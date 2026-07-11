@@ -43,17 +43,17 @@ var ukMessages = map[string]string{
 	CLIFlagRightCircleBookViewUsage: "показувати перекривні пари сторінок справа наліво",
 	CLIErrMultipleBookViews:         "можна вказати лише один режим книжкового перегляду",
 	CLIHelpHint:                     "виконайте 'comicread --help' для довідки",
-	CLIUsage:                        "використання: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [--book-view|--right-book-view|--circle-book-view|--right-circle-book-view] [файл.cbz|файл.pdf|файл.epub|тека-із-зображеннями]",
+	CLIUsage:                        "використання: comicread [опції] [файл]",
 	CLIUsageFull: `comicread - мінімалістична манга-читалка для термінала
 
-використання: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [--book-view|--right-book-view|--circle-book-view|--right-circle-book-view] [файл.cbz|файл.pdf|файл.epub|тека-із-зображеннями]
+використання: comicread [опції] [файл]
 
 опції:
   --graphics string   рендерер: auto, ascii, dots, kitty, sixel або iterm2 (за замовчуванням "auto")
   --book-view         показувати сторінки парами зліва направо
-  --right-book-view   показувати сторінки парами справа наліво
-  --circle-book-view  показувати перекривні пари сторінок зліва направо
-  --right-circle-book-view
+  --right-view        показувати сторінки парами справа наліво
+  --circle-view       показувати перекривні пари сторінок зліва направо
+  --right-circle-view
                       показувати перекривні пари сторінок справа наліво
   -v, --version       вивести версію та завершити роботу
   -h, --help          показати цю довідку

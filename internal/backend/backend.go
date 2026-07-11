@@ -15,3 +15,9 @@ type Renderer interface {
 	Render(image.Image, Area) (string, error)
 	Clear(Area) string
 }
+
+// SpreadRenderer can draw several images in one protocol command. Backends
+// that do not implement it receive each page through Renderer.Render instead.
+type SpreadRenderer interface {
+	RenderSpread([]image.Image, []Area) (string, error)
+}

@@ -26,6 +26,37 @@ func NewSixel() *Sixel { return &Sixel{} }
 
 func (*Sixel) Name() string { return "sixel" }
 
+// RenderSpread draws a book spread as one raster. Some Sixel terminals do not
+// preserve horizontal cursor placement between consecutive sixel commands, so
+// emitting a single raster prevents the second page from covering the first.
+func (s *Sixel) RenderSpread(images []image.Image, areas []Area) (string, error) {
+	if len(images) != len(areas) || len(images) < 1 {
+		return "", fmt.Errorf("invalid sixel spread")
+	}
+
+	spread := unionArea(areas)
+	if spread.Cols < 1 || spread.Rows < 1 {
+		return "", fmt.Errorf("invalid sixel spread area: %+v", spread)
+	}
+
+	canvas := image.NewNRGBA(image.Rect(0, 0, spread.Cols*sixelCellWidth, spread.Rows*sixelCellHeight))
+	for index, img := range images {
+		area := areas[index]
+		if img == nil || area.Cols < 1 || area.Rows < 1 {
+			return "", fmt.Errorf("invalid sixel spread page")
+		}
+		rect := image.Rect(
+			(area.X-spread.X)*sixelCellWidth,
+			(area.Y-spread.Y)*sixelCellHeight,
+			(area.X-spread.X+area.Cols)*sixelCellWidth,
+			(area.Y-spread.Y+area.Rows)*sixelCellHeight,
+		)
+		draw.CatmullRom.Scale(canvas, rect, img, img.Bounds(), draw.Over, nil)
+	}
+
+	return s.Render(canvas, spread)
+}
+
 func (*Sixel) Render(img image.Image, area Area) (string, error) {
 	if img == nil {
 		return "", fmt.Errorf("render nil image")
@@ -97,4 +128,24 @@ func writeSixelRepeat(output *strings.Builder, count int, value byte) {
 	}
 }
 
+func unionArea(areas []Area) Area {
+	var result Area
+	for _, area := range areas {
+		if area.Cols < 1 || area.Rows < 1 {
+			continue
+		}
+		if result.Cols < 1 || result.Rows < 1 {
+			result = area
+			continue
+		}
+		left := min(result.X, area.X)
+		top := min(result.Y, area.Y)
+		right := max(result.X+result.Cols, area.X+area.Cols)
+		bottom := max(result.Y+result.Rows, area.Y+area.Rows)
+		result = Area{X: left, Y: top, Cols: right - left, Rows: bottom - top}
+	}
+	return result
+}
+
 var _ Renderer = (*Sixel)(nil)
+var _ SpreadRenderer = (*Sixel)(nil)

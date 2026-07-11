@@ -42,7 +42,8 @@ func (m *Model) renderPage() tea.Cmd {
 	m.renderError = nil
 
 	return func() tea.Msg {
-		var output strings.Builder
+		images := make([]image.Image, 0, len(pages))
+		pageAreas := make([]backend.Area, 0, len(pages))
 		for slot, pageIndex := range pages {
 			if pageIndex < 0 {
 				continue
@@ -51,7 +52,21 @@ func (m *Model) renderPage() tea.Cmd {
 			if err != nil {
 				return pageRenderedMsg{requestID: requestID, page: page, err: err}
 			}
-			rendered, err := renderer.Render(zoomedImage(img, zoom, scroll), areas[slot])
+			images = append(images, zoomedImage(img, zoom, scroll))
+			pageAreas = append(pageAreas, areas[slot])
+		}
+
+		if spreadRenderer, ok := renderer.(backend.SpreadRenderer); ok && len(images) > 1 {
+			output, err := spreadRenderer.RenderSpread(images, pageAreas)
+			if err != nil {
+				return pageRenderedMsg{requestID: requestID, page: page, err: err}
+			}
+			return pageRenderedMsg{requestID: requestID, page: page, area: area, output: output}
+		}
+
+		var output strings.Builder
+		for index, img := range images {
+			rendered, err := renderer.Render(img, pageAreas[index])
 			if err != nil {
 				return pageRenderedMsg{requestID: requestID, page: page, err: err}
 			}

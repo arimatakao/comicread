@@ -102,9 +102,9 @@ func parseOptions(args []string) (options, error) {
 	graphicsFlag := flags.String("graphics", "auto", i18n.T(i18n.CLIFlagGraphicsUsage))
 	versionFlag := flags.Bool("version", false, i18n.T(i18n.CLIFlagVersionUsage))
 	bookViewFlag := flags.Bool("book-view", false, i18n.T(i18n.CLIFlagBookViewUsage))
-	rightBookViewFlag := flags.Bool("right-book-view", false, i18n.T(i18n.CLIFlagRightBookViewUsage))
-	circleBookViewFlag := flags.Bool("circle-book-view", false, i18n.T(i18n.CLIFlagCircleBookViewUsage))
-	rightCircleBookViewFlag := flags.Bool("right-circle-book-view", false, i18n.T(i18n.CLIFlagRightCircleBookViewUsage))
+	rightBookViewFlag := flags.Bool("right-view", false, i18n.T(i18n.CLIFlagRightBookViewUsage))
+	circleBookViewFlag := flags.Bool("circle-view", false, i18n.T(i18n.CLIFlagCircleBookViewUsage))
+	rightCircleBookViewFlag := flags.Bool("right-circle-view", false, i18n.T(i18n.CLIFlagRightCircleBookViewUsage))
 	flags.BoolVar(versionFlag, "v", false, i18n.T(i18n.CLIFlagVersionUsage))
 	if err := flags.Parse(args); err != nil {
 		if errors.Is(err, flag.ErrHelp) {

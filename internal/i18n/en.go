@@ -43,17 +43,17 @@ var enMessages = map[string]string{
 	CLIFlagRightCircleBookViewUsage: "show overlapping page pairs right to left",
 	CLIErrMultipleBookViews:         "only one book view option may be used",
 	CLIHelpHint:                     "run 'comicread --help' for usage",
-	CLIUsage:                        "usage: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [--book-view|--right-book-view|--circle-book-view|--right-circle-book-view] [file.cbz|file.pdf|file.epub|image-directory]",
+	CLIUsage:                        "usage: comicread [options] [file]",
 	CLIUsageFull: `comicread - a minimal terminal manga reader
 
-usage: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [--book-view|--right-book-view|--circle-book-view|--right-circle-book-view] [file.cbz|file.pdf|file.epub|image-directory]
+usage: comicread [options] [file]
 
 options:
   --graphics string   renderer: auto, ascii, dots, kitty, sixel, or iterm2 (default "auto")
   --book-view         show pages left to right in pairs
-  --right-book-view   show pages right to left in pairs
-  --circle-book-view  show overlapping page pairs left to right
-  --right-circle-book-view
+  --right-view        show pages right to left in pairs
+  --circle-view       show overlapping page pairs left to right
+  --right-circle-view
                       show overlapping page pairs right to left
   -v, --version       print version and exit
   -h, --help          show this help message
