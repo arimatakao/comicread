@@ -4,16 +4,29 @@ import (
 	"image"
 	"image/draw"
 	"math"
+	"time"
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicread/internal/backend"
 )
+
+const layoutRenderDelay = time.Second / 50
+
+// renderAfterLayout waits for Bubble Tea to flush a resized frame before
+// emitting text-art escape sequences. Otherwise the first frame can erase the
+// ASCII or Braille output that was written through tea.Raw.
+func renderAfterLayout(layoutID uint64) tea.Cmd {
+	return tea.Tick(layoutRenderDelay, func(time.Time) tea.Msg {
+		return renderAfterLayoutMsg{layoutID: layoutID}
+	})
+}
 
 func (m *Model) renderPage() tea.Cmd {
 	if m.area.Cols < 1 || m.area.Rows < 1 {
 		return nil
 	}
 
+	m.layoutPending = false
 	m.requestID++
 	requestID := m.requestID
 	page := m.page

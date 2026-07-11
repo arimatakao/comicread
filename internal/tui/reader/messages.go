@@ -9,3 +9,7 @@ type pageRenderedMsg struct {
 	output    string
 	err       error
 }
+
+type renderAfterLayoutMsg struct {
+	layoutID uint64
+}

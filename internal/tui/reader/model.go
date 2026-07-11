@@ -17,6 +17,8 @@ type Model struct {
 	area          backend.Area
 	displayedArea backend.Area
 	requestID     uint64
+	layoutID      uint64
+	layoutPending bool
 	zoom          int
 	scroll        float64
 	rendering     bool

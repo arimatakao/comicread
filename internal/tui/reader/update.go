@@ -13,8 +13,17 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.height = msg.Height
 		m.area = imageArea(msg.Width, msg.Height, m.currentPageAspect())
 		if m.area.Cols < 1 || m.area.Rows < 1 {
+			m.layoutPending = false
 			m.status = i18n.T(i18n.ReaderStatusTerminalTooSmall)
 			return m, tea.Raw(m.backend.Clear(m.displayedArea))
+		}
+		m.layoutID++
+		m.layoutPending = true
+		return m, renderAfterLayout(m.layoutID)
+
+	case renderAfterLayoutMsg:
+		if msg.layoutID != m.layoutID || !m.layoutPending {
+			return m, nil
 		}
 		return m, m.renderPage()
 
@@ -74,6 +83,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.status = ""
 		oldArea := m.displayedArea
 		m.displayedArea = msg.area
+		if oldArea.Cols < 1 || oldArea.Rows < 1 {
+			return m, tea.Raw(msg.output)
+		}
 		return m, tea.Sequence(
 			tea.Raw(m.backend.Clear(oldArea)),
 			tea.Raw(msg.output),
