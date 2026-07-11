@@ -8,7 +8,6 @@ The project is a minimal terminal manga reader written in Go. It opens CBZ, imag
 .
 ├── AGENTS.md
 ├── CLAUDE.md
-├── cmd
 ├── .gitignore
 ├── go.mod
 ├── go.sum
