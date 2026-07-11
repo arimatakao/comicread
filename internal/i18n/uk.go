@@ -23,6 +23,9 @@ var ukMessages = map[string]string{
 	FilepickerErrReadDir:    "не вдалося прочитати теку %q: %w",
 	FilepickerErrRunPicker:  "помилка запуску вибору файлу: %w",
 
+	LoadingViewOpening:     "відкриваю %s…",
+	LoadingViewWindowTitle: "comicread — відкриття",
+
 	CLIErrGetWorkingDir:   "не вдалося отримати робочу теку: %w",
 	CLIErrPickFile:        "не вдалося обрати файл: %w",
 	CLIErrRunTUI:          "помилка запуску TUI: %w",

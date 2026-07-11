@@ -14,6 +14,7 @@ import (
 	"github.com/arimatakao/comicread/internal/backend"
 	"github.com/arimatakao/comicread/internal/i18n"
 	"github.com/arimatakao/comicread/internal/tui/filepicker"
+	"github.com/arimatakao/comicread/internal/tui/loading"
 	"github.com/arimatakao/comicread/internal/tui/reader"
 )
 
@@ -52,7 +53,9 @@ func Run(args []string) error {
 		return err
 	}
 
-	chapter, err := openChapter(path)
+	chapter, err := loading.Open(path, func() (comicfile.ContainerReader, error) {
+		return openChapter(path)
+	})
 	if err != nil {
 		return err
 	}

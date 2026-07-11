@@ -23,6 +23,9 @@ var enMessages = map[string]string{
 	FilepickerErrReadDir:    "read directory %q: %w",
 	FilepickerErrRunPicker:  "run file picker: %w",
 
+	LoadingViewOpening:     "opening %s…",
+	LoadingViewWindowTitle: "comicread — opening",
+
 	CLIErrGetWorkingDir:   "get working directory: %w",
 	CLIErrPickFile:        "pick file: %w",
 	CLIErrRunTUI:          "run TUI: %w",

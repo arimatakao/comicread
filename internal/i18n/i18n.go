@@ -39,6 +39,9 @@ const (
 	FilepickerErrReadDir    = "filepicker.err.read_dir"
 	FilepickerErrRunPicker  = "filepicker.err.run_picker"
 
+	LoadingViewOpening     = "loading.view.opening"
+	LoadingViewWindowTitle = "loading.view.window_title"
+
 	CLIErrGetWorkingDir   = "cli.err.get_working_dir"
 	CLIErrPickFile        = "cli.err.pick_file"
 	CLIErrRunTUI          = "cli.err.run_tui"
