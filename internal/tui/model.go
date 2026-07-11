@@ -16,6 +16,8 @@ type Model struct {
 	area          backend.Area
 	displayedArea backend.Area
 	requestID     uint64
+	zoom          int
+	scroll        float64
 	rendering     bool
 	status        string
 	renderError   error
@@ -26,6 +28,7 @@ func New(title string, chapter comicfile.ContainerReader, renderer backend.Rende
 		title:   title,
 		chapter: chapter,
 		backend: renderer,
+		zoom:    100,
 		status:  "waiting for terminal size",
 	}
 }

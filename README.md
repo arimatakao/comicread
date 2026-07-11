@@ -28,6 +28,8 @@ Keys:
 
 - `right`, `l`, `space`, `j`, `PageDown`: next page
 - `left`, `h`, `backspace`, `k`, `PageUp`: previous page
+- `+`, `-`: zoom in/out for every page in the open file
+- `up`, `down`: scroll the zoomed page vertically
 - `q`, `Esc`, `Ctrl+C`: quit
 
 Supported formats: CBZ, image-based PDF files, image-based EPUB files, and directories containing image files.

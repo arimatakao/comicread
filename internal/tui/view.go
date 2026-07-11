@@ -27,7 +27,7 @@ func (m Model) View() tea.View {
 }
 
 func (m Model) footer() string {
-	page := fmt.Sprintf("page %d/%d", m.page+1, m.chapter.TotalPages())
+	page := fmt.Sprintf("page %d/%d  zoom %d%%", m.page+1, m.chapter.TotalPages(), m.zoom)
 	pageWidth := len([]rune(page))
 	if pageWidth > m.width {
 		return fitLine(page, m.width)
