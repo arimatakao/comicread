@@ -18,6 +18,9 @@ func (m Model) content() string {
 	if m.width < 1 || m.height < 2 {
 		return i18n.T(i18n.ReaderViewTerminalTooSmall)
 	}
+	if m.showingHelp {
+		return "\n" + i18n.T(i18n.ReaderViewHelp)
+	}
 	return m.header() + strings.Repeat("\n", m.height-1)
 }
 

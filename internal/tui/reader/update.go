@@ -12,6 +12,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.width = msg.Width
 		m.height = msg.Height
 		m.updateLayout()
+		if m.showingHelp {
+			return m, nil
+		}
 		if m.area.Cols < 1 || m.area.Rows < 1 {
 			m.layoutPending = false
 			m.status = i18n.T(i18n.ReaderStatusTerminalTooSmall)
@@ -32,6 +35,20 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch {
 		case key == "q", key == "esc", key == "ctrl+c":
 			return m, tea.Sequence(tea.Raw(m.backend.Clear(m.displayedArea)), tea.Quit)
+
+		case isHelpKey(key):
+			m.showingHelp = !m.showingHelp
+			m.status = ""
+			if m.showingHelp {
+				m.requestID++
+				m.layoutPending = false
+				m.rendering = false
+				return m, m.clearAndRepaint(m.displayedArea)
+			}
+			return m, m.renderPage()
+
+		case m.showingHelp:
+			return m, nil
 
 		case isZoomInKey(msg):
 			if m.zoomIn() {

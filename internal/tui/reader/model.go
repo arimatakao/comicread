@@ -24,6 +24,7 @@ type Model struct {
 	zoom          int
 	scroll        float64
 	rendering     bool
+	showingHelp   bool
 	status        string
 	renderError   error
 }

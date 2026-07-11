@@ -14,6 +14,14 @@ var enMessages = map[string]string{
 	ReaderViewPages:            "pages %d/%d",
 	ReaderViewPageRange:        "pages %d-%d/%d",
 	ReaderViewRendering:        "rendering",
+	ReaderViewHelp: `Keys
+
+← →  previous / next page
+↑ ↓  scroll a zoomed page
++ -  zoom in / out
+q    quit
+
+?    close help`,
 
 	FilepickerHeader:      "comicread — select a chapter\n%s\n\n",
 	FilepickerNoEntries:   "  (no supported entries)\n",

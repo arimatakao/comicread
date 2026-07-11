@@ -14,6 +14,14 @@ var ukMessages = map[string]string{
 	ReaderViewPages:            "сторінки %d/%d",
 	ReaderViewPageRange:        "сторінки %d-%d/%d",
 	ReaderViewRendering:        "рендеринг",
+	ReaderViewHelp: `Клавіші
+
+← →  попередня / наступна сторінка
+↑ ↓  прокрутка збільшеної сторінки
++ -  збільшити / зменшити
+q    вихід
+
+?    закрити довідку`,
 
 	FilepickerHeader:      "comicread — оберіть розділ\n%s\n\n",
 	FilepickerNoEntries:   "  (немає підтримуваних елементів)\n",

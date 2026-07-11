@@ -31,6 +31,7 @@ const (
 	ReaderViewPages            = "reader.view.pages"
 	ReaderViewPageRange        = "reader.view.page_range"
 	ReaderViewRendering        = "reader.view.rendering"
+	ReaderViewHelp             = "reader.view.help"
 
 	FilepickerHeader        = "filepicker.header"
 	FilepickerNoEntries     = "filepicker.no_entries"

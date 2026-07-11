@@ -2,6 +2,10 @@ package reader
 
 import tea "charm.land/bubbletea/v2"
 
+func isHelpKey(key string) bool {
+	return key == "?"
+}
+
 func isNextKey(key string) bool {
 	switch key {
 	case "right", "l", "space", "pgdown", "j":
