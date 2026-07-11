@@ -1,4 +1,6 @@
-package tui
+// Package filepicker implements a small interactive Bubble Tea program for
+// choosing a comic chapter (a CBZ, PDF, EPUB file, or an image directory).
+package filepicker
 
 import (
 	"fmt"
@@ -9,15 +11,15 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-// PickFile runs an interactive file picker rooted at root and returns the
-// chosen chapter path. It returns an empty path if the user cancels.
-func PickFile(root string) (string, error) {
+// Pick runs an interactive file picker rooted at root and returns the chosen
+// chapter path. It returns an empty path if the user cancels.
+func Pick(root string) (string, error) {
 	abs, err := filepath.Abs(root)
 	if err != nil {
 		return "", fmt.Errorf("resolve directory %q: %w", root, err)
 	}
 
-	model, err := newFilePickerModel(abs)
+	model, err := newModel(abs)
 	if err != nil {
 		return "", err
 	}
@@ -28,18 +30,18 @@ func PickFile(root string) (string, error) {
 		return "", fmt.Errorf("run file picker: %w", err)
 	}
 
-	result := finalModel.(filePickerModel)
+	result := finalModel.(pickerModel)
 	return result.selected, result.err
 }
 
-type pickerEntry struct {
+type entry struct {
 	name  string
 	isDir bool
 }
 
-type filePickerModel struct {
+type pickerModel struct {
 	dir      string
-	entries  []pickerEntry
+	entries  []entry
 	cursor   int
 	selected string
 	err      error
@@ -47,31 +49,31 @@ type filePickerModel struct {
 	height   int
 }
 
-func newFilePickerModel(dir string) (filePickerModel, error) {
-	m := filePickerModel{dir: dir}
+func newModel(dir string) (pickerModel, error) {
+	m := pickerModel{dir: dir}
 	if err := m.readDir(); err != nil {
-		return filePickerModel{}, err
+		return pickerModel{}, err
 	}
 	return m, nil
 }
 
-func (m *filePickerModel) readDir() error {
-	entries, err := os.ReadDir(m.dir)
+func (m *pickerModel) readDir() error {
+	dirEntries, err := os.ReadDir(m.dir)
 	if err != nil {
 		return fmt.Errorf("read directory %q: %w", m.dir, err)
 	}
 
-	items := make([]pickerEntry, 0, len(entries)+1)
+	items := make([]entry, 0, len(dirEntries)+1)
 	if parent := filepath.Dir(m.dir); parent != m.dir {
-		items = append(items, pickerEntry{name: "..", isDir: true})
+		items = append(items, entry{name: "..", isDir: true})
 	}
-	for _, entry := range entries {
-		if entry.IsDir() {
-			items = append(items, pickerEntry{name: entry.Name(), isDir: true})
+	for _, e := range dirEntries {
+		if e.IsDir() {
+			items = append(items, entry{name: e.Name(), isDir: true})
 			continue
 		}
-		if isSupportedChapterFile(entry.Name()) {
-			items = append(items, pickerEntry{name: entry.Name()})
+		if isSupportedChapterFile(e.Name()) {
+			items = append(items, entry{name: e.Name()})
 		}
 	}
 
@@ -91,11 +93,11 @@ func isSupportedChapterFile(name string) bool {
 	}
 }
 
-func (m filePickerModel) Init() tea.Cmd {
+func (m pickerModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m filePickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
@@ -118,11 +120,11 @@ func (m filePickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case "s":
 			if len(m.entries) > 0 && m.entries[m.cursor].isDir {
-				entry := m.entries[m.cursor]
-				if entry.name == ".." {
+				e := m.entries[m.cursor]
+				if e.name == ".." {
 					m.selected = filepath.Dir(m.dir)
 				} else {
-					m.selected = filepath.Join(m.dir, entry.name)
+					m.selected = filepath.Join(m.dir, e.name)
 				}
 			} else {
 				m.selected = m.dir
@@ -133,16 +135,16 @@ func (m filePickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if len(m.entries) == 0 {
 				return m, nil
 			}
-			entry := m.entries[m.cursor]
-			if !entry.isDir {
-				m.selected = filepath.Join(m.dir, entry.name)
+			e := m.entries[m.cursor]
+			if !e.isDir {
+				m.selected = filepath.Join(m.dir, e.name)
 				return m, tea.Quit
 			}
 
-			if entry.name == ".." {
+			if e.name == ".." {
 				m.dir = filepath.Dir(m.dir)
 			} else {
-				m.dir = filepath.Join(m.dir, entry.name)
+				m.dir = filepath.Join(m.dir, e.name)
 			}
 			if err := m.readDir(); err != nil {
 				m.err = err
@@ -154,20 +156,20 @@ func (m filePickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m filePickerModel) View() tea.View {
+func (m pickerModel) View() tea.View {
 	var b strings.Builder
 	fmt.Fprintf(&b, "comicread — select a chapter\n%s\n\n", m.dir)
 
 	if len(m.entries) == 0 {
 		b.WriteString("  (no supported entries)\n")
 	}
-	for i, entry := range m.entries {
+	for i, e := range m.entries {
 		cursor := "  "
 		if i == m.cursor {
 			cursor = "> "
 		}
-		name := entry.name
-		if entry.isDir {
+		name := e.name
+		if e.isDir {
 			name += "/"
 		}
 		fmt.Fprintf(&b, "%s%s\n", cursor, name)

@@ -11,7 +11,8 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicfile"
 	"github.com/arimatakao/comicread/internal/backend"
-	"github.com/arimatakao/comicread/internal/tui"
+	"github.com/arimatakao/comicread/internal/tui/filepicker"
+	"github.com/arimatakao/comicread/internal/tui/reader"
 )
 
 func Run(args []string) error {
@@ -25,7 +26,7 @@ func Run(args []string) error {
 		if err != nil {
 			return fmt.Errorf("get working directory: %w", err)
 		}
-		path, err = tui.PickFile(cwd)
+		path, err = filepicker.Pick(cwd)
 		if err != nil {
 			return fmt.Errorf("pick file: %w", err)
 		}
@@ -48,7 +49,7 @@ func Run(args []string) error {
 		return err
 	}
 
-	model := tui.New(filepath.Base(path), chapter, renderer)
+	model := reader.New(filepath.Base(path), chapter, renderer)
 	program := tea.NewProgram(model)
 	if _, err := program.Run(); err != nil {
 		return fmt.Errorf("run TUI: %w", err)

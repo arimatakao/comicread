@@ -1,4 +1,4 @@
-package tui
+package reader
 
 import (
 	tea "charm.land/bubbletea/v2"

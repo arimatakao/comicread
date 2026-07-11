@@ -1,4 +1,4 @@
-package tui
+package reader
 
 import "github.com/arimatakao/comicread/internal/backend"
 
