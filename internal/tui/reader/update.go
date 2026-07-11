@@ -13,7 +13,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.height = msg.Height
 		m.area = imageArea(msg.Width, msg.Height, m.currentPageAspect())
 		if m.area.Cols < 1 || m.area.Rows < 1 {
-			m.status = i18n.T("reader.status.terminal_too_small")
+			m.status = i18n.T(i18n.ReaderStatusTerminalTooSmall)
 			return m, tea.Raw(m.backend.Clear(m.displayedArea))
 		}
 		return m, m.renderPage()
@@ -49,14 +49,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.area = imageArea(m.width, m.height, m.currentPageAspect())
 				return m, m.renderPage()
 			}
-			m.status = i18n.T("reader.status.last_page")
+			m.status = i18n.T(i18n.ReaderStatusLastPage)
 
 		case isPreviousKey(key):
 			if m.previousPage() {
 				m.area = imageArea(m.width, m.height, m.currentPageAspect())
 				return m, m.renderPage()
 			}
-			m.status = i18n.T("reader.status.first_page")
+			m.status = i18n.T(i18n.ReaderStatusFirstPage)
 		}
 
 	case pageRenderedMsg:
@@ -67,7 +67,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.rendering = false
 		if msg.err != nil {
 			m.renderError = msg.err
-			m.status = i18n.T("reader.status.render_error", msg.err)
+			m.status = i18n.T(i18n.ReaderStatusRenderError, msg.err)
 			return m, nil
 		}
 
@@ -109,7 +109,7 @@ const (
 
 func (m *Model) zoomIn() bool {
 	if m.zoom >= maxZoom {
-		m.status = i18n.T("reader.status.maximum_zoom")
+		m.status = i18n.T(i18n.ReaderStatusMaximumZoom)
 		return false
 	}
 	m.zoom += zoomStep
@@ -119,7 +119,7 @@ func (m *Model) zoomIn() bool {
 
 func (m *Model) zoomOut() bool {
 	if m.zoom <= 100 {
-		m.status = i18n.T("reader.status.minimum_zoom")
+		m.status = i18n.T(i18n.ReaderStatusMinimumZoom)
 		return false
 	}
 	m.zoom -= zoomStep

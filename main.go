@@ -18,7 +18,7 @@ func main() {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "comicread:", err)
 		if errors.Is(err, cli.ErrUsage) {
-			fmt.Fprintln(os.Stderr, i18n.T("cli.help_hint"))
+			fmt.Fprintln(os.Stderr, i18n.T(i18n.CLIHelpHint))
 		}
 		os.Exit(1)
 	}

@@ -37,11 +37,11 @@ func Run(args []string) error {
 	if path == "" {
 		cwd, err := os.Getwd()
 		if err != nil {
-			return fmt.Errorf(i18n.T("cli.err.get_working_dir"), err)
+			return fmt.Errorf(i18n.T(i18n.CLIErrGetWorkingDir), err)
 		}
 		path, err = filepicker.Pick(cwd)
 		if err != nil {
-			return fmt.Errorf(i18n.T("cli.err.pick_file"), err)
+			return fmt.Errorf(i18n.T(i18n.CLIErrPickFile), err)
 		}
 		if path == "" {
 			return nil
@@ -65,7 +65,7 @@ func Run(args []string) error {
 	model := reader.New(filepath.Base(path), chapter, renderer)
 	program := tea.NewProgram(model)
 	if _, err := program.Run(); err != nil {
-		return fmt.Errorf(i18n.T("cli.err.run_tui"), err)
+		return fmt.Errorf(i18n.T(i18n.CLIErrRunTUI), err)
 	}
 
 	return nil
@@ -74,13 +74,13 @@ func Run(args []string) error {
 func parseArgs(args []string) (graphics, path string, err error) {
 	flags := flag.NewFlagSet("comicread", flag.ContinueOnError)
 	flags.SetOutput(io.Discard)
-	graphicsFlag := flags.String("graphics", "auto", i18n.T("cli.flag.graphics_usage"))
+	graphicsFlag := flags.String("graphics", "auto", i18n.T(i18n.CLIFlagGraphicsUsage))
 	if err := flags.Parse(args); err != nil {
 		if errors.Is(err, flag.ErrHelp) {
-			fmt.Println(i18n.T("cli.usage_full"))
+			fmt.Println(i18n.T(i18n.CLIUsageFull))
 			return "", "", flag.ErrHelp
 		}
-		return "", "", &usageError{fmt.Errorf(i18n.T("cli.err.parse_args"), err)}
+		return "", "", &usageError{fmt.Errorf(i18n.T(i18n.CLIErrParseArgs), err)}
 	}
 	switch flags.NArg() {
 	case 0:
@@ -88,17 +88,17 @@ func parseArgs(args []string) (graphics, path string, err error) {
 	case 1:
 		return *graphicsFlag, flags.Arg(0), nil
 	default:
-		return "", "", &usageError{errors.New(i18n.T("cli.usage"))}
+		return "", "", &usageError{errors.New(i18n.T(i18n.CLIUsage))}
 	}
 }
 
 func openChapter(path string) (comicfile.ContainerReader, error) {
 	chapter, err := comicfile.OpenContainer(path)
 	if err != nil {
-		return nil, fmt.Errorf(i18n.T("cli.err.open_chapter"), err)
+		return nil, fmt.Errorf(i18n.T(i18n.CLIErrOpenChapter), err)
 	}
 	if chapter.TotalPages() == 0 {
-		return nil, errors.New(i18n.T("cli.err.no_pages"))
+		return nil, errors.New(i18n.T(i18n.CLIErrNoPages))
 	}
 	return chapter, nil
 }
@@ -115,10 +115,10 @@ func isSupportedFile(path string) bool {
 func validateInput(path string) error {
 	info, err := os.Stat(path)
 	if err != nil {
-		return fmt.Errorf(i18n.T("cli.err.inspect_input"), path, err)
+		return fmt.Errorf(i18n.T(i18n.CLIErrInspectInput), path, err)
 	}
 	if info.IsDir() || isSupportedFile(path) {
 		return nil
 	}
-	return fmt.Errorf(i18n.T("cli.err.unsupported_file"), path)
+	return fmt.Errorf(i18n.T(i18n.CLIErrUnsupportedFile), path)
 }

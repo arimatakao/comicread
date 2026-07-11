@@ -10,19 +10,19 @@ import (
 func (m Model) View() tea.View {
 	var content string
 	if m.width < 1 || m.height < 2 {
-		content = i18n.T("reader.view.terminal_too_small")
+		content = i18n.T(i18n.ReaderViewTerminalTooSmall)
 	} else {
 		content = m.header() + strings.Repeat("\n", m.height-1)
 	}
 
 	view := tea.NewView(content)
 	view.AltScreen = true
-	view.WindowTitle = i18n.T("reader.view.window_title", m.title)
+	view.WindowTitle = i18n.T(i18n.ReaderViewWindowTitle, m.title)
 	return view
 }
 
 func (m Model) header() string {
-	page := i18n.T("reader.view.pages", m.page+1, m.chapter.TotalPages())
+	page := i18n.T(i18n.ReaderViewPages, m.page+1, m.chapter.TotalPages())
 	pageWidth := len([]rune(page))
 	if pageWidth > m.width {
 		return fitLine(page, m.width)
@@ -32,7 +32,7 @@ func (m Model) header() string {
 		return strings.Repeat(" ", (m.width-pageWidth)/2) + page
 	}
 
-	status := i18n.T("reader.view.rendering")
+	status := i18n.T(i18n.ReaderViewRendering)
 	statusWidth := len([]rune(status))
 	pageStart := (m.width - pageWidth) / 2
 	statusStart := m.width - statusWidth

@@ -16,6 +16,43 @@ const (
 	Ukrainian Lang = "uk"
 )
 
+// Message keys.
+const (
+	ReaderStatusWaitingTerminalSize = "reader.status.waiting_terminal_size"
+	ReaderStatusTerminalTooSmall    = "reader.status.terminal_too_small"
+	ReaderStatusLastPage            = "reader.status.last_page"
+	ReaderStatusFirstPage           = "reader.status.first_page"
+	ReaderStatusRenderError         = "reader.status.render_error"
+	ReaderStatusMaximumZoom         = "reader.status.maximum_zoom"
+	ReaderStatusMinimumZoom         = "reader.status.minimum_zoom"
+
+	ReaderViewTerminalTooSmall = "reader.view.terminal_too_small"
+	ReaderViewWindowTitle      = "reader.view.window_title"
+	ReaderViewPages            = "reader.view.pages"
+	ReaderViewRendering        = "reader.view.rendering"
+
+	FilepickerHeader        = "filepicker.header"
+	FilepickerNoEntries     = "filepicker.no_entries"
+	FilepickerHelp          = "filepicker.help"
+	FilepickerWindowTitle   = "filepicker.window_title"
+	FilepickerErrResolveDir = "filepicker.err.resolve_dir"
+	FilepickerErrReadDir    = "filepicker.err.read_dir"
+	FilepickerErrRunPicker  = "filepicker.err.run_picker"
+
+	CLIErrGetWorkingDir   = "cli.err.get_working_dir"
+	CLIErrPickFile        = "cli.err.pick_file"
+	CLIErrRunTUI          = "cli.err.run_tui"
+	CLIErrParseArgs       = "cli.err.parse_args"
+	CLIErrOpenChapter     = "cli.err.open_chapter"
+	CLIErrNoPages         = "cli.err.no_pages"
+	CLIErrInspectInput    = "cli.err.inspect_input"
+	CLIErrUnsupportedFile = "cli.err.unsupported_file"
+	CLIFlagGraphicsUsage  = "cli.flag.graphics_usage"
+	CLIHelpHint           = "cli.help_hint"
+	CLIUsage              = "cli.usage"
+	CLIUsageFull          = "cli.usage_full"
+)
+
 var current = detect()
 
 // detect picks a language from the COMICREAD_LANG environment variable,

@@ -30,7 +30,7 @@ func New(title string, chapter comicfile.ContainerReader, renderer backend.Rende
 		chapter: chapter,
 		backend: renderer,
 		zoom:    100,
-		status:  i18n.T("reader.status.waiting_terminal_size"),
+		status:  i18n.T(i18n.ReaderStatusWaitingTerminalSize),
 	}
 }
 

@@ -17,7 +17,7 @@ import (
 func Pick(root string) (string, error) {
 	abs, err := filepath.Abs(root)
 	if err != nil {
-		return "", fmt.Errorf(i18n.T("filepicker.err.resolve_dir"), root, err)
+		return "", fmt.Errorf(i18n.T(i18n.FilepickerErrResolveDir), root, err)
 	}
 
 	model, err := newModel(abs)
@@ -28,7 +28,7 @@ func Pick(root string) (string, error) {
 	program := tea.NewProgram(model)
 	finalModel, err := program.Run()
 	if err != nil {
-		return "", fmt.Errorf(i18n.T("filepicker.err.run_picker"), err)
+		return "", fmt.Errorf(i18n.T(i18n.FilepickerErrRunPicker), err)
 	}
 
 	result := finalModel.(pickerModel)
@@ -61,7 +61,7 @@ func newModel(dir string) (pickerModel, error) {
 func (m *pickerModel) readDir() error {
 	dirEntries, err := os.ReadDir(m.dir)
 	if err != nil {
-		return fmt.Errorf(i18n.T("filepicker.err.read_dir"), m.dir, err)
+		return fmt.Errorf(i18n.T(i18n.FilepickerErrReadDir), m.dir, err)
 	}
 
 	items := make([]entry, 0, len(dirEntries)+1)
@@ -172,10 +172,10 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m pickerModel) View() tea.View {
 	var b strings.Builder
-	fmt.Fprintf(&b, i18n.T("filepicker.header"), m.dir)
+	fmt.Fprintf(&b, i18n.T(i18n.FilepickerHeader), m.dir)
 
 	if len(m.entries) == 0 {
-		b.WriteString(i18n.T("filepicker.no_entries"))
+		b.WriteString(i18n.T(i18n.FilepickerNoEntries))
 	}
 	for i, e := range m.entries {
 		cursor := "  "
@@ -189,10 +189,10 @@ func (m pickerModel) View() tea.View {
 		fmt.Fprintf(&b, "%s%s\n", cursor, name)
 	}
 
-	b.WriteString(i18n.T("filepicker.help"))
+	b.WriteString(i18n.T(i18n.FilepickerHelp))
 
 	view := tea.NewView(b.String())
 	view.AltScreen = true
-	view.WindowTitle = i18n.T("filepicker.window_title")
+	view.WindowTitle = i18n.T(i18n.FilepickerWindowTitle)
 	return view
 }
