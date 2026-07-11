@@ -8,17 +8,23 @@ import (
 )
 
 func (m Model) View() tea.View {
-	var content string
-	if m.width < 1 || m.height < 2 {
-		content = i18n.T(i18n.ReaderViewTerminalTooSmall)
-	} else {
-		content = m.header() + strings.Repeat("\n", m.height-1)
-	}
-
-	view := tea.NewView(content)
+	view := tea.NewView(m.content())
 	view.AltScreen = true
 	view.WindowTitle = i18n.T(i18n.ReaderViewWindowTitle, m.title)
 	return view
+}
+
+func (m Model) content() string {
+	if m.width < 1 || m.height < 2 {
+		return i18n.T(i18n.ReaderViewTerminalTooSmall)
+	}
+	return m.header() + strings.Repeat("\n", m.height-1)
+}
+
+// repaintText restores Bubble Tea's text layer after iTerm2 erases the whole
+// display to remove a previous inline image.
+func (m Model) repaintText() string {
+	return "\x1b[H" + m.content()
 }
 
 func (m Model) header() string {

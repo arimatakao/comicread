@@ -15,7 +15,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if m.area.Cols < 1 || m.area.Rows < 1 {
 			m.layoutPending = false
 			m.status = i18n.T(i18n.ReaderStatusTerminalTooSmall)
-			return m, tea.Raw(m.backend.Clear(m.displayedArea))
+			return m, m.clearAndRepaint(m.displayedArea)
 		}
 		m.layoutID++
 		m.layoutPending = true
@@ -86,13 +86,27 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if oldArea.Cols < 1 || oldArea.Rows < 1 {
 			return m, tea.Raw(msg.output)
 		}
-		return m, tea.Sequence(
-			tea.Raw(m.backend.Clear(oldArea)),
-			tea.Raw(msg.output),
-		)
+		return m, m.clearAndRender(oldArea, msg.output)
 	}
 
 	return m, nil
+}
+
+func (m Model) clearAndRepaint(area backend.Area) tea.Cmd {
+	clear := tea.Raw(m.backend.Clear(area))
+	if m.backend.Name() != "iterm2" {
+		return clear
+	}
+	return tea.Sequence(clear, tea.Raw(m.repaintText()))
+}
+
+func (m Model) clearAndRender(area backend.Area, output string) tea.Cmd {
+	clear := tea.Raw(m.backend.Clear(area))
+	image := tea.Raw(output)
+	if m.backend.Name() != "iterm2" {
+		return tea.Sequence(clear, image)
+	}
+	return tea.Sequence(clear, tea.Raw(m.repaintText()), image)
 }
 
 func (m *Model) nextPage() bool {

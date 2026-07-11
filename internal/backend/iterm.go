@@ -40,21 +40,22 @@ func (*Iterm) Render(img image.Image, area Area) (string, error) {
 	return output.String(), nil
 }
 
-// Clear erases the character cells containing the prior inline image. iTerm2
-// has no image-deletion escape sequence, so erasing only this rectangle leaves
-// Bubble Tea's header and footer untouched.
+// Clear removes inline images with an erase-display command. The iTerm2 image
+// protocol has no command for deleting one placed image; erasing individual
+// cells does not remove it. The TUI redraws its text layer immediately after
+// this command when a page is replaced.
 func (*Iterm) Clear(area Area) string {
 	if area.X < 1 || area.Y < 1 || area.Cols < 1 || area.Rows < 1 {
 		return ""
 	}
 
 	var output bytes.Buffer
-	output.Grow(area.Rows * 16)
+	output.Grow(area.Rows*16 + 16)
 	output.WriteString("\x1b7")
 	for row := area.Y; row < area.Y+area.Rows; row++ {
 		fmt.Fprintf(&output, "\x1b[%d;%dH\x1b[%dX", row, area.X, area.Cols)
 	}
-	output.WriteString("\x1b8")
+	output.WriteString("\x1b[2J\x1b8")
 	return output.String()
 }
 
