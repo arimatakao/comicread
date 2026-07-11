@@ -143,7 +143,7 @@ func TestIsSupportedFile(t *testing.T) {
 func TestParseArgs(t *testing.T) {
 	t.Parallel()
 
-	graphics, path, err := parseArgs([]string{"--graphics", "sixel", "chapter.cbz"})
+	graphics, path, _, err := parseArgs([]string{"--graphics", "sixel", "chapter.cbz"})
 	if err != nil {
 		t.Fatalf("parseArgs() error = %v", err)
 	}

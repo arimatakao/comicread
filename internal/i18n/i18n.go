@@ -51,6 +51,7 @@ const (
 	CLIErrInspectInput    = "cli.err.inspect_input"
 	CLIErrUnsupportedFile = "cli.err.unsupported_file"
 	CLIFlagGraphicsUsage  = "cli.flag.graphics_usage"
+	CLIFlagVersionUsage   = "cli.flag.version_usage"
 	CLIHelpHint           = "cli.help_hint"
 	CLIUsage              = "cli.usage"
 	CLIUsageFull          = "cli.usage_full"

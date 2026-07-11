@@ -35,6 +35,7 @@ var enMessages = map[string]string{
 	CLIErrInspectInput:    "inspect input %q: %w",
 	CLIErrUnsupportedFile: "unsupported file %q: supported formats are CBZ, PDF, EPUB, or an image directory",
 	CLIFlagGraphicsUsage:  "renderer: auto, ascii, dots, kitty, sixel, or iterm2",
+	CLIFlagVersionUsage:   "print version and exit",
 	CLIHelpHint:           "run 'comicread --help' for usage",
 	CLIUsage:              "usage: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [file.cbz|file.pdf|file.epub|image-directory]",
 	CLIUsageFull: `comicread - a minimal terminal manga reader
@@ -43,6 +44,7 @@ usage: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [file.cbz|file.
 
 options:
   --graphics string   renderer: auto, ascii, dots, kitty, sixel, or iterm2 (default "auto")
+  -v, --version       print version and exit
   -h, --help          show this help message
 
 If no file or directory is given, an interactive file picker opens in the current directory.

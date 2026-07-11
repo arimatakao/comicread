@@ -35,6 +35,7 @@ var ukMessages = map[string]string{
 	CLIErrInspectInput:    "не вдалося перевірити вхідні дані %q: %w",
 	CLIErrUnsupportedFile: "непідтримуваний файл %q: підтримувані формати — CBZ, PDF, EPUB або тека із зображеннями",
 	CLIFlagGraphicsUsage:  "рендерер: auto, ascii, dots, kitty, sixel або iterm2",
+	CLIFlagVersionUsage:   "вивести версію та завершити роботу",
 	CLIHelpHint:           "виконайте 'comicread --help' для довідки",
 	CLIUsage:              "використання: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [файл.cbz|файл.pdf|файл.epub|тека-із-зображеннями]",
 	CLIUsageFull: `comicread - мінімалістична манга-читалка для термінала
@@ -43,6 +44,7 @@ var ukMessages = map[string]string{
 
 опції:
   --graphics string   рендерер: auto, ascii, dots, kitty, sixel або iterm2 (за замовчуванням "auto")
+  -v, --version       вивести версію та завершити роботу
   -h, --help          показати цю довідку
 
 Якщо файл або тека не вказані, відкриється інтерактивний вибір файлу в поточній теці.

@@ -23,6 +23,10 @@ import (
 // for it with errors.Is.
 var ErrUsage = errors.New("usage error")
 
+// Version is the program version, overridden at build time via
+// -ldflags "-X github.com/arimatakao/comicread/internal/cli.Version=YOUR_VERSION".
+var Version = "dev"
+
 type usageError struct{ err error }
 
 func (e *usageError) Error() string        { return e.err.Error() }
@@ -30,9 +34,14 @@ func (e *usageError) Unwrap() error        { return e.err }
 func (e *usageError) Is(target error) bool { return target == ErrUsage }
 
 func Run(args []string) error {
-	graphics, path, err := parseArgs(args)
+	graphics, path, version, err := parseArgs(args)
 	if err != nil {
 		return err
+	}
+
+	if version {
+		fmt.Println(Version)
+		return nil
 	}
 
 	if path == "" {
@@ -74,24 +83,29 @@ func Run(args []string) error {
 	return nil
 }
 
-func parseArgs(args []string) (graphics, path string, err error) {
+func parseArgs(args []string) (graphics, path string, version bool, err error) {
 	flags := flag.NewFlagSet("comicread", flag.ContinueOnError)
 	flags.SetOutput(io.Discard)
 	graphicsFlag := flags.String("graphics", "auto", i18n.T(i18n.CLIFlagGraphicsUsage))
+	versionFlag := flags.Bool("version", false, i18n.T(i18n.CLIFlagVersionUsage))
+	flags.BoolVar(versionFlag, "v", false, i18n.T(i18n.CLIFlagVersionUsage))
 	if err := flags.Parse(args); err != nil {
 		if errors.Is(err, flag.ErrHelp) {
 			fmt.Println(i18n.T(i18n.CLIUsageFull))
-			return "", "", flag.ErrHelp
+			return "", "", false, flag.ErrHelp
 		}
-		return "", "", &usageError{fmt.Errorf(i18n.T(i18n.CLIErrParseArgs), err)}
+		return "", "", false, &usageError{fmt.Errorf(i18n.T(i18n.CLIErrParseArgs), err)}
+	}
+	if *versionFlag {
+		return "", "", true, nil
 	}
 	switch flags.NArg() {
 	case 0:
-		return *graphicsFlag, "", nil
+		return *graphicsFlag, "", false, nil
 	case 1:
-		return *graphicsFlag, flags.Arg(0), nil
+		return *graphicsFlag, flags.Arg(0), false, nil
 	default:
-		return "", "", &usageError{errors.New(i18n.T(i18n.CLIUsage))}
+		return "", "", false, &usageError{errors.New(i18n.T(i18n.CLIUsage))}
 	}
 }
 
