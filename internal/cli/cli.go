@@ -20,6 +20,20 @@ func Run(args []string) error {
 		return err
 	}
 
+	if path == "" {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return fmt.Errorf("get working directory: %w", err)
+		}
+		path, err = tui.PickFile(cwd)
+		if err != nil {
+			return fmt.Errorf("pick file: %w", err)
+		}
+		if path == "" {
+			return nil
+		}
+	}
+
 	if err := validateInput(path); err != nil {
 		return err
 	}
@@ -50,10 +64,14 @@ func parseArgs(args []string) (graphics, path string, err error) {
 	if err := flags.Parse(args); err != nil {
 		return "", "", fmt.Errorf("parse arguments: %w", err)
 	}
-	if flags.NArg() != 1 {
-		return "", "", fmt.Errorf("usage: comicread [--graphics auto|kitty|sixel|iterm2] <file.cbz|file.pdf|file.epub|image-directory>")
+	switch flags.NArg() {
+	case 0:
+		return *graphicsFlag, "", nil
+	case 1:
+		return *graphicsFlag, flags.Arg(0), nil
+	default:
+		return "", "", fmt.Errorf("usage: comicread [--graphics auto|kitty|sixel|iterm2] [file.cbz|file.pdf|file.epub|image-directory]")
 	}
-	return *graphicsFlag, flags.Arg(0), nil
 }
 
 func openChapter(path string) (comicfile.ContainerReader, error) {
