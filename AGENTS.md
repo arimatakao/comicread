@@ -7,31 +7,15 @@ The project is a minimal terminal manga reader written in Go. It opens CBZ, imag
 ```
 .
 ├── AGENTS.md
-├── CLAUDE.md -> AGENTS.md
+├── CLAUDE.md
 ├── cmd
 ├── .gitignore
 ├── go.mod
 ├── go.sum
 ├── internal
 │   ├── backend
-│   │   ├── backend.go
-│   │   ├── kitty.go
-│   │   ├── kitty_test.go
-│   │   ├── renderer.go
-│   │   ├── renderer_test.go
-│   │   ├── sixel.go
-│   │   └── sixel_test.go
 │   ├── cli
-│   │   ├── cli.go
-│   │   └── cli_test.go
 │   └── tui
-│       ├── commands.go
-│       ├── keys.go
-│       ├── messages.go
-│       ├── model.go
-│       ├── update.go
-│       ├── update_test.go
-│       └── view.go
 ├── main.go
 ├── Makefile
 └── README.md
@@ -40,7 +24,7 @@ The project is a minimal terminal manga reader written in Go. It opens CBZ, imag
 Key directories:
 
 - `cmd/` — reserved for standalone executable commands; currently empty.
-- `internal/backend/` — terminal-rendering interfaces and the Kitty/Sixel protocol implementations.
+- `internal/backend/` — terminal-rendering interfaces and terminal image processing protocol implementations.
 - `internal/cli/` — input-path validation and opening CBZ, PDF, EPUB, or image-directory chapters.
 - `internal/tui/` — the Bubble Tea model, key handling, navigation, and view rendering.
 
