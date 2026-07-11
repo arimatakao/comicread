@@ -131,16 +131,18 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			return m, tea.Quit
 
-		case "enter", " ":
-			if len(m.entries) == 0 {
-				return m, nil
-			}
-			e := m.entries[m.cursor]
-			if !e.isDir {
-				m.selected = filepath.Join(m.dir, e.name)
+		case "left", "h":
+			m.dir = filepath.Dir(m.dir)
+			if err := m.readDir(); err != nil {
+				m.err = err
 				return m, tea.Quit
 			}
 
+		case "right", "l":
+			if len(m.entries) == 0 || !m.entries[m.cursor].isDir {
+				return m, nil
+			}
+			e := m.entries[m.cursor]
 			if e.name == ".." {
 				m.dir = filepath.Dir(m.dir)
 			} else {
@@ -150,6 +152,17 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.err = err
 				return m, tea.Quit
 			}
+
+		case "enter":
+			if len(m.entries) == 0 {
+				return m, nil
+			}
+			e := m.entries[m.cursor]
+			if e.isDir {
+				return m, nil
+			}
+			m.selected = filepath.Join(m.dir, e.name)
+			return m, tea.Quit
 		}
 	}
 
@@ -175,7 +188,7 @@ func (m pickerModel) View() tea.View {
 		fmt.Fprintf(&b, "%s%s\n", cursor, name)
 	}
 
-	b.WriteString("\n↑/↓ move  enter open/select  s select highlighted directory  q quit\n")
+	b.WriteString("\n↑/↓ move  ← parent dir  → enter dir  enter open file  s select highlighted directory  q quit\n")
 
 	view := tea.NewView(b.String())
 	view.AltScreen = true
