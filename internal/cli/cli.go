@@ -46,12 +46,12 @@ func Run(args []string) error {
 func parseArgs(args []string) (graphics, path string, err error) {
 	flags := flag.NewFlagSet("comicread", flag.ContinueOnError)
 	flags.SetOutput(io.Discard)
-	graphicsFlag := flags.String("graphics", "auto", "graphics protocol: auto, kitty, or sixel")
+	graphicsFlag := flags.String("graphics", "auto", "graphics protocol: auto, kitty, sixel, or iterm2")
 	if err := flags.Parse(args); err != nil {
 		return "", "", fmt.Errorf("parse arguments: %w", err)
 	}
 	if flags.NArg() != 1 {
-		return "", "", fmt.Errorf("usage: comicread [--graphics auto|kitty|sixel] <file.cbz|file.pdf|file.epub|image-directory>")
+		return "", "", fmt.Errorf("usage: comicread [--graphics auto|kitty|sixel|iterm2] <file.cbz|file.pdf|file.epub|image-directory>")
 	}
 	return *graphicsFlag, flags.Arg(0), nil
 }

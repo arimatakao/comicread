@@ -11,6 +11,7 @@ func TestNewRenderer(t *testing.T) {
 	}{
 		{"kitty", "kitty"},
 		{"sixel", "sixel"},
+		{"iterm2", "iterm2"},
 	} {
 		t.Run(test.protocol, func(t *testing.T) {
 			renderer, err := NewRenderer(test.protocol)
@@ -27,8 +28,19 @@ func TestNewRenderer(t *testing.T) {
 func TestNewRendererRejectsUnknownProtocol(t *testing.T) {
 	t.Parallel()
 
-	if _, err := NewRenderer("iterm2"); err == nil {
+	if _, err := NewRenderer("unknown"); err == nil {
 		t.Fatal("NewRenderer() error = nil, want unsupported protocol error")
+	}
+}
+
+func TestSupportsIterm(t *testing.T) {
+	t.Parallel()
+
+	if !supportsIterm("xterm-256color", "iTerm.app", "iTerm2") {
+		t.Fatal("supportsIterm() = false, want true for iTerm2")
+	}
+	if supportsIterm("xterm-256color", "kitty", "") {
+		t.Fatal("supportsIterm() = true, want false for Kitty")
 	}
 }
 
