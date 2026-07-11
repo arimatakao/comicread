@@ -3,7 +3,7 @@
 BINARY := bin/comicread
 
 build:
-	go build -o $(BINARY) ./cmd/comicread
+	go build -o $(BINARY) .
 
 run:
-	go run ./cmd/comicread $(FILE)
+	go run . $(FILE)

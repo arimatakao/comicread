@@ -13,7 +13,7 @@ protocol, and supports forward/backward navigation.
 ## Run
 
 ```sh
-go run ./cmd/comicread path/to/chapter.cbz
+go run . path/to/chapter.cbz
 ```
 
 Keys:
