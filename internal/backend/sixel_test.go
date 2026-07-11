@@ -19,8 +19,8 @@ func TestSixelRender(t *testing.T) {
 
 	for _, want := range []string{
 		"\x1b[2;4H",
-		"\x1bP0;0;0q\"1;1;16;16",
-		"#224;2;100;0;0",
+		"\x1bP0;1q\"1;1;16;16",
+		";2;100;0;0",
 		"\x1b\\",
 	} {
 		if !strings.Contains(output, want) {

@@ -1,17 +1,18 @@
 package backend
 
 import (
+	"bytes"
 	"fmt"
 	"image"
 	"strings"
 
+	"github.com/charmbracelet/x/ansi/sixel"
 	"golang.org/x/image/draw"
 )
 
 const (
 	sixelCellWidth  = 8
 	sixelCellHeight = 16
-	sixelColors     = 256
 )
 
 // Sixel renders images with the DEC Sixel graphics protocol. It assumes the
@@ -32,34 +33,21 @@ func (*Sixel) Render(img image.Image, area Area) (string, error) {
 	}
 
 	width, height := area.Cols*sixelCellWidth, area.Rows*sixelCellHeight
-	indexed, palette, used := sixelImage(img, width, height)
+	resized := image.NewNRGBA(image.Rect(0, 0, width, height))
+	draw.CatmullRom.Scale(resized, resized.Bounds(), img, img.Bounds(), draw.Over, nil)
+
+	var payload bytes.Buffer
+	if err := (&sixel.Encoder{}).Encode(&payload, resized); err != nil {
+		return "", fmt.Errorf("encode sixel image: %w", err)
+	}
 
 	var output strings.Builder
-	output.Grow(width * height / 2)
+	output.Grow(payload.Len() + 32)
 	// Save and restore the text cursor: a Sixel image remains at its placement
 	// while Bubble Tea continues to own the text UI cursor.
 	output.WriteString("\x1b7")
-	fmt.Fprintf(&output, "\x1b[%d;%dH\x1bP0;0;0q\"1;1;%d;%d", area.Y, area.X, width, height)
-	for index, color := range palette {
-		if !used[index] {
-			continue
-		}
-		fmt.Fprintf(&output, "#%d;2;%d;%d;%d", index, color.r, color.g, color.b)
-	}
-
-	for y := 0; y < height; y += 6 {
-		for index := range palette {
-			if !used[index] {
-				continue
-			}
-			line := sixelLine(indexed, width, height, y, int16(index))
-			if line == "" {
-				continue
-			}
-			fmt.Fprintf(&output, "#%d%s$", index, line)
-		}
-		output.WriteByte('-')
-	}
+	fmt.Fprintf(&output, "\x1b[%d;%dH\x1bP0;1q", area.Y, area.X)
+	output.Write(payload.Bytes())
 	output.WriteString("\x1b\\\x1b8")
 	return output.String(), nil
 }
@@ -87,77 +75,6 @@ func (*Sixel) Clear(area Area) string {
 		}
 	}
 	output.WriteString("\x1b\\\x1b8")
-	return output.String()
-}
-
-type sixelColor struct{ r, g, b int }
-
-func sixelImage(source image.Image, width, height int) ([]int16, []sixelColor, []bool) {
-	resized := image.NewNRGBA(image.Rect(0, 0, width, height))
-	draw.CatmullRom.Scale(resized, resized.Bounds(), source, source.Bounds(), draw.Over, nil)
-
-	indexed := make([]int16, width*height)
-	used := make([]bool, sixelColors)
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
-			pixel := resized.NRGBAAt(x, y)
-			if pixel.A == 0 {
-				indexed[y*width+x] = -1
-				continue
-			}
-			index := sixelIndex(pixel.R, pixel.G, pixel.B)
-			indexed[y*width+x] = int16(index)
-			used[index] = true
-		}
-	}
-
-	palette := make([]sixelColor, sixelColors)
-	for index := range palette {
-		palette[index] = sixelPalette(uint8(index))
-	}
-	return indexed, palette, used
-}
-
-func sixelIndex(r, g, b uint8) uint8 {
-	return (r>>5)<<5 | (g>>5)<<2 | b>>6
-}
-
-func sixelPalette(index uint8) sixelColor {
-	r := int(index>>5) * 100 / 7
-	g := int((index>>2)&7) * 100 / 7
-	b := int(index&3) * 100 / 3
-	return sixelColor{r: r, g: g, b: b}
-}
-
-func sixelLine(indexed []int16, width, height, top int, color int16) string {
-	values := make([]byte, width)
-	hasPixel := false
-	for x := range values {
-		for bit := 0; bit < 6 && top+bit < height; bit++ {
-			if indexed[(top+bit)*width+x] == color {
-				values[x] |= 1 << bit
-				hasPixel = true
-			}
-		}
-		values[x] += '?'
-	}
-	if !hasPixel {
-		return ""
-	}
-
-	var output strings.Builder
-	for start := 0; start < len(values); {
-		end := start + 1
-		for end < len(values) && values[end] == values[start] {
-			end++
-		}
-		if count := end - start; count > 3 {
-			writeSixelRepeat(&output, count, values[start])
-		} else {
-			output.WriteString(string(values[start:end]))
-		}
-		start = end
-	}
 	return output.String()
 }
 
