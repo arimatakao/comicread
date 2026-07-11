@@ -16,7 +16,7 @@ var ukMessages = map[string]string{
 
 	FilepickerHeader:      "comicread — оберіть розділ\n%s\n\n",
 	FilepickerNoEntries:   "  (немає підтримуваних елементів)\n",
-	FilepickerHelp:        "\n↑/↓ рух  ← батьківська тека  → відкрити теку  enter відкрити файл  s обрати виділену теку  q вихід\n",
+	FilepickerHelp:        "\n↑/↓ рух  |  ← батьківська тека  |  → відкрити теку  |  enter відкрити файл  |  s обрати виділену теку  |  q вихід\n",
 	FilepickerWindowTitle: "comicread — вибір файлу",
 
 	FilepickerErrResolveDir: "не вдалося визначити теку %q: %w",

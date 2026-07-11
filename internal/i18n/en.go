@@ -16,7 +16,7 @@ var enMessages = map[string]string{
 
 	FilepickerHeader:      "comicread — select a chapter\n%s\n\n",
 	FilepickerNoEntries:   "  (no supported entries)\n",
-	FilepickerHelp:        "\n↑/↓ move  ← parent dir  → enter dir  enter open file  s select highlighted directory  q quit\n",
+	FilepickerHelp:        "\n↑/↓ move  |  ← parent dir  |  → enter dir  |  enter open file  |  s select highlighted directory  |  q quit\n",
 	FilepickerWindowTitle: "comicread — pick a file",
 
 	FilepickerErrResolveDir: "resolve directory %q: %w",
