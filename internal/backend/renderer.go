@@ -27,8 +27,10 @@ func NewRenderer(protocol string) (Renderer, error) {
 		return NewIterm(), nil
 	case "ascii", "ansi":
 		return NewASCII(), nil
+	case "dots":
+		return NewDots(), nil
 	default:
-		return nil, fmt.Errorf("unsupported graphics protocol %q (want auto, ascii, kitty, sixel, or iterm2)", protocol)
+		return nil, fmt.Errorf("unsupported graphics protocol %q (want auto, ascii, dots, kitty, sixel, or iterm2)", protocol)
 	}
 }
 

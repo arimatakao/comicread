@@ -31,6 +31,6 @@ var enMessages = map[string]string{
 	"cli.err.no_pages":         "chapter contains no readable image pages",
 	"cli.err.inspect_input":    "inspect input %q: %w",
 	"cli.err.unsupported_file": "unsupported file %q: supported formats are CBZ, PDF, EPUB, or an image directory",
-	"cli.flag.graphics_usage":  "renderer: auto, ascii, kitty, sixel, or iterm2",
-	"cli.usage":                "usage: comicread [--graphics auto|ascii|kitty|sixel|iterm2] [file.cbz|file.pdf|file.epub|image-directory]",
+	"cli.flag.graphics_usage":  "renderer: auto, ascii, dots, kitty, sixel, or iterm2",
+	"cli.usage":                "usage: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [file.cbz|file.pdf|file.epub|image-directory]",
 }

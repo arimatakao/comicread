@@ -7,6 +7,7 @@ require (
 	github.com/BourgeoisBear/rasterm v1.1.2
 	github.com/arimatakao/comicfile v1.0.2
 	github.com/fandasy/ASCIIimage/v2 v2.2.8
+	github.com/imjasonh/dots v0.0.0-20260521180724-9419fd6aaca0
 	golang.org/x/image v0.41.0
 )
 
