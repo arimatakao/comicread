@@ -38,3 +38,18 @@ Supported formats: CBZ, image-based PDF files, image-based EPUB files, and direc
 
 PDF pages must contain one embedded raster image per page. EPUB pages must
 reference their page images through the EPUB spine.
+
+## Dependency licenses
+
+The main direct dependencies are distributed under permissive licenses:
+
+- [Bubble Tea v2](https://github.com/charmbracelet/bubbletea) — MIT
+- [rasterm](https://github.com/BourgeoisBear/rasterm) — MIT
+- [comicfile](https://github.com/arimatakao/comicfile) — MIT
+- [ASCIIimage v2](https://github.com/fandasy/ASCIIimage) — MIT
+- [dots](https://github.com/imjasonh/dots) — Apache License 2.0
+- [golang.org/x/image](https://pkg.go.dev/golang.org/x/image) — BSD-style (Go Authors)
+
+See the `LICENSE` file bundled with each dependency version in the Go module
+cache for its full license text. Transitive dependencies may have their own
+license terms.
