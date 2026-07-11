@@ -6,9 +6,9 @@ import (
 	"strings"
 )
 
-// NewRenderer returns the requested graphics renderer. The auto setting keeps
-// Kitty as the default and selects iTerm2 or Sixel when the terminal identifies
-// itself as supporting one of those protocols.
+// NewRenderer returns the requested renderer. The auto setting keeps Kitty as
+// the default and selects iTerm2 or Sixel when the terminal identifies itself
+// as supporting one of those protocols.
 func NewRenderer(protocol string) (Renderer, error) {
 	switch strings.ToLower(strings.TrimSpace(protocol)) {
 	case "", "auto":
@@ -25,8 +25,10 @@ func NewRenderer(protocol string) (Renderer, error) {
 		return NewSixel(), nil
 	case "iterm", "iterm2":
 		return NewIterm(), nil
+	case "ascii", "ansi":
+		return NewASCII(), nil
 	default:
-		return nil, fmt.Errorf("unsupported graphics protocol %q (want auto, kitty, sixel, or iterm2)", protocol)
+		return nil, fmt.Errorf("unsupported graphics protocol %q (want auto, ascii, kitty, sixel, or iterm2)", protocol)
 	}
 }
 

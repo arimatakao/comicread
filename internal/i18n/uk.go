@@ -31,6 +31,6 @@ var ukMessages = map[string]string{
 	"cli.err.no_pages":         "розділ не містить придатних для читання сторінок",
 	"cli.err.inspect_input":    "не вдалося перевірити вхідні дані %q: %w",
 	"cli.err.unsupported_file": "непідтримуваний файл %q: підтримувані формати — CBZ, PDF, EPUB або тека із зображеннями",
-	"cli.flag.graphics_usage":  "графічний протокол: auto, kitty, sixel або iterm2",
-	"cli.usage":                "використання: comicread [--graphics auto|kitty|sixel|iterm2] [файл.cbz|файл.pdf|файл.epub|тека-із-зображеннями]",
+	"cli.flag.graphics_usage":  "рендерер: auto, ascii, kitty, sixel або iterm2",
+	"cli.usage":                "використання: comicread [--graphics auto|ascii|kitty|sixel|iterm2] [файл.cbz|файл.pdf|файл.epub|тека-із-зображеннями]",
 }

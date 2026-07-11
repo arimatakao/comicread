@@ -6,6 +6,7 @@ require (
 	charm.land/bubbletea/v2 v2.0.8
 	github.com/BourgeoisBear/rasterm v1.1.2
 	github.com/arimatakao/comicfile v1.0.2
+	github.com/fandasy/ASCIIimage/v2 v2.2.8
 	golang.org/x/image v0.41.0
 )
 
