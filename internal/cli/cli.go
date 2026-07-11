@@ -34,16 +34,17 @@ func (e *usageError) Unwrap() error        { return e.err }
 func (e *usageError) Is(target error) bool { return target == ErrUsage }
 
 func Run(args []string) error {
-	graphics, path, version, err := parseArgs(args)
+	options, err := parseOptions(args)
 	if err != nil {
 		return err
 	}
 
-	if version {
+	if options.version {
 		fmt.Println(Version)
 		return nil
 	}
 
+	path := options.path
 	if path == "" {
 		cwd, err := os.Getwd()
 		if err != nil {
@@ -69,12 +70,12 @@ func Run(args []string) error {
 		return err
 	}
 
-	renderer, err := backend.NewRenderer(graphics)
+	renderer, err := backend.NewRenderer(options.graphics)
 	if err != nil {
 		return err
 	}
 
-	model := reader.New(filepath.Base(path), chapter, renderer)
+	model := reader.NewWithBookView(filepath.Base(path), chapter, renderer, options.bookView)
 	program := tea.NewProgram(model)
 	if _, err := program.Run(); err != nil {
 		return fmt.Errorf(i18n.T(i18n.CLIErrRunTUI), err)
@@ -84,28 +85,72 @@ func Run(args []string) error {
 }
 
 func parseArgs(args []string) (graphics, path string, version bool, err error) {
+	options, err := parseOptions(args)
+	return options.graphics, options.path, options.version, err
+}
+
+type options struct {
+	graphics string
+	path     string
+	version  bool
+	bookView reader.ViewMode
+}
+
+func parseOptions(args []string) (options, error) {
 	flags := flag.NewFlagSet("comicread", flag.ContinueOnError)
 	flags.SetOutput(io.Discard)
 	graphicsFlag := flags.String("graphics", "auto", i18n.T(i18n.CLIFlagGraphicsUsage))
 	versionFlag := flags.Bool("version", false, i18n.T(i18n.CLIFlagVersionUsage))
+	bookViewFlag := flags.Bool("book-view", false, i18n.T(i18n.CLIFlagBookViewUsage))
+	rightBookViewFlag := flags.Bool("right-book-view", false, i18n.T(i18n.CLIFlagRightBookViewUsage))
+	circleBookViewFlag := flags.Bool("circle-book-view", false, i18n.T(i18n.CLIFlagCircleBookViewUsage))
+	rightCircleBookViewFlag := flags.Bool("right-circle-book-view", false, i18n.T(i18n.CLIFlagRightCircleBookViewUsage))
 	flags.BoolVar(versionFlag, "v", false, i18n.T(i18n.CLIFlagVersionUsage))
 	if err := flags.Parse(args); err != nil {
 		if errors.Is(err, flag.ErrHelp) {
 			fmt.Println(i18n.T(i18n.CLIUsageFull))
-			return "", "", false, flag.ErrHelp
+			return options{}, flag.ErrHelp
 		}
-		return "", "", false, &usageError{fmt.Errorf(i18n.T(i18n.CLIErrParseArgs), err)}
+		return options{}, &usageError{fmt.Errorf(i18n.T(i18n.CLIErrParseArgs), err)}
+	}
+	bookView, err := selectedBookView(*bookViewFlag, *rightBookViewFlag, *circleBookViewFlag, *rightCircleBookViewFlag)
+	if err != nil {
+		return options{}, &usageError{err}
 	}
 	if *versionFlag {
-		return "", "", true, nil
+		return options{version: true}, nil
 	}
 	switch flags.NArg() {
 	case 0:
-		return *graphicsFlag, "", false, nil
+		return options{graphics: *graphicsFlag, bookView: bookView}, nil
 	case 1:
-		return *graphicsFlag, flags.Arg(0), false, nil
+		return options{graphics: *graphicsFlag, path: flags.Arg(0), bookView: bookView}, nil
 	default:
-		return "", "", false, &usageError{errors.New(i18n.T(i18n.CLIUsage))}
+		return options{}, &usageError{errors.New(i18n.T(i18n.CLIUsage))}
+	}
+}
+
+func selectedBookView(book, rightBook, circle, rightCircle bool) (reader.ViewMode, error) {
+	selected := 0
+	for _, enabled := range []bool{book, rightBook, circle, rightCircle} {
+		if enabled {
+			selected++
+		}
+	}
+	if selected > 1 {
+		return reader.SinglePageView, errors.New(i18n.T(i18n.CLIErrMultipleBookViews))
+	}
+	switch {
+	case book:
+		return reader.BookView, nil
+	case rightBook:
+		return reader.RightBookView, nil
+	case circle:
+		return reader.CircleBookView, nil
+	case rightCircle:
+		return reader.RightCircleBookView, nil
+	default:
+		return reader.SinglePageView, nil
 	}
 }
 

@@ -28,7 +28,7 @@ func (m Model) repaintText() string {
 }
 
 func (m Model) header() string {
-	page := i18n.T(i18n.ReaderViewPages, m.page+1, m.chapter.TotalPages())
+	page := m.pageLabel()
 	pageWidth := len([]rune(page))
 	if pageWidth > m.width {
 		return fitLine(page, m.width)
@@ -47,6 +47,26 @@ func (m Model) header() string {
 	}
 
 	return strings.Repeat(" ", pageStart) + page + strings.Repeat(" ", statusStart-pageStart-pageWidth) + status
+}
+
+func (m Model) pageLabel() string {
+	slots := m.pageSlots()
+	first, last := -1, -1
+	for _, page := range slots {
+		if page < 0 {
+			continue
+		}
+		if first < 0 || page < first {
+			first = page
+		}
+		if last < 0 || page > last {
+			last = page
+		}
+	}
+	if first == last {
+		return i18n.T(i18n.ReaderViewPages, first+1, m.chapter.TotalPages())
+	}
+	return i18n.T(i18n.ReaderViewPageRange, first+1, last+1, m.chapter.TotalPages())
 }
 
 func fitLine(value string, width int) string {

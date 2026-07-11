@@ -11,10 +11,12 @@ type Model struct {
 	title         string
 	chapter       comicfile.ContainerReader
 	backend       backend.Renderer
+	bookView      ViewMode
 	page          int
 	width         int
 	height        int
 	area          backend.Area
+	pageAreas     [2]backend.Area
 	displayedArea backend.Area
 	requestID     uint64
 	layoutID      uint64
@@ -27,12 +29,18 @@ type Model struct {
 }
 
 func New(title string, chapter comicfile.ContainerReader, renderer backend.Renderer) Model {
+	return NewWithBookView(title, chapter, renderer, SinglePageView)
+}
+
+// NewWithBookView creates a reader using the requested page layout.
+func NewWithBookView(title string, chapter comicfile.ContainerReader, renderer backend.Renderer, bookView ViewMode) Model {
 	return Model{
-		title:   title,
-		chapter: chapter,
-		backend: renderer,
-		zoom:    100,
-		status:  i18n.T(i18n.ReaderStatusWaitingTerminalSize),
+		title:    title,
+		chapter:  chapter,
+		backend:  renderer,
+		bookView: bookView,
+		zoom:     100,
+		status:   i18n.T(i18n.ReaderStatusWaitingTerminalSize),
 	}
 }
 

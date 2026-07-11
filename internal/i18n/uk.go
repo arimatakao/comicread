@@ -12,6 +12,7 @@ var ukMessages = map[string]string{
 	ReaderViewTerminalTooSmall: "comicread: вікно термінала замале",
 	ReaderViewWindowTitle:      "comicread — %s",
 	ReaderViewPages:            "сторінки %d/%d",
+	ReaderViewPageRange:        "сторінки %d-%d/%d",
 	ReaderViewRendering:        "рендеринг",
 
 	FilepickerHeader:      "comicread — оберіть розділ\n%s\n\n",
@@ -26,24 +27,34 @@ var ukMessages = map[string]string{
 	LoadingViewOpening:     "відкриваю %s…",
 	LoadingViewWindowTitle: "comicread — відкриття",
 
-	CLIErrGetWorkingDir:   "не вдалося отримати робочу теку: %w",
-	CLIErrPickFile:        "не вдалося обрати файл: %w",
-	CLIErrRunTUI:          "помилка запуску TUI: %w",
-	CLIErrParseArgs:       "помилка розбору аргументів: %w",
-	CLIErrOpenChapter:     "не вдалося відкрити розділ: %w",
-	CLIErrNoPages:         "розділ не містить придатних для читання сторінок",
-	CLIErrInspectInput:    "не вдалося перевірити вхідні дані %q: %w",
-	CLIErrUnsupportedFile: "непідтримуваний файл %q: підтримувані формати — CBZ, PDF, EPUB або тека із зображеннями",
-	CLIFlagGraphicsUsage:  "рендерер: auto, ascii, dots, kitty, sixel або iterm2",
-	CLIFlagVersionUsage:   "вивести версію та завершити роботу",
-	CLIHelpHint:           "виконайте 'comicread --help' для довідки",
-	CLIUsage:              "використання: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [файл.cbz|файл.pdf|файл.epub|тека-із-зображеннями]",
+	CLIErrGetWorkingDir:             "не вдалося отримати робочу теку: %w",
+	CLIErrPickFile:                  "не вдалося обрати файл: %w",
+	CLIErrRunTUI:                    "помилка запуску TUI: %w",
+	CLIErrParseArgs:                 "помилка розбору аргументів: %w",
+	CLIErrOpenChapter:               "не вдалося відкрити розділ: %w",
+	CLIErrNoPages:                   "розділ не містить придатних для читання сторінок",
+	CLIErrInspectInput:              "не вдалося перевірити вхідні дані %q: %w",
+	CLIErrUnsupportedFile:           "непідтримуваний файл %q: підтримувані формати — CBZ, PDF, EPUB або тека із зображеннями",
+	CLIFlagGraphicsUsage:            "рендерер: auto, ascii, dots, kitty, sixel або iterm2",
+	CLIFlagVersionUsage:             "вивести версію та завершити роботу",
+	CLIFlagBookViewUsage:            "показувати сторінки парами зліва направо",
+	CLIFlagRightBookViewUsage:       "показувати сторінки парами справа наліво",
+	CLIFlagCircleBookViewUsage:      "показувати перекривні пари сторінок зліва направо",
+	CLIFlagRightCircleBookViewUsage: "показувати перекривні пари сторінок справа наліво",
+	CLIErrMultipleBookViews:         "можна вказати лише один режим книжкового перегляду",
+	CLIHelpHint:                     "виконайте 'comicread --help' для довідки",
+	CLIUsage:                        "використання: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [--book-view|--right-book-view|--circle-book-view|--right-circle-book-view] [файл.cbz|файл.pdf|файл.epub|тека-із-зображеннями]",
 	CLIUsageFull: `comicread - мінімалістична манга-читалка для термінала
 
-використання: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [файл.cbz|файл.pdf|файл.epub|тека-із-зображеннями]
+використання: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [--book-view|--right-book-view|--circle-book-view|--right-circle-book-view] [файл.cbz|файл.pdf|файл.epub|тека-із-зображеннями]
 
 опції:
   --graphics string   рендерер: auto, ascii, dots, kitty, sixel або iterm2 (за замовчуванням "auto")
+  --book-view         показувати сторінки парами зліва направо
+  --right-book-view   показувати сторінки парами справа наліво
+  --circle-book-view  показувати перекривні пари сторінок зліва направо
+  --right-circle-book-view
+                      показувати перекривні пари сторінок справа наліво
   -v, --version       вивести версію та завершити роботу
   -h, --help          показати цю довідку
 

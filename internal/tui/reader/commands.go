@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/draw"
 	"math"
+	"strings"
 	"time"
 
 	tea "charm.land/bubbletea/v2"
@@ -30,27 +31,37 @@ func (m *Model) renderPage() tea.Cmd {
 	m.requestID++
 	requestID := m.requestID
 	page := m.page
+	pages := m.pageSlots()
 	chapter := m.chapter
 	renderer := m.backend
 	zoom := m.zoom
 	scroll := m.scroll
-	area := m.zoomedArea()
+	areas := m.pageAreas
+	area := m.area
 	m.rendering = true
 	m.renderError = nil
 
 	return func() tea.Msg {
-		img, err := chapter.Page(page)
-		if err != nil {
-			return pageRenderedMsg{requestID: requestID, page: page, err: err}
+		var output strings.Builder
+		for slot, pageIndex := range pages {
+			if pageIndex < 0 {
+				continue
+			}
+			img, err := chapter.Page(pageIndex)
+			if err != nil {
+				return pageRenderedMsg{requestID: requestID, page: page, err: err}
+			}
+			rendered, err := renderer.Render(zoomedImage(img, zoom, scroll), areas[slot])
+			if err != nil {
+				return pageRenderedMsg{requestID: requestID, page: page, err: err}
+			}
+			output.WriteString(rendered)
 		}
-
-		output, err := renderer.Render(zoomedImage(img, zoom, scroll), area)
 		return pageRenderedMsg{
 			requestID: requestID,
 			page:      page,
 			area:      area,
-			output:    output,
-			err:       err,
+			output:    output.String(),
 		}
 	}
 }

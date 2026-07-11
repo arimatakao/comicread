@@ -11,7 +11,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
-		m.area = imageArea(msg.Width, msg.Height, m.currentPageAspect())
+		m.updateLayout()
 		if m.area.Cols < 1 || m.area.Rows < 1 {
 			m.layoutPending = false
 			m.status = i18n.T(i18n.ReaderStatusTerminalTooSmall)
@@ -35,11 +35,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case isZoomInKey(msg):
 			if m.zoomIn() {
+				m.updateLayout()
 				return m, m.renderPage()
 			}
 
 		case isZoomOutKey(msg):
 			if m.zoomOut() {
+				m.updateLayout()
 				return m, m.renderPage()
 			}
 
@@ -55,14 +57,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case isNextKey(key):
 			if m.nextPage() {
-				m.area = imageArea(m.width, m.height, m.currentPageAspect())
+				m.updateLayout()
 				return m, m.renderPage()
 			}
 			m.status = i18n.T(i18n.ReaderStatusLastPage)
 
 		case isPreviousKey(key):
 			if m.previousPage() {
-				m.area = imageArea(m.width, m.height, m.currentPageAspect())
+				m.updateLayout()
 				return m, m.renderPage()
 			}
 			m.status = i18n.T(i18n.ReaderStatusFirstPage)
@@ -83,9 +85,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.status = ""
 		oldArea := m.displayedArea
 		m.displayedArea = msg.area
-		if oldArea.Cols < 1 || oldArea.Rows < 1 {
-			return m, tea.Raw(msg.output)
-		}
 		return m, m.clearAndRender(oldArea, msg.output)
 	}
 
@@ -103,14 +102,14 @@ func (m Model) clearAndRepaint(area backend.Area) tea.Cmd {
 func (m Model) clearAndRender(area backend.Area, output string) tea.Cmd {
 	clear := tea.Raw(m.backend.Clear(area))
 	image := tea.Raw(output)
-	if m.backend.Name() != "iterm2" {
+	if m.backend.Name() != "iterm2" || area.Cols < 1 || area.Rows < 1 {
 		return tea.Sequence(clear, image)
 	}
 	return tea.Sequence(clear, tea.Raw(m.repaintText()), image)
 }
 
 func (m *Model) nextPage() bool {
-	if m.page+1 >= m.chapter.TotalPages() {
+	if !m.canNextPage() {
 		return false
 	}
 	m.page++
@@ -175,11 +174,7 @@ func (m *Model) scrollUp() bool {
 }
 
 func (m Model) currentPageAspect() float64 {
-	img, err := m.chapter.Page(m.page)
-	if err != nil || img.Bounds().Dy() == 0 {
-		return 1
-	}
-	return float64(img.Bounds().Dx()) / float64(img.Bounds().Dy())
+	return m.pageAspect(m.pageSlots()[0])
 }
 
 func imageArea(width, height int, imageAspect float64) backend.Area {
