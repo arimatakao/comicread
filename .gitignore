@@ -1,2 +1,9 @@
 .vscode
 bin
+
+*.cbz
+*.epub
+*.pdf
+*.png
+*.jpeg
+*.jpg
