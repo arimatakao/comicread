@@ -1,0 +1,34 @@
+package tui
+
+import (
+	tea "charm.land/bubbletea/v2"
+	"github.com/arimatakao/comicfile"
+	"github.com/arimatakao/comicread/internal/backend"
+)
+
+type Model struct {
+	title       string
+	chapter     comicfile.ContainerReader
+	backend     backend.Renderer
+	page        int
+	width       int
+	height      int
+	area        backend.Area
+	requestID   uint64
+	rendering   bool
+	status      string
+	renderError error
+}
+
+func New(title string, chapter comicfile.ContainerReader, renderer backend.Renderer) Model {
+	return Model{
+		title:   title,
+		chapter: chapter,
+		backend: renderer,
+		status:  "waiting for terminal size",
+	}
+}
+
+func (m Model) Init() tea.Cmd {
+	return nil
+}
