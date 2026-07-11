@@ -52,7 +52,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 
-		m.status = fmt.Sprintf("page %d/%d", m.page+1, m.chapter.TotalPages())
+		m.status = ""
 		oldArea := m.displayedArea
 		m.displayedArea = msg.area
 		return m, tea.Sequence(
