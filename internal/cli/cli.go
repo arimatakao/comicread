@@ -17,6 +17,17 @@ import (
 	"github.com/arimatakao/comicread/internal/tui/reader"
 )
 
+// ErrUsage marks errors caused by invalid command-line arguments, as opposed
+// to runtime failures (missing files, decode errors, etc). Callers can check
+// for it with errors.Is.
+var ErrUsage = errors.New("usage error")
+
+type usageError struct{ err error }
+
+func (e *usageError) Error() string        { return e.err.Error() }
+func (e *usageError) Unwrap() error        { return e.err }
+func (e *usageError) Is(target error) bool { return target == ErrUsage }
+
 func Run(args []string) error {
 	graphics, path, err := parseArgs(args)
 	if err != nil {
@@ -65,7 +76,11 @@ func parseArgs(args []string) (graphics, path string, err error) {
 	flags.SetOutput(io.Discard)
 	graphicsFlag := flags.String("graphics", "auto", i18n.T("cli.flag.graphics_usage"))
 	if err := flags.Parse(args); err != nil {
-		return "", "", fmt.Errorf(i18n.T("cli.err.parse_args"), err)
+		if errors.Is(err, flag.ErrHelp) {
+			fmt.Println(i18n.T("cli.usage_full"))
+			return "", "", flag.ErrHelp
+		}
+		return "", "", &usageError{fmt.Errorf(i18n.T("cli.err.parse_args"), err)}
 	}
 	switch flags.NArg() {
 	case 0:
@@ -73,7 +88,7 @@ func parseArgs(args []string) (graphics, path string, err error) {
 	case 1:
 		return *graphicsFlag, flags.Arg(0), nil
 	default:
-		return "", "", errors.New(i18n.T("cli.usage"))
+		return "", "", &usageError{errors.New(i18n.T("cli.usage"))}
 	}
 }
 

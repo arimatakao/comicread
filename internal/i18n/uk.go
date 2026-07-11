@@ -32,5 +32,18 @@ var ukMessages = map[string]string{
 	"cli.err.inspect_input":    "не вдалося перевірити вхідні дані %q: %w",
 	"cli.err.unsupported_file": "непідтримуваний файл %q: підтримувані формати — CBZ, PDF, EPUB або тека із зображеннями",
 	"cli.flag.graphics_usage":  "рендерер: auto, ascii, dots, kitty, sixel або iterm2",
+	"cli.help_hint":            "виконайте 'comicread --help' для довідки",
 	"cli.usage":                "використання: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [файл.cbz|файл.pdf|файл.epub|тека-із-зображеннями]",
+	"cli.usage_full": `comicread - мінімалістична манга-читалка для термінала
+
+використання: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [файл.cbz|файл.pdf|файл.epub|тека-із-зображеннями]
+
+опції:
+  --graphics string   рендерер: auto, ascii, dots, kitty, sixel або iterm2 (за замовчуванням "auto")
+  -h, --help          показати цю довідку
+
+Якщо файл або тека не вказані, відкриється інтерактивний вибір файлу в поточній теці.
+
+змінні середовища:
+  COMICREAD_LANG   мова повідомлень: en або uk (за замовчуванням "en")`,
 }

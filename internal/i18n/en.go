@@ -32,5 +32,18 @@ var enMessages = map[string]string{
 	"cli.err.inspect_input":    "inspect input %q: %w",
 	"cli.err.unsupported_file": "unsupported file %q: supported formats are CBZ, PDF, EPUB, or an image directory",
 	"cli.flag.graphics_usage":  "renderer: auto, ascii, dots, kitty, sixel, or iterm2",
+	"cli.help_hint":            "run 'comicread --help' for usage",
 	"cli.usage":                "usage: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [file.cbz|file.pdf|file.epub|image-directory]",
+	"cli.usage_full": `comicread - a minimal terminal manga reader
+
+usage: comicread [--graphics auto|ascii|dots|kitty|sixel|iterm2] [file.cbz|file.pdf|file.epub|image-directory]
+
+options:
+  --graphics string   renderer: auto, ascii, dots, kitty, sixel, or iterm2 (default "auto")
+  -h, --help          show this help message
+
+If no file or directory is given, an interactive file picker opens in the current directory.
+
+environment:
+  COMICREAD_LANG   message language: en or uk (default "en")`,
 }
