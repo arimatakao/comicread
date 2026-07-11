@@ -17,10 +17,11 @@ func TestKittyRender(t *testing.T) {
 	}
 
 	for _, want := range []string{
+		"\x1b7",
 		"\x1b[2;4H",
-		"\x1b_Ga=T,f=100,t=d,i=7,p=3,c=20,r=10",
+		"\x1b_Ga=T,f=100,t=d,m=1,c=20,r=10,i=7,p=3,z=1",
 		"m=0;",
-		"\x1b\\",
+		"\x1b8",
 	} {
 		if !strings.Contains(output, want) {
 			t.Errorf("Render() output does not contain %q", want)
@@ -41,7 +42,7 @@ func TestKittyClearTargetsOwnPlacement(t *testing.T) {
 	t.Parallel()
 
 	clear := (&Kitty{imageID: 7, placementID: 3}).Clear(Area{})
-	if !strings.Contains(clear, "a=d,d=I,i=7,p=3") {
+	if !strings.Contains(clear, "a=d,d=I,q=2,i=7,p=3") {
 		t.Fatalf("Clear() = %q", clear)
 	}
 }

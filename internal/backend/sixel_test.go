@@ -18,10 +18,11 @@ func TestSixelRender(t *testing.T) {
 	}
 
 	for _, want := range []string{
+		"\x1b7",
 		"\x1b[2;4H",
 		"\x1bP0;1q\"1;1;16;16",
-		";2;100;0;0",
 		"\x1b\\",
+		"\x1b8",
 	} {
 		if !strings.Contains(output, want) {
 			t.Errorf("Render() output does not contain %q", want)

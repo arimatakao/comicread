@@ -2,15 +2,12 @@ package backend
 
 import (
 	"bytes"
-	"encoding/base64"
 	"fmt"
 	"image"
-	"image/png"
 	"os"
-	"strings"
-)
 
-const kittyChunkSize = 4096
+	"github.com/BourgeoisBear/rasterm"
+)
 
 // Kitty renders images with the Kitty graphics protocol.
 type Kitty struct {
@@ -36,52 +33,29 @@ func (k *Kitty) Render(img image.Image, area Area) (string, error) {
 		return "", fmt.Errorf("invalid terminal area: %+v", area)
 	}
 
-	var pngData bytes.Buffer
-	if err := png.Encode(&pngData, img); err != nil {
-		return "", fmt.Errorf("encode PNG: %w", err)
+	var output bytes.Buffer
+	// rasterm places images at the current cursor position. Save and restore it
+	// so Bubble Tea keeps ownership of the text cursor.
+	fmt.Fprintf(&output, "\x1b7\x1b[%d;%dH", area.Y, area.X)
+	if err := rasterm.KittyWriteImage(&output, img, rasterm.KittyImgOpts{
+		DstCols:     uint32(area.Cols),
+		DstRows:     uint32(area.Rows),
+		ZIndex:      1,
+		ImageId:     k.imageID,
+		PlacementId: k.placementID,
+	}); err != nil {
+		return "", fmt.Errorf("encode Kitty image: %w", err)
 	}
-
-	encoded := base64.StdEncoding.EncodeToString(pngData.Bytes())
-	var output strings.Builder
-	output.Grow(len(encoded) + len(encoded)/kittyChunkSize*32 + 128)
-
-	// Kitty places an image at the cursor position when the final chunk arrives.
-	// Move there first and ask Kitty not to move the cursor after placement.
-	fmt.Fprintf(&output, "\x1b[%d;%dH", area.Y, area.X)
-
-	for offset := 0; offset < len(encoded); offset += kittyChunkSize {
-		end := min(offset+kittyChunkSize, len(encoded))
-		more := 0
-		if end < len(encoded) {
-			more = 1
-		}
-
-		if offset == 0 {
-			fmt.Fprintf(
-				&output,
-				"\x1b_Ga=T,f=100,t=d,i=%d,p=%d,c=%d,r=%d,z=1,C=1,q=2,m=%d;%s\x1b\\",
-				k.imageID,
-				k.placementID,
-				area.Cols,
-				area.Rows,
-				more,
-				encoded[offset:end],
-			)
-			continue
-		}
-
-		fmt.Fprintf(&output, "\x1b_Gm=%d,q=2;%s\x1b\\", more, encoded[offset:end])
-	}
+	output.WriteString("\x1b8")
 
 	return output.String(), nil
 }
 
 func (k *Kitty) Clear(Area) string {
-	return fmt.Sprintf(
-		"\x1b_Ga=d,d=I,i=%d,p=%d,q=2\x1b\\",
-		k.imageID,
-		k.placementID,
-	)
+	return rasterm.KittyImgOpts{
+		ImageId:     k.imageID,
+		PlacementId: k.placementID,
+	}.ToHeader("a=d", "d=I", "q=2") + "\x1b\\"
 }
 
 var _ Renderer = (*Kitty)(nil)

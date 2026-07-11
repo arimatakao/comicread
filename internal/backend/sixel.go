@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"fmt"
 	"image"
+	"image/color/palette"
+	stdraw "image/draw"
 	"strings"
 
-	"github.com/charmbracelet/x/ansi/sixel"
+	"github.com/BourgeoisBear/rasterm"
 	"golang.org/x/image/draw"
 )
 
@@ -36,8 +38,11 @@ func (*Sixel) Render(img image.Image, area Area) (string, error) {
 	resized := image.NewNRGBA(image.Rect(0, 0, width, height))
 	draw.CatmullRom.Scale(resized, resized.Bounds(), img, img.Bounds(), draw.Over, nil)
 
+	paletted := image.NewPaletted(resized.Bounds(), palette.Plan9)
+	stdraw.FloydSteinberg.Draw(paletted, paletted.Bounds(), resized, image.Point{})
+
 	var payload bytes.Buffer
-	if err := (&sixel.Encoder{}).Encode(&payload, resized); err != nil {
+	if err := rasterm.SixelWriteImage(&payload, paletted); err != nil {
 		return "", fmt.Errorf("encode sixel image: %w", err)
 	}
 
@@ -46,9 +51,9 @@ func (*Sixel) Render(img image.Image, area Area) (string, error) {
 	// Save and restore the text cursor: a Sixel image remains at its placement
 	// while Bubble Tea continues to own the text UI cursor.
 	output.WriteString("\x1b7")
-	fmt.Fprintf(&output, "\x1b[%d;%dH\x1bP0;1q", area.Y, area.X)
+	fmt.Fprintf(&output, "\x1b[%d;%dH", area.Y, area.X)
 	output.Write(payload.Bytes())
-	output.WriteString("\x1b\\\x1b8")
+	output.WriteString("\x1b8")
 	return output.String(), nil
 }
 
