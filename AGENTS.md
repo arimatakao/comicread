@@ -46,12 +46,14 @@ Key directories:
 
 `main.go` starts the application. Tests live beside the code they cover as `*_test.go`; `Makefile` writes the binary to `bin/`.
 
-```sh
-make build # write the executable to bin/comicread
-```
+## Guidelines
 
-## Coding Style & Naming Conventions
+DO NOT:
+- Update README.md
+- Add new external dependencies/packages
+- Update/add tests (*_test.go)
 
-Follow standard Go style and run `gofmt` on every changed `.go` file. Use tabs for indentation as emitted by `gofmt`; do not hand-align code. Keep package names short and lowercase (`cli`, `tui`, `backend`). Export only cross-package APIs and use Go-style names: `New`, `OpenChapter`, `TotalPages`; use concise unexported names such as `imageArea` or `validateInput` within a package.
+Do these only if the user explicitly asks for it.
 
-Keep terminal escape-sequence handling in `internal/backend`, and keep navigation and UI state in `internal/tui`. Return contextual errors rather than panicking for bad files or invalid rendering input.
+If any .go files were changed, run `go vet ./...` and `make build` to confirm the code compiles.
+
