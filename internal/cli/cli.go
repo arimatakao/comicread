@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -13,12 +14,12 @@ import (
 
 func Run(args []string) error {
 	if len(args) != 1 {
-		return fmt.Errorf("usage: comicread <file.cbz|file.pdf|file.epub>")
+		return fmt.Errorf("usage: comicread <file.cbz|file.pdf|file.epub|image-directory>")
 	}
 
 	path := args[0]
-	if !isSupportedFile(path) {
-		return fmt.Errorf("unsupported file %q: supported formats are CBZ, PDF, EPUB", path)
+	if err := validateInput(path); err != nil {
+		return err
 	}
 
 	chapter, err := openChapter(path)
@@ -53,4 +54,15 @@ func isSupportedFile(path string) bool {
 	default:
 		return false
 	}
+}
+
+func validateInput(path string) error {
+	info, err := os.Stat(path)
+	if err != nil {
+		return fmt.Errorf("inspect input %q: %w", path, err)
+	}
+	if info.IsDir() || isSupportedFile(path) {
+		return nil
+	}
+	return fmt.Errorf("unsupported file %q: supported formats are CBZ, PDF, EPUB, or an image directory", path)
 }
