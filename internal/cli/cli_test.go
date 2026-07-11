@@ -140,6 +140,18 @@ func TestIsSupportedFile(t *testing.T) {
 	}
 }
 
+func TestParseArgs(t *testing.T) {
+	t.Parallel()
+
+	graphics, path, err := parseArgs([]string{"--graphics", "sixel", "chapter.cbz"})
+	if err != nil {
+		t.Fatalf("parseArgs() error = %v", err)
+	}
+	if graphics != "sixel" || path != "chapter.cbz" {
+		t.Fatalf("parseArgs() = (%q, %q), want (sixel, chapter.cbz)", graphics, path)
+	}
+}
+
 func TestValidateInputRejectsUnsupportedFile(t *testing.T) {
 	t.Parallel()
 

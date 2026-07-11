@@ -13,5 +13,5 @@ type Area struct {
 type Renderer interface {
 	Name() string
 	Render(image.Image, Area) (string, error)
-	Clear() string
+	Clear(Area) string
 }

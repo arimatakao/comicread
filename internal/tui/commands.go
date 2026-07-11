@@ -31,6 +31,7 @@ func (m *Model) renderPage() tea.Cmd {
 		return pageRenderedMsg{
 			requestID: requestID,
 			page:      page,
+			area:      area,
 			output:    output,
 			err:       err,
 		}

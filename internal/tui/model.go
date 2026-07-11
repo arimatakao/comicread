@@ -7,17 +7,18 @@ import (
 )
 
 type Model struct {
-	title       string
-	chapter     comicfile.ContainerReader
-	backend     backend.Renderer
-	page        int
-	width       int
-	height      int
-	area        backend.Area
-	requestID   uint64
-	rendering   bool
-	status      string
-	renderError error
+	title         string
+	chapter       comicfile.ContainerReader
+	backend       backend.Renderer
+	page          int
+	width         int
+	height        int
+	area          backend.Area
+	displayedArea backend.Area
+	requestID     uint64
+	rendering     bool
+	status        string
+	renderError   error
 }
 
 func New(title string, chapter comicfile.ContainerReader, renderer backend.Renderer) Model {

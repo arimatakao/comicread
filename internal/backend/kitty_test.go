@@ -40,7 +40,7 @@ func TestKittyRenderRejectsInvalidArea(t *testing.T) {
 func TestKittyClearTargetsOwnPlacement(t *testing.T) {
 	t.Parallel()
 
-	clear := (&Kitty{imageID: 7, placementID: 3}).Clear()
+	clear := (&Kitty{imageID: 7, placementID: 3}).Clear(Area{})
 	if !strings.Contains(clear, "a=d,d=I,i=7,p=3") {
 		t.Fatalf("Clear() = %q", clear)
 	}

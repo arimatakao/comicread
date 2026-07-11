@@ -1,6 +1,6 @@
 # comicread
 
-The project is a minimal terminal manga reader written in Go. It opens CBZ, image-based PDF and EPUB files, or image directories, renders pages through the Kitty graphics protocol, and supports keyboard navigation.
+The project is a minimal terminal manga reader written in Go. It opens CBZ, image-based PDF and EPUB files, or image directories, renders pages through the Kitty or Sixel graphics protocol, and supports keyboard navigation.
 
 ## Project Structure & Module Organization
 
@@ -16,7 +16,11 @@ The project is a minimal terminal manga reader written in Go. It opens CBZ, imag
 │   ├── backend
 │   │   ├── backend.go
 │   │   ├── kitty.go
-│   │   └── kitty_test.go
+│   │   ├── kitty_test.go
+│   │   ├── renderer.go
+│   │   ├── renderer_test.go
+│   │   ├── sixel.go
+│   │   └── sixel_test.go
 │   ├── cli
 │   │   ├── cli.go
 │   │   └── cli_test.go
@@ -36,7 +40,7 @@ The project is a minimal terminal manga reader written in Go. It opens CBZ, imag
 Key directories:
 
 - `cmd/` — reserved for standalone executable commands; currently empty.
-- `internal/backend/` — terminal-rendering interfaces and the Kitty protocol implementation.
+- `internal/backend/` — terminal-rendering interfaces and the Kitty/Sixel protocol implementations.
 - `internal/cli/` — input-path validation and opening CBZ, PDF, EPUB, or image-directory chapters.
 - `internal/tui/` — the Bubble Tea model, key handling, navigation, and view rendering.
 

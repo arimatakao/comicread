@@ -1,7 +1,9 @@
 package cli
 
 import (
+	"flag"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,11 +15,11 @@ import (
 )
 
 func Run(args []string) error {
-	if len(args) != 1 {
-		return fmt.Errorf("usage: comicread <file.cbz|file.pdf|file.epub|image-directory>")
+	graphics, path, err := parseArgs(args)
+	if err != nil {
+		return err
 	}
 
-	path := args[0]
 	if err := validateInput(path); err != nil {
 		return err
 	}
@@ -27,13 +29,31 @@ func Run(args []string) error {
 		return err
 	}
 
-	model := tui.New(filepath.Base(path), chapter, backend.NewKitty())
+	renderer, err := backend.NewRenderer(graphics)
+	if err != nil {
+		return err
+	}
+
+	model := tui.New(filepath.Base(path), chapter, renderer)
 	program := tea.NewProgram(model)
 	if _, err := program.Run(); err != nil {
 		return fmt.Errorf("run TUI: %w", err)
 	}
 
 	return nil
+}
+
+func parseArgs(args []string) (graphics, path string, err error) {
+	flags := flag.NewFlagSet("comicread", flag.ContinueOnError)
+	flags.SetOutput(io.Discard)
+	graphicsFlag := flags.String("graphics", "auto", "graphics protocol: auto, kitty, or sixel")
+	if err := flags.Parse(args); err != nil {
+		return "", "", fmt.Errorf("parse arguments: %w", err)
+	}
+	if flags.NArg() != 1 {
+		return "", "", fmt.Errorf("usage: comicread [--graphics auto|kitty|sixel] <file.cbz|file.pdf|file.epub|image-directory>")
+	}
+	return *graphicsFlag, flags.Arg(0), nil
 }
 
 func openChapter(path string) (comicfile.ContainerReader, error) {

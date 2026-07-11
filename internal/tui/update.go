@@ -15,7 +15,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.area = imageArea(msg.Width, msg.Height, m.currentPageAspect())
 		if m.area.Cols < 1 || m.area.Rows < 1 {
 			m.status = "terminal window is too small"
-			return m, tea.Raw(m.backend.Clear())
+			return m, tea.Raw(m.backend.Clear(m.displayedArea))
 		}
 		return m, m.renderPage()
 
@@ -23,7 +23,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		key := msg.String()
 		switch {
 		case key == "q", key == "esc", key == "ctrl+c":
-			return m, tea.Sequence(tea.Raw(m.backend.Clear()), tea.Quit)
+			return m, tea.Sequence(tea.Raw(m.backend.Clear(m.displayedArea)), tea.Quit)
 
 		case isNextKey(key):
 			if m.nextPage() {
@@ -53,8 +53,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		m.status = fmt.Sprintf("page %d/%d", m.page+1, m.chapter.TotalPages())
+		oldArea := m.displayedArea
+		m.displayedArea = msg.area
 		return m, tea.Sequence(
-			tea.Raw(m.backend.Clear()),
+			tea.Raw(m.backend.Clear(oldArea)),
 			tea.Raw(msg.output),
 		)
 	}

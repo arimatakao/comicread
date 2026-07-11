@@ -23,7 +23,7 @@ func (fakeBackend) Name() string { return "fake" }
 func (fakeBackend) Render(image.Image, backend.Area) (string, error) {
 	return "rendered", nil
 }
-func (fakeBackend) Clear() string { return "clear" }
+func (fakeBackend) Clear(backend.Area) string { return "clear" }
 
 func TestNavigationBounds(t *testing.T) {
 	t.Parallel()

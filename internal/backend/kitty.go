@@ -76,7 +76,7 @@ func (k *Kitty) Render(img image.Image, area Area) (string, error) {
 	return output.String(), nil
 }
 
-func (k *Kitty) Clear() string {
+func (k *Kitty) Clear(Area) string {
 	return fmt.Sprintf(
 		"\x1b_Ga=d,d=I,i=%d,p=%d,q=2\x1b\\",
 		k.imageID,
