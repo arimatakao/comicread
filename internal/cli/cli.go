@@ -13,12 +13,12 @@ import (
 
 func Run(args []string) error {
 	if len(args) != 1 {
-		return fmt.Errorf("usage: comicread <file.cbz>")
+		return fmt.Errorf("usage: comicread <file.cbz|file.pdf|file.epub>")
 	}
 
 	path := args[0]
-	if !strings.EqualFold(filepath.Ext(path), ".cbz") {
-		return fmt.Errorf("unsupported file %q: only CBZ is available for now", path)
+	if !isSupportedFile(path) {
+		return fmt.Errorf("unsupported file %q: supported formats are CBZ, PDF, EPUB", path)
 	}
 
 	chapter, err := openChapter(path)
@@ -38,10 +38,19 @@ func Run(args []string) error {
 func openChapter(path string) (comicfile.ContainerReader, error) {
 	chapter, err := comicfile.OpenContainer(path)
 	if err != nil {
-		return nil, fmt.Errorf("open CBZ: %w", err)
+		return nil, fmt.Errorf("open chapter: %w", err)
 	}
 	if chapter.TotalPages() == 0 {
-		return nil, fmt.Errorf("CBZ contains no readable image pages")
+		return nil, fmt.Errorf("chapter contains no readable image pages")
 	}
 	return chapter, nil
+}
+
+func isSupportedFile(path string) bool {
+	switch strings.ToLower(filepath.Ext(path)) {
+	case ".cbz", ".pdf", ".epub":
+		return true
+	default:
+		return false
+	}
 }

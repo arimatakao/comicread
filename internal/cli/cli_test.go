@@ -2,6 +2,7 @@ package cli
 
 import (
 	"archive/zip"
+	"bytes"
 	"fmt"
 	"image"
 	"image/color"
@@ -9,6 +10,9 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/arimatakao/comicfile"
+	"github.com/arimatakao/comicfile/metadata"
 )
 
 func TestOpenChapter(t *testing.T) {
@@ -69,4 +73,62 @@ func TestOpenChapterRejectsEmptyCBZ(t *testing.T) {
 	if _, err := openChapter(path); err == nil {
 		t.Fatal("openChapter() error = nil, want empty chapter error")
 	}
+}
+
+func TestOpenChapterSupportedFormats(t *testing.T) {
+	for _, format := range []string{comicfile.CBZ_EXT, comicfile.PDF_EXT, comicfile.EPUB_EXT} {
+		t.Run(format, func(t *testing.T) {
+			path := createChapter(t, format)
+			chapter, err := openChapter(path)
+			if err != nil {
+				t.Fatalf("openChapter() error = %v", err)
+			}
+			if chapter.TotalPages() != 1 {
+				t.Fatalf("TotalPages() = %d, want 1", chapter.TotalPages())
+			}
+		})
+	}
+}
+
+func TestIsSupportedFile(t *testing.T) {
+	t.Parallel()
+
+	for _, test := range []struct {
+		path string
+		want bool
+	}{
+		{"chapter.cbz", true},
+		{"chapter.PDF", true},
+		{"chapter.epub", true},
+		{"chapter.zip", false},
+		{"chapter", false},
+	} {
+		if got := isSupportedFile(test.path); got != test.want {
+			t.Errorf("isSupportedFile(%q) = %v, want %v", test.path, got, test.want)
+		}
+	}
+}
+
+func createChapter(t *testing.T, format string) string {
+	t.Helper()
+
+	container, err := comicfile.NewContainer(format)
+	if err != nil {
+		t.Fatal(err)
+	}
+	page := image.NewRGBA(image.Rect(0, 0, 2, 3))
+	page.Set(0, 0, color.RGBA{R: 255, A: 255})
+	var encoded bytes.Buffer
+	if err := png.Encode(&encoded, page); err != nil {
+		t.Fatal(err)
+	}
+	if err := container.AddPage("png", encoded.Bytes()); err != nil {
+		t.Fatal(err)
+	}
+
+	dir := t.TempDir()
+	if err := container.WriteOnDiskAndClose(dir, "chapter", metadata.Metadata{}, ""); err != nil {
+		t.Fatal(err)
+	}
+	return filepath.Join(dir, "chapter."+format)
 }

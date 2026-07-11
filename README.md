@@ -2,7 +2,7 @@
 
 Minimal terminal manga reader written in Go.
 
-The current MVP opens CBZ files, renders pages with the Kitty graphics
+The current MVP opens CBZ, PDF, and EPUB files, renders pages with the Kitty graphics
 protocol, and supports forward/backward navigation.
 
 ## Requirements
@@ -22,4 +22,7 @@ Keys:
 - `left`, `h`, `backspace`, `k`, `PageUp`: previous page
 - `q`, `Esc`, `Ctrl+C`: quit
 
-Only CBZ is supported by this first version.
+Supported formats: CBZ, image-based PDF files, and image-based EPUB files.
+
+PDF pages must contain one embedded raster image per page. EPUB pages must
+reference their page images through the EPUB spine.
