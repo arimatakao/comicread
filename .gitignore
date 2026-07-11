@@ -1,6 +1,7 @@
 .vscode
 .codex
 .claude
+.env
 bin
 other
 

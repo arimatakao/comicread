@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -11,6 +12,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicfile"
 	"github.com/arimatakao/comicread/internal/backend"
+	"github.com/arimatakao/comicread/internal/i18n"
 	"github.com/arimatakao/comicread/internal/tui/filepicker"
 	"github.com/arimatakao/comicread/internal/tui/reader"
 )
@@ -24,11 +26,11 @@ func Run(args []string) error {
 	if path == "" {
 		cwd, err := os.Getwd()
 		if err != nil {
-			return fmt.Errorf("get working directory: %w", err)
+			return fmt.Errorf(i18n.T("cli.err.get_working_dir"), err)
 		}
 		path, err = filepicker.Pick(cwd)
 		if err != nil {
-			return fmt.Errorf("pick file: %w", err)
+			return fmt.Errorf(i18n.T("cli.err.pick_file"), err)
 		}
 		if path == "" {
 			return nil
@@ -52,7 +54,7 @@ func Run(args []string) error {
 	model := reader.New(filepath.Base(path), chapter, renderer)
 	program := tea.NewProgram(model)
 	if _, err := program.Run(); err != nil {
-		return fmt.Errorf("run TUI: %w", err)
+		return fmt.Errorf(i18n.T("cli.err.run_tui"), err)
 	}
 
 	return nil
@@ -61,9 +63,9 @@ func Run(args []string) error {
 func parseArgs(args []string) (graphics, path string, err error) {
 	flags := flag.NewFlagSet("comicread", flag.ContinueOnError)
 	flags.SetOutput(io.Discard)
-	graphicsFlag := flags.String("graphics", "auto", "graphics protocol: auto, kitty, sixel, or iterm2")
+	graphicsFlag := flags.String("graphics", "auto", i18n.T("cli.flag.graphics_usage"))
 	if err := flags.Parse(args); err != nil {
-		return "", "", fmt.Errorf("parse arguments: %w", err)
+		return "", "", fmt.Errorf(i18n.T("cli.err.parse_args"), err)
 	}
 	switch flags.NArg() {
 	case 0:
@@ -71,17 +73,17 @@ func parseArgs(args []string) (graphics, path string, err error) {
 	case 1:
 		return *graphicsFlag, flags.Arg(0), nil
 	default:
-		return "", "", fmt.Errorf("usage: comicread [--graphics auto|kitty|sixel|iterm2] [file.cbz|file.pdf|file.epub|image-directory]")
+		return "", "", errors.New(i18n.T("cli.usage"))
 	}
 }
 
 func openChapter(path string) (comicfile.ContainerReader, error) {
 	chapter, err := comicfile.OpenContainer(path)
 	if err != nil {
-		return nil, fmt.Errorf("open chapter: %w", err)
+		return nil, fmt.Errorf(i18n.T("cli.err.open_chapter"), err)
 	}
 	if chapter.TotalPages() == 0 {
-		return nil, fmt.Errorf("chapter contains no readable image pages")
+		return nil, errors.New(i18n.T("cli.err.no_pages"))
 	}
 	return chapter, nil
 }
@@ -98,10 +100,10 @@ func isSupportedFile(path string) bool {
 func validateInput(path string) error {
 	info, err := os.Stat(path)
 	if err != nil {
-		return fmt.Errorf("inspect input %q: %w", path, err)
+		return fmt.Errorf(i18n.T("cli.err.inspect_input"), path, err)
 	}
 	if info.IsDir() || isSupportedFile(path) {
 		return nil
 	}
-	return fmt.Errorf("unsupported file %q: supported formats are CBZ, PDF, EPUB, or an image directory", path)
+	return fmt.Errorf(i18n.T("cli.err.unsupported_file"), path)
 }

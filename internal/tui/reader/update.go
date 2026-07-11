@@ -1,10 +1,9 @@
 package reader
 
 import (
-	"fmt"
-
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicread/internal/backend"
+	"github.com/arimatakao/comicread/internal/i18n"
 )
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -14,7 +13,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.height = msg.Height
 		m.area = imageArea(msg.Width, msg.Height, m.currentPageAspect())
 		if m.area.Cols < 1 || m.area.Rows < 1 {
-			m.status = "terminal window is too small"
+			m.status = i18n.T("reader.status.terminal_too_small")
 			return m, tea.Raw(m.backend.Clear(m.displayedArea))
 		}
 		return m, m.renderPage()
@@ -50,14 +49,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.area = imageArea(m.width, m.height, m.currentPageAspect())
 				return m, m.renderPage()
 			}
-			m.status = "last page"
+			m.status = i18n.T("reader.status.last_page")
 
 		case isPreviousKey(key):
 			if m.previousPage() {
 				m.area = imageArea(m.width, m.height, m.currentPageAspect())
 				return m, m.renderPage()
 			}
-			m.status = "first page"
+			m.status = i18n.T("reader.status.first_page")
 		}
 
 	case pageRenderedMsg:
@@ -68,7 +67,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.rendering = false
 		if msg.err != nil {
 			m.renderError = msg.err
-			m.status = fmt.Sprintf("render error: %v", msg.err)
+			m.status = i18n.T("reader.status.render_error", msg.err)
 			return m, nil
 		}
 
@@ -110,7 +109,7 @@ const (
 
 func (m *Model) zoomIn() bool {
 	if m.zoom >= maxZoom {
-		m.status = "maximum zoom"
+		m.status = i18n.T("reader.status.maximum_zoom")
 		return false
 	}
 	m.zoom += zoomStep
@@ -120,7 +119,7 @@ func (m *Model) zoomIn() bool {
 
 func (m *Model) zoomOut() bool {
 	if m.zoom <= 100 {
-		m.status = "minimum zoom"
+		m.status = i18n.T("reader.status.minimum_zoom")
 		return false
 	}
 	m.zoom -= zoomStep

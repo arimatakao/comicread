@@ -15,6 +15,7 @@ The project is a minimal terminal manga reader written in Go. It opens CBZ, imag
 ├── internal
 │   ├── backend
 │   ├── cli
+│   ├── i18n
 │   └── tui
 ├── main.go
 ├── Makefile
@@ -26,6 +27,7 @@ Key directories:
 - `cmd/` — reserved for standalone executable commands; currently empty.
 - `internal/backend/` — terminal-rendering interfaces and terminal image processing protocol implementations.
 - `internal/cli/` — input-path validation and opening CBZ, PDF, EPUB, or image-directory chapters.
+- `internal/i18n/` — message translation for user-facing strings; language is selected via the `COMICREAD_LANG` environment variable.
 - `internal/tui/` — the Bubble Tea model, key handling, navigation, and view rendering.
 
 `main.go` starts the application. Tests live beside the code they cover as `*_test.go`; `Makefile` writes the binary to `bin/`.

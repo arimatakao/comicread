@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
+	"github.com/arimatakao/comicread/internal/i18n"
 )
 
 // Pick runs an interactive file picker rooted at root and returns the chosen
@@ -16,7 +17,7 @@ import (
 func Pick(root string) (string, error) {
 	abs, err := filepath.Abs(root)
 	if err != nil {
-		return "", fmt.Errorf("resolve directory %q: %w", root, err)
+		return "", fmt.Errorf(i18n.T("filepicker.err.resolve_dir"), root, err)
 	}
 
 	model, err := newModel(abs)
@@ -27,7 +28,7 @@ func Pick(root string) (string, error) {
 	program := tea.NewProgram(model)
 	finalModel, err := program.Run()
 	if err != nil {
-		return "", fmt.Errorf("run file picker: %w", err)
+		return "", fmt.Errorf(i18n.T("filepicker.err.run_picker"), err)
 	}
 
 	result := finalModel.(pickerModel)
@@ -60,7 +61,7 @@ func newModel(dir string) (pickerModel, error) {
 func (m *pickerModel) readDir() error {
 	dirEntries, err := os.ReadDir(m.dir)
 	if err != nil {
-		return fmt.Errorf("read directory %q: %w", m.dir, err)
+		return fmt.Errorf(i18n.T("filepicker.err.read_dir"), m.dir, err)
 	}
 
 	items := make([]entry, 0, len(dirEntries)+1)
@@ -171,10 +172,10 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m pickerModel) View() tea.View {
 	var b strings.Builder
-	fmt.Fprintf(&b, "comicread — select a chapter\n%s\n\n", m.dir)
+	fmt.Fprintf(&b, i18n.T("filepicker.header"), m.dir)
 
 	if len(m.entries) == 0 {
-		b.WriteString("  (no supported entries)\n")
+		b.WriteString(i18n.T("filepicker.no_entries"))
 	}
 	for i, e := range m.entries {
 		cursor := "  "
@@ -188,10 +189,10 @@ func (m pickerModel) View() tea.View {
 		fmt.Fprintf(&b, "%s%s\n", cursor, name)
 	}
 
-	b.WriteString("\n↑/↓ move  ← parent dir  → enter dir  enter open file  s select highlighted directory  q quit\n")
+	b.WriteString(i18n.T("filepicker.help"))
 
 	view := tea.NewView(b.String())
 	view.AltScreen = true
-	view.WindowTitle = "comicread — pick a file"
+	view.WindowTitle = i18n.T("filepicker.window_title")
 	return view
 }

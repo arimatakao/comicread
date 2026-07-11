@@ -1,28 +1,28 @@
 package reader
 
 import (
-	"fmt"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
+	"github.com/arimatakao/comicread/internal/i18n"
 )
 
 func (m Model) View() tea.View {
 	var content string
 	if m.width < 1 || m.height < 2 {
-		content = "comicread: terminal window is too small"
+		content = i18n.T("reader.view.terminal_too_small")
 	} else {
 		content = m.header() + strings.Repeat("\n", m.height-1)
 	}
 
 	view := tea.NewView(content)
 	view.AltScreen = true
-	view.WindowTitle = "comicread — " + m.title
+	view.WindowTitle = i18n.T("reader.view.window_title", m.title)
 	return view
 }
 
 func (m Model) header() string {
-	page := fmt.Sprintf("pages %d/%d", m.page+1, m.chapter.TotalPages())
+	page := i18n.T("reader.view.pages", m.page+1, m.chapter.TotalPages())
 	pageWidth := len([]rune(page))
 	if pageWidth > m.width {
 		return fitLine(page, m.width)
@@ -32,7 +32,7 @@ func (m Model) header() string {
 		return strings.Repeat(" ", (m.width-pageWidth)/2) + page
 	}
 
-	status := "rendering"
+	status := i18n.T("reader.view.rendering")
 	statusWidth := len([]rune(status))
 	pageStart := (m.width - pageWidth) / 2
 	statusStart := m.width - statusWidth

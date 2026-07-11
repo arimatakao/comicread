@@ -4,6 +4,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicfile"
 	"github.com/arimatakao/comicread/internal/backend"
+	"github.com/arimatakao/comicread/internal/i18n"
 )
 
 type Model struct {
@@ -29,7 +30,7 @@ func New(title string, chapter comicfile.ContainerReader, renderer backend.Rende
 		chapter: chapter,
 		backend: renderer,
 		zoom:    100,
-		status:  "waiting for terminal size",
+		status:  i18n.T("reader.status.waiting_terminal_size"),
 	}
 }
 
