@@ -15,7 +15,7 @@ type fakeChapter struct {
 	pages []image.Image
 }
 
-func TestFooterKeepsPageNumberWhileRendering(t *testing.T) {
+func TestHeaderShowsPageNumberAndRenderingStatus(t *testing.T) {
 	t.Parallel()
 
 	m := New("test.cbz", fakeChapter{pages: []image.Image{
@@ -26,18 +26,15 @@ func TestFooterKeepsPageNumberWhileRendering(t *testing.T) {
 	m.page = 1
 	m.rendering = true
 
-	footer := m.footer()
-	if !strings.Contains(footer, "page 2/2") {
-		t.Fatalf("footer %q does not contain page number", footer)
+	header := m.header()
+	if !strings.Contains(header, "pages 2/2") {
+		t.Fatalf("header %q does not contain page number", header)
 	}
-	if strings.Contains(footer, "previous") || strings.Contains(footer, "next") || strings.Contains(footer, "quit") {
-		t.Fatalf("footer %q contains button hints", footer)
+	if strings.Contains(header, "test.cbz") || strings.Contains(header, "fake") || strings.Contains(header, "zoom") {
+		t.Fatalf("header %q contains removed labels", header)
 	}
-	if !strings.HasSuffix(footer, "rendering") {
-		t.Fatalf("footer %q does not end with rendering status", footer)
-	}
-	if !strings.Contains(footer, "zoom 100%") {
-		t.Fatalf("footer %q does not contain zoom", footer)
+	if !strings.HasSuffix(header, "rendering") {
+		t.Fatalf("header %q does not end with rendering status", header)
 	}
 }
 
@@ -157,7 +154,7 @@ func TestZoomedAreaKeepsImageProportions(t *testing.T) {
 	m.zoom = 200
 
 	area := m.zoomedArea()
-	if area.Cols != 44 || area.Rows != 22 {
-		t.Fatalf("zoomed area = %+v, want 44 columns by 22 rows", area)
+	if area.Cols != 46 || area.Rows != 23 {
+		t.Fatalf("zoomed area = %+v, want 46 columns by 23 rows", area)
 	}
 }

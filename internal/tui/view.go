@@ -9,15 +9,10 @@ import (
 
 func (m Model) View() tea.View {
 	var content string
-	if m.width < 1 || m.height < 3 {
+	if m.width < 1 || m.height < 2 {
 		content = "comicread: terminal window is too small"
 	} else {
-		header := fitLine(
-			fmt.Sprintf(" %s  %d/%d  [%s]", m.title, m.page+1, m.chapter.TotalPages(), m.backend.Name()),
-			m.width,
-		)
-		footer := m.footer()
-		content = header + "\n" + strings.Repeat("\n", m.height-2) + footer
+		content = m.header() + strings.Repeat("\n", m.height-1)
 	}
 
 	view := tea.NewView(content)
@@ -26,21 +21,18 @@ func (m Model) View() tea.View {
 	return view
 }
 
-func (m Model) footer() string {
-	page := fmt.Sprintf("page %d/%d  zoom %d%%", m.page+1, m.chapter.TotalPages(), m.zoom)
+func (m Model) header() string {
+	page := fmt.Sprintf("pages %d/%d", m.page+1, m.chapter.TotalPages())
 	pageWidth := len([]rune(page))
 	if pageWidth > m.width {
 		return fitLine(page, m.width)
 	}
 
-	status := m.status
-	if m.rendering {
-		status = "rendering"
-	}
-	if status == "" {
+	if !m.rendering {
 		return strings.Repeat(" ", (m.width-pageWidth)/2) + page
 	}
 
+	status := "rendering"
 	statusWidth := len([]rune(status))
 	pageStart := (m.width - pageWidth) / 2
 	statusStart := m.width - statusWidth

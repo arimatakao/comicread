@@ -160,7 +160,7 @@ func (m Model) currentPageAspect() float64 {
 func imageArea(width, height int, imageAspect float64) backend.Area {
 	const cellAspect = 0.5 // typical terminal cell width / height in pixels
 
-	availableRows := height - 2 // one header and one footer row
+	availableRows := height - 1 // one header row
 	if width < 1 || availableRows < 1 {
 		return backend.Area{}
 	}
