@@ -1,5 +1,6 @@
 <div align="center">
-# comicread
+
+# comicread 📖
 
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/arimatakao/comicread)
 ![GitHub Release](https://img.shields.io/github/v/release/arimatakao/comicread)
@@ -18,6 +19,16 @@ usable fallback in ordinary UTF-8 terminals. The interface stays deliberately
 small: open a chapter, turn pages with the keyboard, and focus on reading.
 
 </div>
+
+## Features 💫
+
+- Runs on **Linux**, **macOS**, and **Windows**.
+- **Fast** and lightweight — a single **standalone binary**, no external libraries to install.
+- Reads **CBZ**, image-based **PDF** and **EPUB** files, and image directories.
+- Renders pages via **Kitty**, **Sixel**, or **iTerm2**, with ASCII/Braille-dot fallback in plain UTF-8 terminals.
+- Supports **single**, **spread** (LTR/RTL), and **overlapping-page** views.
+- Offers **keyboard navigation**, **zoom/scroll**, help, and a **file picker**.
+- Localised in **15+ languages**.
 
 ## Installation
 
