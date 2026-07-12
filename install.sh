@@ -66,25 +66,36 @@ parse_args() {
   fi
 }
 
-confirm_install() {
-  local answer=""
-
-  [ "$AUTO_YES" = "true" ] && return 0
+read_answer() {
+  ANSWER=""
   if [ -t 0 ]; then
-    read -r -p "$1 [y/N]: " answer
+    read -r -p "$1" ANSWER
   elif [ -r /dev/tty ]; then
-    read -r -p "$1 [y/N]: " answer < /dev/tty
+    read -r -p "$1" ANSWER < /dev/tty
   else
-    printf '%s\n' 'Error: confirmation requires a terminal; use --yes to continue.' >&2
+    printf '%s\n' 'Error: interactive input requires a terminal; use --yes to continue.' >&2
     exit 1
   fi
+}
 
-  case "$answer" in
+confirm_install() {
+  [ "$AUTO_YES" = "true" ] && return 0
+  read_answer "$1 [y/N]: "
+
+  case "$ANSWER" in
     y|Y|yes|YES) ;;
     *)
       printf '%s\n' 'Installation cancelled.'
       exit 0
       ;;
+  esac
+}
+
+ask_yes_no() {
+  read_answer "$1 [y/N]: "
+  case "$ANSWER" in
+    y|Y|yes|YES) return 0 ;;
+    *) return 1 ;;
   esac
 }
 
@@ -130,21 +141,63 @@ path_contains_install_dir() {
   esac
 }
 
+shell_config_file() {
+  local shell_name
+  shell_name="$(basename "${SHELL:-}")"
+  case "$shell_name" in
+    bash) printf '%s\n' "${HOME}/.bashrc" ;;
+    zsh) printf '%s\n' "${HOME}/.zshrc" ;;
+    *) printf '%s\n' "${HOME}/.profile" ;;
+  esac
+}
+
+append_shell_line() {
+  local target_file="$1" line="$2"
+  mkdir -p "$(dirname "$target_file")"
+  touch "$target_file"
+  grep -Fqx "$line" "$target_file" || printf '\n%s\n' "$line" >> "$target_file"
+}
+
 ensure_path_setup() {
   path_contains_install_dir && return 0
 
-  local shell_name target_file line
-  shell_name="$(basename "${SHELL:-}")"
-  case "$shell_name" in
-    bash) target_file="${HOME}/.bashrc" ;;
-    zsh) target_file="${HOME}/.zshrc" ;;
-    *) target_file="${HOME}/.profile" ;;
-  esac
-
-  mkdir -p "$(dirname "$target_file")"
-  touch "$target_file"
+  local target_file line
+  target_file="$(shell_config_file)"
   line="case \":\$PATH:\" in *\":${INSTALL_DIR}:\"*) ;; *) export PATH=\"${INSTALL_DIR}:\$PATH\" ;; esac"
-  grep -Fqx "$line" "$target_file" || printf '\n%s\n' "$line" >> "$target_file"
+  append_shell_line "$target_file" "$line"
+}
+
+configure_environment_value() {
+  local target_file="$1" name="$2" values="$3"
+
+  while :; do
+    read_answer "  ${name} (${values}; leave blank to skip): "
+    if [ -z "$ANSWER" ]; then
+      return
+    fi
+
+    case "${name}:${ANSWER}" in
+      COMICREAD_GRAPHICS:auto|COMICREAD_GRAPHICS:ascii|COMICREAD_GRAPHICS:dots|COMICREAD_GRAPHICS:kitty|COMICREAD_GRAPHICS:sixel|COMICREAD_GRAPHICS:iterm2|COMICREAD_VIEW:book-view|COMICREAD_VIEW:right-view|COMICREAD_VIEW:circle-view|COMICREAD_VIEW:right-circle-view|COMICREAD_LANG:en|COMICREAD_LANG:uk)
+        append_shell_line "$target_file" "export ${name}=${ANSWER}"
+        return
+        ;;
+      *) printf 'Invalid value. Choose one of: %s\n' "$values" >&2 ;;
+    esac
+  done
+}
+
+configure_environment() {
+  [ "$AUTO_YES" = "true" ] && return
+  if ! ask_yes_no 'Configure comicread environment variables in your shell profile?'; then
+    return
+  fi
+
+  local target_file
+  target_file="$(shell_config_file)"
+  printf 'Values will be saved in %s.\n' "$target_file"
+  configure_environment_value "$target_file" 'COMICREAD_GRAPHICS' 'auto ascii dots kitty sixel iterm2'
+  configure_environment_value "$target_file" 'COMICREAD_VIEW' 'book-view right-view circle-view right-circle-view'
+  configure_environment_value "$target_file" 'COMICREAD_LANG' 'en uk'
 }
 
 install_binary() {
@@ -189,10 +242,11 @@ main() {
 
   install_binary "${TMP_DIR}/${BIN_NAME}"
   ensure_path_setup
+  configure_environment
 
   printf 'comicread %s installed to %s/%s\n' "$version" "$INSTALL_DIR" "$BIN_NAME"
   if ! path_contains_install_dir; then
-    printf 'Restart your terminal or run: export PATH="%s:$PATH"\n' "$INSTALL_DIR"
+    printf '%s\n' 'Restart your terminal to use comicread.'
   fi
 }
 
