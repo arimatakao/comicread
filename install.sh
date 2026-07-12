@@ -177,7 +177,7 @@ configure_environment_value() {
     fi
 
     case "${name}:${ANSWER}" in
-      COMICREAD_GRAPHICS:auto|COMICREAD_GRAPHICS:ascii|COMICREAD_GRAPHICS:dots|COMICREAD_GRAPHICS:kitty|COMICREAD_GRAPHICS:sixel|COMICREAD_GRAPHICS:iterm2|COMICREAD_VIEW:book-view|COMICREAD_VIEW:right-view|COMICREAD_VIEW:circle-view|COMICREAD_VIEW:right-circle-view|COMICREAD_LANG:en|COMICREAD_LANG:uk)
+      COMICREAD_GRAPHICS:auto|COMICREAD_GRAPHICS:ascii|COMICREAD_GRAPHICS:dots|COMICREAD_GRAPHICS:kitty|COMICREAD_GRAPHICS:sixel|COMICREAD_GRAPHICS:iterm2|COMICREAD_VIEW:book-view|COMICREAD_VIEW:right-view|COMICREAD_VIEW:circle-view|COMICREAD_VIEW:right-circle-view|COMICREAD_LANG:en|COMICREAD_LANG:uk|COMICREAD_LANG:pl|COMICREAD_LANG:de|COMICREAD_LANG:fr|COMICREAD_LANG:es|COMICREAD_LANG:cs|COMICREAD_LANG:ro|COMICREAD_LANG:it|COMICREAD_LANG:ko|COMICREAD_LANG:ja|COMICREAD_LANG:id|COMICREAD_LANG:hi|COMICREAD_LANG:el|COMICREAD_LANG:tr)
         append_shell_line "$target_file" "export ${name}=${ANSWER}"
         return
         ;;
@@ -195,9 +195,12 @@ configure_environment() {
   local target_file
   target_file="$(shell_config_file)"
   printf 'Values will be saved in %s.\n' "$target_file"
+  printf '%s\n' 'COMICREAD_GRAPHICS chooses how pages are rendered; auto detects terminal support.'
+  printf '%s\n' 'COMICREAD_VIEW chooses the default page layout; leave it blank for single-page view.'
+  printf '%s\n' 'COMICREAD_LANG chooses the language of the interface; the default is en.'
   configure_environment_value "$target_file" 'COMICREAD_GRAPHICS' 'auto ascii dots kitty sixel iterm2'
   configure_environment_value "$target_file" 'COMICREAD_VIEW' 'book-view right-view circle-view right-circle-view'
-  configure_environment_value "$target_file" 'COMICREAD_LANG' 'en uk'
+  configure_environment_value "$target_file" 'COMICREAD_LANG' 'en uk pl de fr es cs ro it ko ja id hi el tr'
 }
 
 install_binary() {
