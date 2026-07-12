@@ -10,6 +10,8 @@
 image-first books. Written in Go, it opens CBZ, image-based PDF and EPUB files,
 or directories of images, and lets you read them without leaving the terminal.
 
+![demo](./.github/assets/demo.gif)
+
 When the terminal supports it, pages are displayed as images through the Kitty,
 Sixel, or iTerm2 graphics protocols. ASCII and Braille-dot renderers provide a
 usable fallback in ordinary UTF-8 terminals. The interface stays deliberately
