@@ -49,6 +49,14 @@ Move the extracted executable to a directory in your `PATH` to install it manual
 
 </details>
 
+### Go
+
+Requires Go 1.26.5 or newer:
+
+```sh
+go install github.com/arimatakao/comicread@latest
+```
+
 
 ## Terminal compatibility
 
@@ -88,33 +96,63 @@ without an image protocol.
 | [yaft](https://github.com/uobikiemukot/yaft) | - | X | - | X | X | Linux framebuffer terminal. |
 | [SyncTERM](https://www.syncterm.net/) | - | X | - | X | X | |
 
-## Run
+## Basic usage
 
 ```sh
-go run . path/to/chapter.cbz
-go run . path/to/image-directory
-go run . --graphics sixel path/to/chapter.cbz
-go run . --graphics iterm2 path/to/chapter.cbz
-go run . --graphics dots path/to/chapter.cbz
+# Print command help.
+comicread --help
+
+# Print the active environment settings or version.
+comicread --env
+comicread --version
+
+# Set the renderer default for this command.
+COMICREAD_GRAPHICS=sixel comicread /path/to/file.cbz
+
+# Set the default page layout for this command.
+COMICREAD_VIEW=right-view comicread /path/to/file.cbz
+
+# Run the interface in Ukrainian for this command.
+COMICREAD_LANG=uk comicread /path/to/file.cbz
+
+# Open the interactive file picker in the current directory.
+comicread
+
+# Read a CBZ archive.
+comicread /path/to/file.cbz
+
+# Read an image-based PDF or EPUB.
+comicread /path/to/file.pdf
+comicread /path/to/file.epub
+
+# Read images from a directory.
+comicread /path/to/image-directory
+
+# Use the Kitty, Sixel, or iTerm2 image protocol explicitly.
+comicread --graphics kitty /path/to/file.cbz
+comicread --graphics sixel /path/to/file.cbz
+comicread --graphics iterm2 /path/to/file.cbz
+
+# Use text-art renderers when the terminal has no image protocol.
+comicread --graphics ascii /path/to/file.cbz
+comicread --graphics dots /path/to/file.cbz
+
+# Show page pairs left to right or right to left.
+comicread --book-view /path/to/file.cbz
+comicread --right-view /path/to/file.cbz
+
+# Show overlapping page pairs left to right or right to left.
+comicread --circle-view /path/to/file.cbz
+comicread --right-circle-view /path/to/file.cbz
 ```
 
-`--graphics` accepts `auto` (the default), `kitty`, `sixel`, `iterm2`, `ascii`,
-or `dots`. Auto-detection selects iTerm2 and the known Sixel terminals `mlterm`,
-`yaft`, `DomTerm`, `Contour`, `mintty`, and `foot`; otherwise it defaults to
-Kitty. Use an explicit backend for a terminal not detected this way.
+Environment variables:
 
-Keys:
+Add these to your shell configuration file (such as `.bashrc`, `.zshrc`, or `.profile`) to use the same defaults every time.
 
-- `right`, `l`, `space`, `j`, `PageDown`: next page
-- `left`, `h`, `backspace`, `k`, `PageUp`: previous page
-- `+`, `-`: zoom in/out for every page in the open file
-- `up`, `down`: scroll the zoomed page vertically
-- `q`, `Esc`, `Ctrl+C`: quit
-
-Supported formats: CBZ, image-based PDF files, image-based EPUB files, and directories containing image files.
-
-PDF pages must contain one embedded raster image per page. EPUB pages must
-reference their page images through the EPUB spine.
+- `COMICREAD_GRAPHICS`: `auto`, `ascii`, `dots`, `kitty`, `sixel`, or `iterm2`.
+- `COMICREAD_VIEW`: `book-view`, `right-view`, `circle-view`, or `right-circle-view`; leave unset for single-page view.
+- `COMICREAD_LANG`: `en`, `uk`, `pl`, `de`, `fr`, `es`, `cs`, `ro`, `it`, `ko`, `ja`, `id`, `hi`, `el`, or `tr`.
 
 ## Dependency licenses
 
