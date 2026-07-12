@@ -1,10 +1,21 @@
+<div align="center">
 # comicread
 
-Minimal terminal manga reader written in Go.
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/arimatakao/comicread)
+![GitHub Release](https://img.shields.io/github/v/release/arimatakao/comicread)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/arimatakao/comicread/total)
+![GitHub Repo stars](https://img.shields.io/github/stars/arimatakao/comicread)
 
-The current MVP opens CBZ, PDF, EPUB, and image directories, renders pages with
-the Kitty, Sixel, or iTerm2 graphics protocol, or as text art, and supports
-forward/backward navigation.
+`comicread` is a lightweight terminal reader for manga, comics, and other
+image-first books. Written in Go, it opens CBZ, image-based PDF and EPUB files,
+or directories of images, and lets you read them without leaving the terminal.
+
+When the terminal supports it, pages are displayed as images through the Kitty,
+Sixel, or iTerm2 graphics protocols. ASCII and Braille-dot renderers provide a
+usable fallback in ordinary UTF-8 terminals. The interface stays deliberately
+small: open a chapter, turn pages with the keyboard, and focus on reading.
+
+</div>
 
 ## Installation
 
@@ -25,6 +36,8 @@ On Linux or macOS:
 tar -xzf comicread_*_linux_*.tar.gz # use *_darwin_* on macOS
 ./comicread /path/to/file.pdf # or file.cbz / file.epub
 ```
+
+Move the extracted executable to a directory in your `PATH` to install it manually.
 
 </details>
 
