@@ -11,3 +11,8 @@ other
 *.png
 *.jpeg
 *.jpg
+
+demomanga/generated
+!demomanga/1.jpeg
+!demomanga/2.png
+!demomanga/3.jpg
