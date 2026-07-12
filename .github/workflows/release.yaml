@@ -1,0 +1,111 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v3.0.1
+        with:
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
+
+  build-artifacts:
+    needs: create-release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+            extension: tar.gz
+          - goos: linux
+            goarch: arm64
+            extension: tar.gz
+          - goos: linux
+            goarch: "386"
+            extension: tar.gz
+          - goos: darwin
+            goarch: amd64
+            extension: tar.gz
+          - goos: darwin
+            goarch: arm64
+            extension: tar.gz
+          - goos: windows
+            goarch: amd64
+            extension: zip
+          - goos: windows
+            goarch: arm64
+            extension: zip
+          - goos: windows
+            goarch: "386"
+            extension: zip
+    steps:
+      - uses: actions/checkout@v6.0.0
+
+      - name: Set up Go
+        uses: actions/setup-go@v6.5.0
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
+
+      - name: Build and package
+        shell: bash
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          EXTENSION: ${{ matrix.extension }}
+          VERSION: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          binary=comicread
+          if [ "$GOOS" = windows ]; then
+            binary="$binary.exe"
+          fi
+
+          archive="comicread_${VERSION}_${GOOS}_${GOARCH}.${EXTENSION}"
+          mkdir -p dist/package
+          CGO_ENABLED=0 go build -buildvcs=false \
+            -ldflags "-X github.com/arimatakao/comicread/internal/cli.Version=${VERSION}" \
+            -o "dist/package/${binary}" .
+
+          if [ "$EXTENSION" = tar.gz ]; then
+            tar -C dist/package -czf "dist/${archive}" "$binary"
+          else
+            (
+              cd dist/package
+              zip "../${archive}" "$binary"
+            )
+          fi
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: comicread-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/comicread_*
+          if-no-files-found: error
+
+  upload-assets:
+    needs: build-artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release artifacts
+        uses: actions/download-artifact@v8.0.1
+        with:
+          path: dist
+          pattern: comicread-*
+          merge-multiple: true
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v3.0.1
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: dist/*
