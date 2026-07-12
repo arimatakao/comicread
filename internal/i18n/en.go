@@ -74,5 +74,5 @@ If no file or directory is given, an interactive file picker opens in the curren
 environment:
   COMICREAD_GRAPHICS  renderer default: auto, ascii, dots, kitty, sixel, or iterm2
   COMICREAD_VIEW      default view: book-view, right-view, circle-view, or right-circle-view
-  COMICREAD_LANG   message language: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, or tr (default "en")`,
+  COMICREAD_LANG   message language: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk, or ka (default "en")`,
 }

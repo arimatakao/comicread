@@ -74,5 +74,5 @@ q    बाहर निकलें
 परिवेश:
   COMICREAD_GRAPHICS  डिफ़ॉल्ट रेंडरर: auto, ascii, dots, kitty, sixel या iterm2
   COMICREAD_VIEW      डिफ़ॉल्ट दृश्य: book-view, right-view, circle-view या right-circle-view
-  COMICREAD_LANG      संदेश की भाषा: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el या tr (डिफ़ॉल्ट "en")`,
+  COMICREAD_LANG      संदेश की भाषा: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk या ka (डिफ़ॉल्ट "en")`,
 }

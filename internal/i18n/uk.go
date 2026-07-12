@@ -74,5 +74,5 @@ q    вихід
 змінні середовища:
   COMICREAD_GRAPHICS  рендерер за замовчуванням: auto, ascii, dots, kitty, sixel або iterm2
   COMICREAD_VIEW      режим за замовчуванням: book-view, right-view, circle-view або right-circle-view
-  COMICREAD_LANG   мова повідомлень: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el або tr (за замовчуванням "en")`,
+  COMICREAD_LANG   мова повідомлень: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk або ka (за замовчуванням "en")`,
 }

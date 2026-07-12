@@ -74,5 +74,5 @@ Se non viene fornito alcun file o cartella, si apre un selettore di file interat
 ambiente:
   COMICREAD_GRAPHICS  renderer predefinito: auto, ascii, dots, kitty, sixel o iterm2
   COMICREAD_VIEW      visualizzazione predefinita: book-view, right-view, circle-view o right-circle-view
-  COMICREAD_LANG      lingua dei messaggi: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el o tr (predefinito "en")`,
+  COMICREAD_LANG      lingua dei messaggi: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk o ka (predefinito "en")`,
 }

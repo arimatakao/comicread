@@ -27,6 +27,8 @@ const (
 	Hindi      Lang = "hi"
 	Greek      Lang = "el"
 	Turkish    Lang = "tr"
+	Kazakh     Lang = "kk"
+	Georgian   Lang = "ka"
 )
 
 // Message keys.
@@ -85,7 +87,7 @@ var current = detect()
 // falling back to English.
 func detect() Lang {
 	lang := strings.ToLower(os.Getenv("COMICREAD_LANG"))
-	for _, supported := range []Lang{Ukrainian, Polish, German, French, Spanish, Czech, Romanian, Italian, Korean, Japanese, Indonesian, Hindi, Greek, Turkish} {
+	for _, supported := range []Lang{Ukrainian, Polish, German, French, Spanish, Czech, Romanian, Italian, Korean, Japanese, Indonesian, Hindi, Greek, Turkish, Kazakh, Georgian} {
 		if strings.HasPrefix(lang, string(supported)) {
 			return supported
 		}
@@ -131,4 +133,6 @@ var messages = map[Lang]map[string]string{
 	Hindi:      hiMessages,
 	Greek:      elMessages,
 	Turkish:    trMessages,
+	Kazakh:     kkMessages,
+	Georgian:   kaMessages,
 }

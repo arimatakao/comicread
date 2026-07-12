@@ -74,5 +74,5 @@ Pokud není zadán soubor ani složka, otevře se v aktuální složce interakti
 prostředí:
   COMICREAD_GRAPHICS  výchozí vykreslovač: auto, ascii, dots, kitty, sixel nebo iterm2
   COMICREAD_VIEW      výchozí zobrazení: book-view, right-view, circle-view nebo right-circle-view
-  COMICREAD_LANG      jazyk zpráv: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el nebo tr (výchozí "en")`,
+  COMICREAD_LANG      jazyk zpráv: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk nebo ka (výchozí "en")`,
 }

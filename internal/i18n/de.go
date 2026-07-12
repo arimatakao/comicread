@@ -74,5 +74,5 @@ Wenn keine Datei und kein Ordner angegeben ist, öffnet sich im aktuellen Ordner
 Umgebung:
   COMICREAD_GRAPHICS  Standard-Renderer: auto, ascii, dots, kitty, sixel oder iterm2
   COMICREAD_VIEW      Standardansicht: book-view, right-view, circle-view oder right-circle-view
-  COMICREAD_LANG      Sprache der Meldungen: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el oder tr (Standard: "en")`,
+  COMICREAD_LANG      Sprache der Meldungen: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk oder ka (Standard: "en")`,
 }

@@ -74,5 +74,5 @@ Jika tidak ada berkas atau direktori yang diberikan, pemilih berkas interaktif a
 lingkungan:
   COMICREAD_GRAPHICS  perender bawaan: auto, ascii, dots, kitty, sixel, atau iterm2
   COMICREAD_VIEW      tampilan bawaan: book-view, right-view, circle-view, atau right-circle-view
-  COMICREAD_LANG      bahasa pesan: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, atau tr (bawaan "en")`,
+  COMICREAD_LANG      bahasa pesan: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk, atau ka (bawaan "en")`,
 }

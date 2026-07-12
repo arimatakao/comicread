@@ -177,7 +177,7 @@ configure_environment_value() {
     fi
 
     case "${name}:${ANSWER}" in
-      COMICREAD_GRAPHICS:auto|COMICREAD_GRAPHICS:ascii|COMICREAD_GRAPHICS:dots|COMICREAD_GRAPHICS:kitty|COMICREAD_GRAPHICS:sixel|COMICREAD_GRAPHICS:iterm2|COMICREAD_VIEW:book-view|COMICREAD_VIEW:right-view|COMICREAD_VIEW:circle-view|COMICREAD_VIEW:right-circle-view|COMICREAD_LANG:en|COMICREAD_LANG:uk|COMICREAD_LANG:pl|COMICREAD_LANG:de|COMICREAD_LANG:fr|COMICREAD_LANG:es|COMICREAD_LANG:cs|COMICREAD_LANG:ro|COMICREAD_LANG:it|COMICREAD_LANG:ko|COMICREAD_LANG:ja|COMICREAD_LANG:id|COMICREAD_LANG:hi|COMICREAD_LANG:el|COMICREAD_LANG:tr)
+      COMICREAD_GRAPHICS:auto|COMICREAD_GRAPHICS:ascii|COMICREAD_GRAPHICS:dots|COMICREAD_GRAPHICS:kitty|COMICREAD_GRAPHICS:sixel|COMICREAD_GRAPHICS:iterm2|COMICREAD_VIEW:book-view|COMICREAD_VIEW:right-view|COMICREAD_VIEW:circle-view|COMICREAD_VIEW:right-circle-view|COMICREAD_LANG:en|COMICREAD_LANG:uk|COMICREAD_LANG:pl|COMICREAD_LANG:de|COMICREAD_LANG:fr|COMICREAD_LANG:es|COMICREAD_LANG:cs|COMICREAD_LANG:ro|COMICREAD_LANG:it|COMICREAD_LANG:ko|COMICREAD_LANG:ja|COMICREAD_LANG:id|COMICREAD_LANG:hi|COMICREAD_LANG:el|COMICREAD_LANG:tr|COMICREAD_LANG:kk|COMICREAD_LANG:ka)
         append_shell_line "$target_file" "export ${name}=${ANSWER}"
         return
         ;;
@@ -200,7 +200,7 @@ configure_environment() {
   printf '%s\n' 'COMICREAD_LANG chooses the language of the interface; the default is en.'
   configure_environment_value "$target_file" 'COMICREAD_GRAPHICS' 'auto ascii dots kitty sixel iterm2'
   configure_environment_value "$target_file" 'COMICREAD_VIEW' 'book-view right-view circle-view right-circle-view'
-  configure_environment_value "$target_file" 'COMICREAD_LANG' 'en uk pl de fr es cs ro it ko ja id hi el tr'
+  configure_environment_value "$target_file" 'COMICREAD_LANG' 'en uk pl de fr es cs ro it ko ja id hi el tr kk ka'
 }
 
 install_binary() {

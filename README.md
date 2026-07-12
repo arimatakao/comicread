@@ -178,7 +178,7 @@ Add these to your shell configuration file (such as `.bashrc`, `.zshrc`, or `.pr
 
 - `COMICREAD_GRAPHICS`: `auto`, `ascii`, `dots`, `kitty`, `sixel`, or `iterm2`.
 - `COMICREAD_VIEW`: `book-view`, `right-view`, `circle-view`, or `right-circle-view`; leave unset for single-page view.
-- `COMICREAD_LANG`: `en`, `uk`, `pl`, `de`, `fr`, `es`, `cs`, `ro`, `it`, `ko`, `ja`, `id`, `hi`, `el`, or `tr`.
+- `COMICREAD_LANG`: `en`, `uk`, `pl`, `de`, `fr`, `es`, `cs`, `ro`, `it`, `ko`, `ja`, `id`, `hi`, `el`, `tr`, `kk`, or `ka`.
 
 ### Controls
 
