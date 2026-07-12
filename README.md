@@ -154,6 +154,30 @@ Add these to your shell configuration file (such as `.bashrc`, `.zshrc`, or `.pr
 - `COMICREAD_VIEW`: `book-view`, `right-view`, `circle-view`, or `right-circle-view`; leave unset for single-page view.
 - `COMICREAD_LANG`: `en`, `uk`, `pl`, `de`, `fr`, `es`, `cs`, `ro`, `it`, `ko`, `ja`, `id`, `hi`, `el`, or `tr`.
 
+### Controls
+
+#### Reader
+
+| Keys | Action |
+| --- | --- |
+| `right`, `l`, `space`, `j`, `PageDown` | Next page |
+| `left`, `h`, `backspace`, `k`, `PageUp` | Previous page |
+| `+`, `-` | Zoom in or out |
+| `up`, `down` | Scroll a zoomed page |
+| `?` | Open or close help |
+| `q`, `Esc`, `Ctrl+C` | Quit |
+
+#### File picker
+
+| Keys | Action |
+| --- | --- |
+| `up`, `down` | Move selection |
+| `left` | Open the parent directory |
+| `right` | Enter the selected directory |
+| `Enter` | Open the selected file |
+| `s` | Open the selected directory |
+| `q`, `Esc`, `Ctrl+C` | Quit |
+
 ## Dependency licenses
 
 The main direct dependencies are distributed under permissive licenses:
