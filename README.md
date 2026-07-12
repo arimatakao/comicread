@@ -6,10 +6,49 @@ The current MVP opens CBZ, PDF, EPUB, and image directories, renders pages with
 the Kitty, Sixel, or iTerm2 graphics protocol, or as text art, and supports
 forward/backward navigation.
 
-## Requirements
+## Installation
 
-- Go 1.26.5 or newer
-- a terminal from the compatibility table below
+### Linux and macOS
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/arimatakao/comicread/main/install.sh | bash
+```
+
+<details>
+<summary>Manual installation or running</summary>
+
+Download the archive for your operating system and architecture from the [latest release](https://github.com/arimatakao/comicread/releases/latest), then extract it.
+
+On Linux or macOS:
+
+```sh
+tar -xzf comicread_*_linux_*.tar.gz # use *_darwin_* on macOS
+./comicread /path/to/file.pdf # or file.cbz / file.epub
+```
+
+</details>
+
+### Windows
+
+```powershell
+powershell -ExecutionPolicy Bypass -Command "iwr -useb https://raw.githubusercontent.com/arimatakao/comicread/main/install.ps1 | iex"
+```
+
+
+<details>
+<summary>Manual installation or running</summary>
+
+On Windows:
+
+```powershell
+Expand-Archive .\comicread_*_windows_*.zip -DestinationPath .\comicread
+.\comicread\comicread.exe C:\path\to\file.pdf # or file.cbz / file.epub
+```
+
+Move the extracted executable to a directory in your `PATH` to install it manually.
+
+</details>
+
 
 ## Terminal compatibility
 
