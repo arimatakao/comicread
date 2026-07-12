@@ -2,16 +2,17 @@
 
 # comicread 📖
 
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/arimatakao/comicread)
-![GitHub Release](https://img.shields.io/github/v/release/arimatakao/comicread)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/arimatakao/comicread/total)
-![GitHub Repo stars](https://img.shields.io/github/stars/arimatakao/comicread)
 
 `comicread` is a lightweight terminal reader for manga, comics, and other
 image-first books. Written in Go, it opens CBZ, image-based PDF and EPUB files,
 or directories of images, and lets you read them without leaving the terminal.
 
 ![demo](./.github/assets/demo.gif)
+
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/arimatakao/comicread)
+![GitHub Release](https://img.shields.io/github/v/release/arimatakao/comicread)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/arimatakao/comicread/total)
+![GitHub Repo stars](https://img.shields.io/github/stars/arimatakao/comicread)
 
 When the terminal supports it, pages are displayed as images through the Kitty,
 Sixel, or iTerm2 graphics protocols. ASCII and Braille-dot renderers provide a
