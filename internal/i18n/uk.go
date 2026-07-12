@@ -45,6 +45,7 @@ q    вихід
 	CLIErrUnsupportedFile:           "непідтримуваний файл %q: підтримувані формати — CBZ, PDF, EPUB або тека із зображеннями",
 	CLIFlagGraphicsUsage:            "рендерер: auto, ascii, dots, kitty, sixel або iterm2",
 	CLIFlagVersionUsage:             "вивести версію та завершити роботу",
+	CLIFlagEnvUsage:                 "вивести середовище comicread та завершити роботу",
 	CLIFlagBookViewUsage:            "показувати сторінки парами зліва направо",
 	CLIFlagRightBookViewUsage:       "показувати сторінки парами справа наліво",
 	CLIFlagCircleBookViewUsage:      "показувати перекривні пари сторінок зліва направо",
@@ -64,11 +65,14 @@ q    вихід
   --circle-view       показувати перекривні пари сторінок зліва направо
   --right-circle-view
                       показувати перекривні пари сторінок справа наліво
+  --env               вивести середовище comicread та завершити роботу
   -v, --version       вивести версію та завершити роботу
   -h, --help          показати цю довідку
 
 Якщо файл або тека не вказані, відкриється інтерактивний вибір файлу в поточній теці.
 
 змінні середовища:
+  COMICREAD_GRAPHICS  рендерер за замовчуванням: auto, ascii, dots, kitty, sixel або iterm2
+  COMICREAD_VIEW      режим за замовчуванням: book-view, right-view, circle-view або right-circle-view
   COMICREAD_LANG   мова повідомлень: en або uk (за замовчуванням "en")`,
 }

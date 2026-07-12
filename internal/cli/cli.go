@@ -43,6 +43,10 @@ func Run(args []string) error {
 		fmt.Println(Version)
 		return nil
 	}
+	if options.env {
+		printEnvironment()
+		return nil
+	}
 
 	path := options.path
 	if path == "" {
@@ -93,6 +97,7 @@ type options struct {
 	graphics string
 	path     string
 	version  bool
+	env      bool
 	bookView reader.ViewMode
 }
 
@@ -107,6 +112,7 @@ func parseOptions(args []string) (options, error) {
 	flags.SetOutput(io.Discard)
 	graphicsFlag := flags.String("graphics", graphics, i18n.T(i18n.CLIFlagGraphicsUsage))
 	versionFlag := flags.Bool("version", false, i18n.T(i18n.CLIFlagVersionUsage))
+	envFlag := flags.Bool("env", false, i18n.T(i18n.CLIFlagEnvUsage))
 	bookViewFlag := flags.Bool("book-view", false, i18n.T(i18n.CLIFlagBookViewUsage))
 	rightBookViewFlag := flags.Bool("right-view", false, i18n.T(i18n.CLIFlagRightBookViewUsage))
 	circleBookViewFlag := flags.Bool("circle-view", false, i18n.T(i18n.CLIFlagCircleBookViewUsage))
@@ -118,6 +124,9 @@ func parseOptions(args []string) (options, error) {
 			return options{}, flag.ErrHelp
 		}
 		return options{}, &usageError{fmt.Errorf(i18n.T(i18n.CLIErrParseArgs), err)}
+	}
+	if *envFlag {
+		return options{env: true}, nil
 	}
 	bookView, err := selectedBookView(view, *bookViewFlag, *rightBookViewFlag, *circleBookViewFlag, *rightCircleBookViewFlag)
 	if err != nil {
@@ -133,6 +142,12 @@ func parseOptions(args []string) (options, error) {
 		return options{graphics: *graphicsFlag, path: flags.Arg(0), bookView: bookView}, nil
 	default:
 		return options{}, &usageError{errors.New(i18n.T(i18n.CLIUsage))}
+	}
+}
+
+func printEnvironment() {
+	for _, name := range []string{"COMICREAD_GRAPHICS", "COMICREAD_VIEW", "COMICREAD_LANG"} {
+		fmt.Printf("%s=%q\n", name, os.Getenv(name))
 	}
 }
 

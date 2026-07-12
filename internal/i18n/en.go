@@ -45,6 +45,7 @@ q    quit
 	CLIErrUnsupportedFile:           "unsupported file %q: supported formats are CBZ, PDF, EPUB, or an image directory",
 	CLIFlagGraphicsUsage:            "renderer: auto, ascii, dots, kitty, sixel, or iterm2",
 	CLIFlagVersionUsage:             "print version and exit",
+	CLIFlagEnvUsage:                 "print comicread environment and exit",
 	CLIFlagBookViewUsage:            "show pages left to right in pairs",
 	CLIFlagRightBookViewUsage:       "show pages right to left in pairs",
 	CLIFlagCircleBookViewUsage:      "show overlapping page pairs left to right",
@@ -64,11 +65,14 @@ options:
   --circle-view       show overlapping page pairs left to right
   --right-circle-view
                       show overlapping page pairs right to left
+  --env               print comicread environment and exit
   -v, --version       print version and exit
   -h, --help          show this help message
 
 If no file or directory is given, an interactive file picker opens in the current directory.
 
 environment:
+  COMICREAD_GRAPHICS  renderer default: auto, ascii, dots, kitty, sixel, or iterm2
+  COMICREAD_VIEW      default view: book-view, right-view, circle-view, or right-circle-view
   COMICREAD_LANG   message language: en or uk (default "en")`,
 }
