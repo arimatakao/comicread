@@ -12,8 +12,21 @@ import (
 type Lang string
 
 const (
-	English   Lang = "en"
-	Ukrainian Lang = "uk"
+	English    Lang = "en"
+	Ukrainian  Lang = "uk"
+	Polish     Lang = "pl"
+	German     Lang = "de"
+	French     Lang = "fr"
+	Spanish    Lang = "es"
+	Czech      Lang = "cs"
+	Romanian   Lang = "ro"
+	Italian    Lang = "it"
+	Korean     Lang = "ko"
+	Japanese   Lang = "ja"
+	Indonesian Lang = "id"
+	Hindi      Lang = "hi"
+	Greek      Lang = "el"
+	Turkish    Lang = "tr"
 )
 
 // Message keys.
@@ -71,8 +84,11 @@ var current = detect()
 // detect picks a language from the COMICREAD_LANG environment variable,
 // falling back to English.
 func detect() Lang {
-	if strings.HasPrefix(strings.ToLower(os.Getenv("COMICREAD_LANG")), "uk") {
-		return Ukrainian
+	lang := strings.ToLower(os.Getenv("COMICREAD_LANG"))
+	for _, supported := range []Lang{Ukrainian, Polish, German, French, Spanish, Czech, Romanian, Italian, Korean, Japanese, Indonesian, Hindi, Greek, Turkish} {
+		if strings.HasPrefix(lang, string(supported)) {
+			return supported
+		}
 	}
 	return English
 }
@@ -100,6 +116,19 @@ func T(key string, args ...any) string {
 }
 
 var messages = map[Lang]map[string]string{
-	English:   enMessages,
-	Ukrainian: ukMessages,
+	English:    enMessages,
+	Ukrainian:  ukMessages,
+	Polish:     plMessages,
+	German:     deMessages,
+	French:     frMessages,
+	Spanish:    esMessages,
+	Czech:      csMessages,
+	Romanian:   roMessages,
+	Italian:    itMessages,
+	Korean:     koMessages,
+	Japanese:   jaMessages,
+	Indonesian: idMessages,
+	Hindi:      hiMessages,
+	Greek:      elMessages,
+	Turkish:    trMessages,
 }
