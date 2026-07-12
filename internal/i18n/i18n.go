@@ -59,6 +59,7 @@ const (
 	CLIFlagCircleBookViewUsage      = "cli.flag.circle_book_view_usage"
 	CLIFlagRightCircleBookViewUsage = "cli.flag.right_circle_book_view_usage"
 	CLIErrMultipleBookViews         = "cli.err.multiple_book_views"
+	CLIErrInvalidView               = "cli.err.invalid_view"
 	CLIHelpHint                     = "cli.help_hint"
 	CLIUsage                        = "cli.usage"
 	CLIUsageFull                    = "cli.usage_full"

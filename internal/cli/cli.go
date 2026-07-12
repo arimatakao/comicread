@@ -97,9 +97,15 @@ type options struct {
 }
 
 func parseOptions(args []string) (options, error) {
+	graphics := os.Getenv("COMICREAD_GRAPHICS")
+	if graphics == "" {
+		graphics = "auto"
+	}
+	view := os.Getenv("COMICREAD_VIEW")
+
 	flags := flag.NewFlagSet("comicread", flag.ContinueOnError)
 	flags.SetOutput(io.Discard)
-	graphicsFlag := flags.String("graphics", "auto", i18n.T(i18n.CLIFlagGraphicsUsage))
+	graphicsFlag := flags.String("graphics", graphics, i18n.T(i18n.CLIFlagGraphicsUsage))
 	versionFlag := flags.Bool("version", false, i18n.T(i18n.CLIFlagVersionUsage))
 	bookViewFlag := flags.Bool("book-view", false, i18n.T(i18n.CLIFlagBookViewUsage))
 	rightBookViewFlag := flags.Bool("right-view", false, i18n.T(i18n.CLIFlagRightBookViewUsage))
@@ -113,7 +119,7 @@ func parseOptions(args []string) (options, error) {
 		}
 		return options{}, &usageError{fmt.Errorf(i18n.T(i18n.CLIErrParseArgs), err)}
 	}
-	bookView, err := selectedBookView(*bookViewFlag, *rightBookViewFlag, *circleBookViewFlag, *rightCircleBookViewFlag)
+	bookView, err := selectedBookView(view, *bookViewFlag, *rightBookViewFlag, *circleBookViewFlag, *rightCircleBookViewFlag)
 	if err != nil {
 		return options{}, &usageError{err}
 	}
@@ -130,7 +136,7 @@ func parseOptions(args []string) (options, error) {
 	}
 }
 
-func selectedBookView(book, rightBook, circle, rightCircle bool) (reader.ViewMode, error) {
+func selectedBookView(view string, book, rightBook, circle, rightCircle bool) (reader.ViewMode, error) {
 	selected := 0
 	for _, enabled := range []bool{book, rightBook, circle, rightCircle} {
 		if enabled {
@@ -149,8 +155,21 @@ func selectedBookView(book, rightBook, circle, rightCircle bool) (reader.ViewMod
 		return reader.CircleBookView, nil
 	case rightCircle:
 		return reader.RightCircleBookView, nil
-	default:
+	}
+
+	switch strings.ToLower(strings.TrimSpace(view)) {
+	case "":
 		return reader.SinglePageView, nil
+	case "book-view":
+		return reader.BookView, nil
+	case "right-view":
+		return reader.RightBookView, nil
+	case "circle-view":
+		return reader.CircleBookView, nil
+	case "right-circle-view":
+		return reader.RightCircleBookView, nil
+	default:
+		return reader.SinglePageView, errors.New(i18n.T(i18n.CLIErrInvalidView, view))
 	}
 }
 

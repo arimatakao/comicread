@@ -50,6 +50,7 @@ q    quit
 	CLIFlagCircleBookViewUsage:      "show overlapping page pairs left to right",
 	CLIFlagRightCircleBookViewUsage: "show overlapping page pairs right to left",
 	CLIErrMultipleBookViews:         "only one book view option may be used",
+	CLIErrInvalidView:               "unsupported COMICREAD_VIEW %q (want book-view, right-view, circle-view, or right-circle-view)",
 	CLIHelpHint:                     "run 'comicread --help' for usage",
 	CLIUsage:                        "usage: comicread [options] [file]",
 	CLIUsageFull: `comicread - a minimal terminal manga reader

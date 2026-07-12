@@ -50,6 +50,7 @@ q    вихід
 	CLIFlagCircleBookViewUsage:      "показувати перекривні пари сторінок зліва направо",
 	CLIFlagRightCircleBookViewUsage: "показувати перекривні пари сторінок справа наліво",
 	CLIErrMultipleBookViews:         "можна вказати лише один режим книжкового перегляду",
+	CLIErrInvalidView:               "непідтримуване значення COMICREAD_VIEW %q (можливі: book-view, right-view, circle-view або right-circle-view)",
 	CLIHelpHint:                     "виконайте 'comicread --help' для довідки",
 	CLIUsage:                        "використання: comicread [опції] [файл]",
 	CLIUsageFull: `comicread - мінімалістична манга-читалка для термінала
