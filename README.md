@@ -112,7 +112,7 @@ without an image protocol.
 | [WezTerm](https://wezterm.org/features.html) | X | X | X | X | X | Enable `enable_kitty_graphics=true` for `kitty`; Sixel is experimental. |
 | [iTerm2](https://iterm2.com/3.5/documentation-images.html) | X | X | X | X | X | Supports all three; its [release notes](https://iterm2.com/downloads.html?cve=title) document SIXEL and Kitty support. |
 | [Warp](https://www.warp.dev/) | X | - | - | X | X | Implements the Kitty graphics protocol. |
-| [wayst](https://github.com/91861/wayst) | X | - | - | X | X | Implements the Kitty graphics protocol. |
+| [wayst](https://github.com/91861/wayst) | X | X | - | X | X | Kitty graphics protocol; SIXEL support is experimental. |
 | [st](https://st.suckless.org/) with a graphics patch | X | - | - | X | X | Requires a Kitty-graphics implementation patch. |
 | [xterm.js](https://xtermjs.org/) host | X | X | X | X | X | Requires the image add-on; its Kitty implementation is partial. |
 | [xterm](https://invisible-island.net/xterm/ctlseqs/ctlseqs.html) | - | X | - | X | X | Must be built with SIXEL and configured as a DEC graphics terminal. |
@@ -181,6 +181,26 @@ Add these to your shell configuration file (such as `.bashrc`, `.zshrc`, or `.pr
 - `COMICREAD_GRAPHICS`: `auto`, `ascii`, `dots`, `kitty`, `sixel`, or `iterm2`.
 - `COMICREAD_VIEW`: `book-view`, `right-view`, `circle-view`, or `right-circle-view`; leave unset for single-page view.
 - `COMICREAD_LANG`: `en`, `uk`, `pl`, `de`, `fr`, `es`, `cs`, `ro`, `it`, `ko`, `ja`, `id`, `hi`, `el`, `tr`, `kk`, or `ka`.
+
+  | Code | Language |
+  | --- | --- |
+  | `en` | English |
+  | `uk` | Ukrainian |
+  | `pl` | Polish |
+  | `de` | German |
+  | `fr` | French |
+  | `es` | Spanish |
+  | `cs` | Czech |
+  | `ro` | Romanian |
+  | `it` | Italian |
+  | `ko` | Korean |
+  | `ja` | Japanese |
+  | `id` | Indonesian |
+  | `hi` | Hindi |
+  | `el` | Greek |
+  | `tr` | Turkish |
+  | `kk` | Kazakh |
+  | `ka` | Georgian |
 
 ### Controls
 
