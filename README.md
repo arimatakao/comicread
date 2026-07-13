@@ -97,32 +97,44 @@ without an image protocol.
 | Terminal | `kitty` | `sixel` | `iterm2` | `ascii` | `dots` | Notes |
 | --- | :---: | :---: | :---: | :---: | :---: | --- |
 | Any current ANSI/UTF-8 terminal | - | - | - | X | X | Fallback modes; use `ascii` if Braille glyphs are unavailable. |
-| [GNOME Terminal](https://gitlab.gnome.org/GNOME/gnome-terminal) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
-| [GNOME Console](https://apps.gnome.org/Console/) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
-| [Xfce Terminal](https://docs.xfce.org/apps/xfce4-terminal/start) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
-| [Tilix](https://github.com/gnunn1/tilix) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
-| [Terminator](https://gnome-terminator.readthedocs.io/) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
-| [MATE Terminal](https://wiki.mate-desktop.org/mate-desktop/applications/mate-terminal/) | - | - | - | X | X | Standard MATE terminal; no image protocol support. |
-| [LXTerminal](https://github.com/lxde/lxterminal) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
-| [Guake](https://github.com/Guake/guake) | - | - | - | X | X | VTE-based drop-down terminal; SIXEL is disabled by default. |
 | [Alacritty](https://github.com/alacritty/alacritty) | - | - | - | X | X | No support for these image protocols in the standard build. |
-| [Kitty](https://sw.kovidgoyal.net/kitty/) | X | - | - | X | X | Native implementation of the Kitty graphics protocol. |
-| [Ghostty](https://ghostty.org/docs/features) | X | - | - | X | X | Kitty graphics protocol. |
-| [Konsole](https://konsole.kde.org/) | X | X | X | X | X | iTerm2 support is available since 22.04; animated images are limited. |
-| [WezTerm](https://wezterm.org/features.html) | X | X | X | X | X | Enable `enable_kitty_graphics=true` for `kitty`; Sixel is experimental. |
-| [iTerm2](https://iterm2.com/3.5/documentation-images.html) | X | X | X | X | X | Supports all three; its [release notes](https://iterm2.com/downloads.html?cve=title) document SIXEL and Kitty support. |
-| [Warp](https://www.warp.dev/) | X | - | - | X | X | Implements the Kitty graphics protocol. |
-| [wayst](https://github.com/91861/wayst) | X | X | - | X | X | Kitty graphics protocol; SIXEL support is experimental. |
-| [st](https://st.suckless.org/) with a graphics patch | X | - | - | X | X | Requires a Kitty-graphics implementation patch. |
-| [xterm.js](https://xtermjs.org/) host | X | X | X | X | X | Requires the image add-on; its Kitty implementation is partial. |
-| [xterm](https://invisible-island.net/xterm/ctlseqs/ctlseqs.html) | - | X | - | X | X | Must be built with SIXEL and configured as a DEC graphics terminal. |
-| [mlterm](https://mlterm.sourceforge.net/) | - | X | X | X | X | `iterm2` requires a build with `SUPPORT_ITERM2_OSC1337`. |
-| [foot](https://codeberg.org/dnkl/foot) | - | X | - | X | X | |
-| [mintty](https://mintty.github.io/) / wsltty | - | X | X | X | X | Windows/Cygwin terminal and its WSL variant. |
+| [Bobcat](https://github.com/ismail-yilmaz/Bobcat) | - | X | - | X | X | Cross-platform (incl. Windows); natively supports SIXEL. |
+| [Cmder](https://github.com/cmderdev/cmder) | - | - | - | X | X | Built on the ConEmu console; inherits its lack of SIXEL/Kitty support. |
+| [ConEmu](https://conemu.github.io/) | - | - | - | X | X | No SIXEL or Kitty graphics protocol support. |
 | [Contour](https://contour-terminal.org/configuration/) | - | X | - | X | X | |
 | [DomTerm](https://domterm.org/Features.html) | - | X | - | X | X | |
-| [yaft](https://github.com/uobikiemukot/yaft) | - | X | - | X | X | Linux framebuffer terminal. |
+| [foot](https://codeberg.org/dnkl/foot) | - | X | - | X | X | |
+| [Ghostty](https://ghostty.org/docs/features) | X | - | - | X | X | Kitty graphics protocol. |
+| [GNOME Console](https://apps.gnome.org/Console/) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
+| [GNOME Terminal](https://gitlab.gnome.org/GNOME/gnome-terminal) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
+| [Guake](https://github.com/Guake/guake) | - | - | - | X | X | VTE-based drop-down terminal; SIXEL is disabled by default. |
+| [Hyper](https://hyper.is/) | - | - | X | X | X | Electron-based terminal; supports the iTerm2 inline image protocol only. |
+| [iTerm2](https://iterm2.com/3.5/documentation-images.html) | X | X | X | X | X | Supports all three; its [release notes](https://iterm2.com/downloads.html?cve=title) document SIXEL and Kitty support. |
+| [Kitty](https://sw.kovidgoyal.net/kitty/) | X | - | - | X | X | Native implementation of the Kitty graphics protocol. |
+| [Konsole](https://konsole.kde.org/) | X | X | X | X | X | iTerm2 support is available since 22.04; animated images are limited. |
+| [LXTerminal](https://github.com/lxde/lxterminal) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
+| [MATE Terminal](https://wiki.mate-desktop.org/mate-desktop/applications/mate-terminal/) | - | - | - | X | X | Standard MATE terminal; no image protocol support. |
+| [mintty](https://mintty.github.io/) / wsltty | - | X | X | X | X | Windows/Cygwin terminal and its WSL variant. |
+| [mlterm](https://mlterm.sourceforge.net/) | - | X | X | X | X | `iterm2` requires a build with `SUPPORT_ITERM2_OSC1337`. |
+| [MobaXterm](https://mobaxterm.mobatek.net/) | - | - | - | X | X | No SIXEL or Kitty graphics protocol support found in its release notes. |
+| [Ptyxis](https://gitlab.gnome.org/chergert/ptyxis) | - | - | - | X | X | GNOME container-focused terminal; no raster image protocol support yet. |
+| [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/) | - | - | - | X | X | No SIXEL or Kitty graphics protocol support. |
+| [QTerminal](https://github.com/lxqt/qterminal) | - | - | - | X | X | LXQt terminal based on qtermwidget; no SIXEL or Kitty support yet. |
+| [Rio](https://rioterm.com/) | X | X | X | X | X | Supports Kitty, Sixel, and iTerm2 image protocols. |
+| [st](https://st.suckless.org/) with a graphics patch | X | - | - | X | X | Requires a Kitty-graphics implementation patch. |
 | [SyncTERM](https://www.syncterm.net/) | - | X | - | X | X | |
+| [Tabby](https://github.com/Eugeny/tabby) | - | X | - | X | X | SIXEL only; Kitty graphics protocol support is still an open request. |
+| [Terminator](https://gnome-terminator.readthedocs.io/) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
+| [Tilix](https://github.com/gnunn1/tilix) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
+| [Warp](https://www.warp.dev/) | X | - | - | X | X | Implements the Kitty graphics protocol. |
+| [wayst](https://github.com/91861/wayst) | X | X | - | X | X | Kitty graphics protocol; SIXEL support is experimental. |
+| [WezTerm](https://wezterm.org/features.html) | X | X | X | X | X | Enable `enable_kitty_graphics=true` for `kitty`; Sixel is experimental. |
+| [Windows Terminal](https://github.com/microsoft/terminal) | - | X | - | X | X | SIXEL support added in 1.22; no Kitty graphics protocol support yet. |
+| [Xfce Terminal](https://docs.xfce.org/apps/xfce4-terminal/start) | - | - | - | X | X | VTE-based; its optional SIXEL support is disabled by default. |
+| [xterm](https://invisible-island.net/xterm/ctlseqs/ctlseqs.html) | - | X | - | X | X | Must be built with SIXEL and configured as a DEC graphics terminal. |
+| [xterm.js](https://xtermjs.org/) host | X | X | X | X | X | Requires the image add-on; its Kitty implementation is partial. |
+| [yaft](https://github.com/uobikiemukot/yaft) | - | X | - | X | X | Linux framebuffer terminal. |
+| [Yakuake](https://apps.kde.org/yakuake/) | X | X | X | X | X | KDE drop-down terminal built on the Konsole KPart; inherits its graphics support. |
 
 ## Basic usage
 
