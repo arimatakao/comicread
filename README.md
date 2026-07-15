@@ -77,6 +77,10 @@ Move the extracted executable to a directory in your `PATH` to install it manual
 
 </details>
 
+### Installer language
+
+The Linux/macOS and Windows installers automatically use the system language for their prompts and status messages. Supported languages are English, Ukrainian, Polish, German, French, Spanish, Czech, Romanian, Italian, Korean, Japanese, Indonesian, Hindi, Greek, Turkish, Kazakh, and Georgian. Unsupported languages fall back to English.
+
 ### Go
 
 Requires Go 1.26.5 or newer:
