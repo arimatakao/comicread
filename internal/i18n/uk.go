@@ -16,7 +16,7 @@ var ukMessages = map[string]string{
 	ReaderViewRendering:        "рендеринг",
 	ReaderViewBookmarks:        "Закладки",
 	ReaderViewNoBookmarks:      "(немає закладок)",
-	ReaderViewBookmarksHelp:    "вгору/вниз рух  enter відкрити  esc закрити",
+	ReaderViewBookmarksHelp:    "вгору/вниз рух | enter відкрити | esc закрити",
 	ReaderViewHelp: `Клавіші
 
 ← →  попередня / наступна сторінка

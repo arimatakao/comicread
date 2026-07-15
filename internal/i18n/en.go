@@ -16,7 +16,7 @@ var enMessages = map[string]string{
 	ReaderViewRendering:        "rendering",
 	ReaderViewBookmarks:        "Bookmarks",
 	ReaderViewNoBookmarks:      "(no bookmarks)",
-	ReaderViewBookmarksHelp:    "up/down move  enter open  esc close",
+	ReaderViewBookmarksHelp:    "up/down move | enter open | esc close",
 	ReaderViewHelp: `Keys
 
 ← →  previous / next page

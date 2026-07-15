@@ -14,11 +14,17 @@ var jaMessages = map[string]string{
 	ReaderViewPages:            "ページ %d/%d",
 	ReaderViewPageRange:        "ページ %d-%d/%d",
 	ReaderViewRendering:        "描画中",
+	ReaderViewBookmarks:        "ブックマーク",
+	ReaderViewNoBookmarks:      "(ブックマークなし)",
+	ReaderViewBookmarksHelp:    "↑/↓ 移動 | enter 開く | esc 閉じる",
 	ReaderViewHelp: `キー
 
 ← →  前 / 次のページ
 ↑ ↓  拡大したページをスクロール
 + -  拡大 / 縮小
+b    ブックマークを追加 / 削除
+v ← → 前 / 次のブックマーク
+c v  ブックマーク
 q    終了
 
 ?    ヘルプを閉じる`,
@@ -40,12 +46,16 @@ q    終了
 	CLIErrRunTUI:                    "TUI の起動中にエラーが発生しました: %w",
 	CLIErrParseArgs:                 "引数の解析中にエラーが発生しました: %w",
 	CLIErrOpenChapter:               "チャプターを開けません: %w",
+	CLIErrOpenJournal:               "ジャーナルを開けません: %w",
+	CLIErrClearJournal:              "ジャーナルを削除できません: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal にはファイルまたはディレクトリが必要です",
 	CLIErrNoPages:                   "チャプターに読み取れる画像ページがありません",
 	CLIErrInspectInput:              "入力 %q を確認できません: %w",
 	CLIErrUnsupportedFile:           "未対応のファイル %q: 対応形式は CBZ、PDF、EPUB、または画像ディレクトリです",
 	CLIFlagGraphicsUsage:            "レンダラー: auto、ascii、dots、kitty、sixel、iterm2",
 	CLIFlagVersionUsage:             "バージョンを表示して終了",
 	CLIFlagEnvUsage:                 "comicread の環境を表示して終了",
+	CLIFlagClearJournalUsage:        "ファイルまたはディレクトリのローカルジャーナルを削除して終了",
 	CLIFlagBookViewUsage:            "ページの組を左から右へ表示",
 	CLIFlagRightBookViewUsage:       "ページの組を右から左へ表示",
 	CLIFlagCircleBookViewUsage:      "重なるページの組を左から右へ表示",
@@ -65,6 +75,7 @@ q    終了
   --circle-view       重なるページの組を左から右へ表示
   --right-circle-view
                       重なるページの組を右から左へ表示
+  --clear-journal    ファイルまたはディレクトリのローカルジャーナルを削除して終了
   --env               comicread の環境を表示して終了
   -v, --version       バージョンを表示して終了
   -h, --help          このヘルプを表示

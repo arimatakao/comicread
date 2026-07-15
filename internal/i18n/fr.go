@@ -14,11 +14,17 @@ var frMessages = map[string]string{
 	ReaderViewPages:            "pages %d/%d",
 	ReaderViewPageRange:        "pages %d-%d/%d",
 	ReaderViewRendering:        "rendu en cours",
+	ReaderViewBookmarks:        "Signets",
+	ReaderViewNoBookmarks:      "(aucun signet)",
+	ReaderViewBookmarksHelp:    "haut/bas déplacer | enter ouvrir | esc fermer",
 	ReaderViewHelp: `Touches
 
 ← →  page précédente / suivante
 ↑ ↓  faire défiler une page zoomée
 + -  zoomer / dézoomer
+b    ajouter / supprimer un signet
+v ← → signet précédent / suivant
+c v  signets
 q    quitter
 
 ?    fermer l'aide`,
@@ -40,12 +46,16 @@ q    quitter
 	CLIErrRunTUI:                    "erreur lors du lancement de la TUI : %w",
 	CLIErrParseArgs:                 "erreur d'analyse des arguments : %w",
 	CLIErrOpenChapter:               "impossible d'ouvrir le chapitre : %w",
+	CLIErrOpenJournal:               "impossible d'ouvrir le journal : %w",
+	CLIErrClearJournal:              "impossible d'effacer le journal : %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal requiert un fichier ou un dossier",
 	CLIErrNoPages:                   "le chapitre ne contient aucune page image lisible",
 	CLIErrInspectInput:              "impossible d'inspecter l'entrée %q : %w",
 	CLIErrUnsupportedFile:           "fichier non pris en charge %q : formats pris en charge : CBZ, PDF, EPUB ou dossier d'images",
 	CLIFlagGraphicsUsage:            "moteur de rendu : auto, ascii, dots, kitty, sixel ou iterm2",
 	CLIFlagVersionUsage:             "afficher la version et quitter",
 	CLIFlagEnvUsage:                 "afficher l'environnement comicread et quitter",
+	CLIFlagClearJournalUsage:        "supprimer le journal local d'un fichier ou dossier et quitter",
 	CLIFlagBookViewUsage:            "afficher les pages par paires de gauche à droite",
 	CLIFlagRightBookViewUsage:       "afficher les pages par paires de droite à gauche",
 	CLIFlagCircleBookViewUsage:      "afficher les paires de pages superposées de gauche à droite",
@@ -65,6 +75,7 @@ options :
   --circle-view       afficher les paires de pages superposées de gauche à droite
   --right-circle-view
                       afficher les paires de pages superposées de droite à gauche
+  --clear-journal    supprimer le journal local d'un fichier ou dossier et quitter
   --env               afficher l'environnement comicread et quitter
   -v, --version       afficher la version et quitter
   -h, --help          afficher cette aide

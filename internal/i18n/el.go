@@ -14,11 +14,17 @@ var elMessages = map[string]string{
 	ReaderViewPages:            "σελίδες %d/%d",
 	ReaderViewPageRange:        "σελίδες %d-%d/%d",
 	ReaderViewRendering:        "απόδοση",
+	ReaderViewBookmarks:        "Σελιδοδείκτες",
+	ReaderViewNoBookmarks:      "(δεν υπάρχουν σελιδοδείκτες)",
+	ReaderViewBookmarksHelp:    "πάνω/κάτω μετακίνηση | enter άνοιγμα | esc κλείσιμο",
 	ReaderViewHelp: `Πλήκτρα
 
 ← →  προηγούμενη / επόμενη σελίδα
 ↑ ↓  κύλιση σε μεγεθυμένη σελίδα
 + -  μεγέθυνση / σμίκρυνση
+b    προσθήκη / αφαίρεση σελιδοδείκτη
+v ← → προηγούμενος / επόμενος σελιδοδείκτης
+c v  σελιδοδείκτες
 q    έξοδος
 
 ?    κλείσιμο βοήθειας`,
@@ -40,12 +46,16 @@ q    έξοδος
 	CLIErrRunTUI:                    "σφάλμα κατά την εκκίνηση του TUI: %w",
 	CLIErrParseArgs:                 "σφάλμα κατά την ανάλυση των ορισμάτων: %w",
 	CLIErrOpenChapter:               "δεν είναι δυνατό το άνοιγμα του κεφαλαίου: %w",
+	CLIErrOpenJournal:               "δεν είναι δυνατό το άνοιγμα του ημερολογίου: %w",
+	CLIErrClearJournal:              "δεν είναι δυνατή η εκκαθάριση του ημερολογίου: %w",
+	CLIErrClearJournalRequiresInput: "το --clear-journal απαιτεί αρχείο ή κατάλογο",
 	CLIErrNoPages:                   "το κεφάλαιο δεν περιέχει αναγνώσιμες σελίδες εικόνων",
 	CLIErrInspectInput:              "δεν είναι δυνατός ο έλεγχος της εισόδου %q: %w",
 	CLIErrUnsupportedFile:           "μη υποστηριζόμενο αρχείο %q: υποστηρίζονται CBZ, PDF, EPUB ή κατάλογος εικόνων",
 	CLIFlagGraphicsUsage:            "αποδότης: auto, ascii, dots, kitty, sixel ή iterm2",
 	CLIFlagVersionUsage:             "εμφάνιση έκδοσης και έξοδος",
 	CLIFlagEnvUsage:                 "εμφάνιση περιβάλλοντος comicread και έξοδος",
+	CLIFlagClearJournalUsage:        "διαγραφή τοπικού ημερολογίου για αρχείο ή κατάλογο και έξοδος",
 	CLIFlagBookViewUsage:            "εμφάνιση ζευγών σελίδων από αριστερά προς τα δεξιά",
 	CLIFlagRightBookViewUsage:       "εμφάνιση ζευγών σελίδων από δεξιά προς τα αριστερά",
 	CLIFlagCircleBookViewUsage:      "εμφάνιση επικαλυπτόμενων ζευγών σελίδων από αριστερά προς τα δεξιά",
@@ -65,6 +75,7 @@ q    έξοδος
   --circle-view       εμφάνιση επικαλυπτόμενων ζευγών σελίδων από αριστερά προς τα δεξιά
   --right-circle-view
                       εμφάνιση επικαλυπτόμενων ζευγών σελίδων από δεξιά προς τα αριστερά
+  --clear-journal    διαγραφή τοπικού ημερολογίου για αρχείο ή κατάλογο και έξοδος
   --env               εμφάνιση περιβάλλοντος comicread και έξοδος
   -v, --version       εμφάνιση έκδοσης και έξοδος
   -h, --help          εμφάνιση αυτής της βοήθειας

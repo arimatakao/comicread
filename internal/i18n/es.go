@@ -14,11 +14,17 @@ var esMessages = map[string]string{
 	ReaderViewPages:            "páginas %d/%d",
 	ReaderViewPageRange:        "páginas %d-%d/%d",
 	ReaderViewRendering:        "renderizando",
+	ReaderViewBookmarks:        "Marcadores",
+	ReaderViewNoBookmarks:      "(sin marcadores)",
+	ReaderViewBookmarksHelp:    "arriba/abajo mover | enter abrir | esc cerrar",
 	ReaderViewHelp: `Teclas
 
 ← →  página anterior / siguiente
 ↑ ↓  desplazar una página ampliada
 + -  ampliar / reducir
+b    añadir / quitar marcador
+v ← → marcador anterior / siguiente
+c v  marcadores
 q    salir
 
 ?    cerrar ayuda`,
@@ -40,12 +46,16 @@ q    salir
 	CLIErrRunTUI:                    "error al ejecutar la TUI: %w",
 	CLIErrParseArgs:                 "error al analizar los argumentos: %w",
 	CLIErrOpenChapter:               "no se puede abrir el capítulo: %w",
+	CLIErrOpenJournal:               "no se puede abrir el registro: %w",
+	CLIErrClearJournal:              "no se puede borrar el registro: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal requiere un archivo o directorio",
 	CLIErrNoPages:                   "el capítulo no contiene páginas de imagen legibles",
 	CLIErrInspectInput:              "no se puede inspeccionar la entrada %q: %w",
 	CLIErrUnsupportedFile:           "archivo no compatible %q: los formatos compatibles son CBZ, PDF, EPUB o un directorio de imágenes",
 	CLIFlagGraphicsUsage:            "renderizador: auto, ascii, dots, kitty, sixel o iterm2",
 	CLIFlagVersionUsage:             "mostrar la versión y salir",
 	CLIFlagEnvUsage:                 "mostrar el entorno de comicread y salir",
+	CLIFlagClearJournalUsage:        "eliminar el registro local de un archivo o directorio y salir",
 	CLIFlagBookViewUsage:            "mostrar pares de páginas de izquierda a derecha",
 	CLIFlagRightBookViewUsage:       "mostrar pares de páginas de derecha a izquierda",
 	CLIFlagCircleBookViewUsage:      "mostrar pares de páginas superpuestas de izquierda a derecha",
@@ -65,6 +75,7 @@ opciones:
   --circle-view       mostrar pares de páginas superpuestas de izquierda a derecha
   --right-circle-view
                       mostrar pares de páginas superpuestas de derecha a izquierda
+  --clear-journal    eliminar el registro local de un archivo o directorio y salir
   --env               mostrar el entorno de comicread y salir
   -v, --version       mostrar la versión y salir
   -h, --help          mostrar esta ayuda

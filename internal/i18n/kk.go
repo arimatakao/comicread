@@ -14,11 +14,17 @@ var kkMessages = map[string]string{
 	ReaderViewPages:            "беттер %d/%d",
 	ReaderViewPageRange:        "беттер %d-%d/%d",
 	ReaderViewRendering:        "рендеринг",
+	ReaderViewBookmarks:        "Бетбелгілер",
+	ReaderViewNoBookmarks:      "(бетбелгілер жоқ)",
+	ReaderViewBookmarksHelp:    "↑/↓ жылжу | enter ашу | esc жабу",
 	ReaderViewHelp: `Пернелер
 
 ← →  алдыңғы / келесі бет
 ↑ ↓  ұлғайтылған бетті айналдыру
 + -  үлкейту / кішірейту
+b    бетбелгі қосу / жою
+v ← → алдыңғы / келесі бетбелгі
+c v  бетбелгілер
 q    шығу
 
 ?    анықтаманы жабу`,
@@ -40,12 +46,16 @@ q    шығу
 	CLIErrRunTUI:                    "TUI іске қосу қатесі: %w",
 	CLIErrParseArgs:                 "аргументтерді талдау қатесі: %w",
 	CLIErrOpenChapter:               "тарауды ашу мүмкін болмады: %w",
+	CLIErrOpenJournal:               "журналды ашу мүмкін болмады: %w",
+	CLIErrClearJournal:              "журналды жою мүмкін болмады: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal файлды немесе қалтаны қажет етеді",
 	CLIErrNoPages:                   "тарауда оқуға жарамды беттер жоқ",
 	CLIErrInspectInput:              "%q кіріс деректерін тексеру мүмкін болмады: %w",
 	CLIErrUnsupportedFile:           "қолдау көрсетілмейтін файл %q: қолдау көрсетілетін пішімдер — CBZ, PDF, EPUB немесе сурет қалтасы",
 	CLIFlagGraphicsUsage:            "рендерер: auto, ascii, dots, kitty, sixel немесе iterm2",
 	CLIFlagVersionUsage:             "нұсқасын шығарып, жұмысты аяқтау",
 	CLIFlagEnvUsage:                 "comicread ортасын шығарып, жұмысты аяқтау",
+	CLIFlagClearJournalUsage:        "файл не қалта үшін жергілікті журналды жойып, жұмысты аяқтау",
 	CLIFlagBookViewUsage:            "беттерді солдан оңға жұп етіп көрсету",
 	CLIFlagRightBookViewUsage:       "беттерді оңнан солға жұп етіп көрсету",
 	CLIFlagCircleBookViewUsage:      "беттерді солдан оңға қабаттасқан жұп етіп көрсету",
@@ -65,6 +75,7 @@ q    шығу
   --circle-view       беттерді солдан оңға қабаттасқан жұп етіп көрсету
   --right-circle-view
                       беттерді оңнан солға қабаттасқан жұп етіп көрсету
+  --clear-journal    файл не қалта үшін жергілікті журналды жойып, жұмысты аяқтау
   --env               comicread ортасын шығарып, жұмысты аяқтау
   -v, --version       нұсқасын шығарып, жұмысты аяқтау
   -h, --help          осы анықтаманы көрсету

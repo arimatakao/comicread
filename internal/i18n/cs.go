@@ -14,11 +14,17 @@ var csMessages = map[string]string{
 	ReaderViewPages:            "strany %d/%d",
 	ReaderViewPageRange:        "strany %d-%d/%d",
 	ReaderViewRendering:        "vykreslování",
+	ReaderViewBookmarks:        "Záložky",
+	ReaderViewNoBookmarks:      "(žádné záložky)",
+	ReaderViewBookmarksHelp:    "↑/↓ pohyb | enter otevřít | esc zavřít",
 	ReaderViewHelp: `Klávesy
 
 ← →  předchozí / další strana
 ↑ ↓  posun přiblížené strany
 + -  přiblížit / oddálit
+b    přidat / odstranit záložku
+v ← → předchozí / další záložka
+c v  záložky
 q    ukončit
 
 ?    zavřít nápovědu`,
@@ -40,12 +46,16 @@ q    ukončit
 	CLIErrRunTUI:                    "chyba při spuštění TUI: %w",
 	CLIErrParseArgs:                 "chyba při analýze argumentů: %w",
 	CLIErrOpenChapter:               "nelze otevřít kapitolu: %w",
+	CLIErrOpenJournal:               "nelze otevřít deník: %w",
+	CLIErrClearJournal:              "nelze vymazat deník: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal vyžaduje soubor nebo složku",
 	CLIErrNoPages:                   "kapitola neobsahuje žádné čitelné obrazové stránky",
 	CLIErrInspectInput:              "nelze zkontrolovat vstup %q: %w",
 	CLIErrUnsupportedFile:           "nepodporovaný soubor %q: podporované formáty jsou CBZ, PDF, EPUB nebo složka s obrázky",
 	CLIFlagGraphicsUsage:            "vykreslovač: auto, ascii, dots, kitty, sixel nebo iterm2",
 	CLIFlagVersionUsage:             "vypsat verzi a ukončit",
 	CLIFlagEnvUsage:                 "vypsat prostředí comicread a ukončit",
+	CLIFlagClearJournalUsage:        "odstranit místní deník pro soubor nebo složku a ukončit",
 	CLIFlagBookViewUsage:            "zobrazit dvojice stránek zleva doprava",
 	CLIFlagRightBookViewUsage:       "zobrazit dvojice stránek zprava doleva",
 	CLIFlagCircleBookViewUsage:      "zobrazit překrývající se dvojice stránek zleva doprava",
@@ -65,6 +75,7 @@ volby:
   --circle-view       zobrazit překrývající se dvojice stránek zleva doprava
   --right-circle-view
                       zobrazit překrývající se dvojice stránek zprava doleva
+  --clear-journal    odstranit místní deník pro soubor nebo složku a ukončit
   --env               vypsat prostředí comicread a ukončit
   -v, --version       vypsat verzi a ukončit
   -h, --help          zobrazit tuto nápovědu

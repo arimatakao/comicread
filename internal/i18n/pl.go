@@ -14,11 +14,17 @@ var plMessages = map[string]string{
 	ReaderViewPages:            "strony %d/%d",
 	ReaderViewPageRange:        "strony %d-%d/%d",
 	ReaderViewRendering:        "renderowanie",
+	ReaderViewBookmarks:        "Zakładki",
+	ReaderViewNoBookmarks:      "(brak zakładek)",
+	ReaderViewBookmarksHelp:    "góra/dół ruch | enter otwórz | esc zamknij",
 	ReaderViewHelp: `Klawisze
 
 ← →  poprzednia / następna strona
 ↑ ↓  przewijanie powiększonej strony
 + -  powiększ / pomniejsz
+b    dodaj / usuń zakładkę
+v ← → poprzednia / następna zakładka
+c v  zakładki
 q    wyjście
 
 ?    zamknij pomoc`,
@@ -40,12 +46,16 @@ q    wyjście
 	CLIErrRunTUI:                    "błąd uruchamiania TUI: %w",
 	CLIErrParseArgs:                 "błąd analizy argumentów: %w",
 	CLIErrOpenChapter:               "nie można otworzyć rozdziału: %w",
+	CLIErrOpenJournal:               "nie można otworzyć dziennika: %w",
+	CLIErrClearJournal:              "nie można usunąć dziennika: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal wymaga pliku lub katalogu",
 	CLIErrNoPages:                   "rozdział nie zawiera czytelnych stron obrazów",
 	CLIErrInspectInput:              "nie można sprawdzić danych wejściowych %q: %w",
 	CLIErrUnsupportedFile:           "nieobsługiwany plik %q: obsługiwane formaty to CBZ, PDF, EPUB lub katalog obrazów",
 	CLIFlagGraphicsUsage:            "renderer: auto, ascii, dots, kitty, sixel lub iterm2",
 	CLIFlagVersionUsage:             "wypisz wersję i zakończ",
 	CLIFlagEnvUsage:                 "wypisz środowisko comicread i zakończ",
+	CLIFlagClearJournalUsage:        "usuń lokalny dziennik dla pliku lub katalogu i zakończ",
 	CLIFlagBookViewUsage:            "pokaż pary stron od lewej do prawej",
 	CLIFlagRightBookViewUsage:       "pokaż pary stron od prawej do lewej",
 	CLIFlagCircleBookViewUsage:      "pokaż nakładające się pary stron od lewej do prawej",
@@ -65,6 +75,7 @@ opcje:
   --circle-view       pokaż nakładające się pary stron od lewej do prawej
   --right-circle-view
                       pokaż nakładające się pary stron od prawej do lewej
+  --clear-journal    usuń lokalny dziennik dla pliku lub katalogu i zakończ
   --env               wypisz środowisko comicread i zakończ
   -v, --version       wypisz wersję i zakończ
   -h, --help          pokaż tę pomoc

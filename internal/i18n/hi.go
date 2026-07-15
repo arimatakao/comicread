@@ -14,11 +14,17 @@ var hiMessages = map[string]string{
 	ReaderViewPages:            "पृष्ठ %d/%d",
 	ReaderViewPageRange:        "पृष्ठ %d-%d/%d",
 	ReaderViewRendering:        "रेंडर हो रहा है",
+	ReaderViewBookmarks:        "बुकमार्क",
+	ReaderViewNoBookmarks:      "(कोई बुकमार्क नहीं)",
+	ReaderViewBookmarksHelp:    "ऊपर/नीचे चलें | enter खोलें | esc बंद करें",
 	ReaderViewHelp: `कुंजियाँ
 
 ← →  पिछला / अगला पृष्ठ
 ↑ ↓  ज़ूम किए गए पृष्ठ को स्क्रॉल करें
 + -  ज़ूम बढ़ाएँ / घटाएँ
+b    बुकमार्क जोड़ें / हटाएँ
+v ← → पिछला / अगला बुकमार्क
+c v  बुकमार्क
 q    बाहर निकलें
 
 ?    सहायता बंद करें`,
@@ -40,12 +46,16 @@ q    बाहर निकलें
 	CLIErrRunTUI:                    "TUI चलाने में त्रुटि: %w",
 	CLIErrParseArgs:                 "तर्कों को पार्स करने में त्रुटि: %w",
 	CLIErrOpenChapter:               "अध्याय नहीं खोला जा सकता: %w",
+	CLIErrOpenJournal:               "जर्नल नहीं खोला जा सकता: %w",
+	CLIErrClearJournal:              "जर्नल साफ़ नहीं किया जा सकता: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal के लिए फ़ाइल या निर्देशिका आवश्यक है",
 	CLIErrNoPages:                   "अध्याय में कोई पढ़ने योग्य छवि पृष्ठ नहीं है",
 	CLIErrInspectInput:              "इनपुट %q की जाँच नहीं की जा सकती: %w",
 	CLIErrUnsupportedFile:           "असमर्थित फ़ाइल %q: समर्थित प्रारूप CBZ, PDF, EPUB या छवियों की निर्देशिका हैं",
 	CLIFlagGraphicsUsage:            "रेंडरर: auto, ascii, dots, kitty, sixel या iterm2",
 	CLIFlagVersionUsage:             "संस्करण दिखाएँ और बाहर निकलें",
 	CLIFlagEnvUsage:                 "comicread परिवेश दिखाएँ और बाहर निकलें",
+	CLIFlagClearJournalUsage:        "फ़ाइल या निर्देशिका का स्थानीय जर्नल हटाएँ और बाहर निकलें",
 	CLIFlagBookViewUsage:            "पृष्ठों के जोड़े बाएँ से दाएँ दिखाएँ",
 	CLIFlagRightBookViewUsage:       "पृष्ठों के जोड़े दाएँ से बाएँ दिखाएँ",
 	CLIFlagCircleBookViewUsage:      "ओवरलैप होते पृष्ठों के जोड़े बाएँ से दाएँ दिखाएँ",
@@ -65,6 +75,7 @@ q    बाहर निकलें
   --circle-view       ओवरलैप होते पृष्ठों के जोड़े बाएँ से दाएँ दिखाएँ
   --right-circle-view
                       ओवरलैप होते पृष्ठों के जोड़े दाएँ से बाएँ दिखाएँ
+  --clear-journal    फ़ाइल या निर्देशिका का स्थानीय जर्नल हटाएँ और बाहर निकलें
   --env               comicread परिवेश दिखाएँ और बाहर निकलें
   -v, --version       संस्करण दिखाएँ और बाहर निकलें
   -h, --help          यह सहायता दिखाएँ

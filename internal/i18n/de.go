@@ -14,11 +14,17 @@ var deMessages = map[string]string{
 	ReaderViewPages:            "Seiten %d/%d",
 	ReaderViewPageRange:        "Seiten %d-%d/%d",
 	ReaderViewRendering:        "wird dargestellt",
+	ReaderViewBookmarks:        "Lesezeichen",
+	ReaderViewNoBookmarks:      "(keine Lesezeichen)",
+	ReaderViewBookmarksHelp:    "hoch/runter bewegen | enter öffnen | esc schließen",
 	ReaderViewHelp: `Tasten
 
 ← →  vorherige / nächste Seite
 ↑ ↓  vergrößerte Seite scrollen
 + -  vergrößern / verkleinern
+b    Lesezeichen hinzufügen / entfernen
+v ← → vorheriges / nächstes Lesezeichen
+c v  Lesezeichen
 q    beenden
 
 ?    Hilfe schließen`,
@@ -40,12 +46,16 @@ q    beenden
 	CLIErrRunTUI:                    "Fehler beim Starten der TUI: %w",
 	CLIErrParseArgs:                 "Fehler beim Verarbeiten der Argumente: %w",
 	CLIErrOpenChapter:               "Kapitel kann nicht geöffnet werden: %w",
+	CLIErrOpenJournal:               "Journal kann nicht geöffnet werden: %w",
+	CLIErrClearJournal:              "Journal kann nicht gelöscht werden: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal benötigt eine Datei oder einen Ordner",
 	CLIErrNoPages:                   "Kapitel enthält keine lesbaren Bildseiten",
 	CLIErrInspectInput:              "Eingabe %q kann nicht geprüft werden: %w",
 	CLIErrUnsupportedFile:           "nicht unterstützte Datei %q: unterstützte Formate sind CBZ, PDF, EPUB oder ein Bildordner",
 	CLIFlagGraphicsUsage:            "Renderer: auto, ascii, dots, kitty, sixel oder iterm2",
 	CLIFlagVersionUsage:             "Version ausgeben und beenden",
 	CLIFlagEnvUsage:                 "comicread-Umgebung ausgeben und beenden",
+	CLIFlagClearJournalUsage:        "lokales Journal für eine Datei oder einen Ordner löschen und beenden",
 	CLIFlagBookViewUsage:            "Seiten paarweise von links nach rechts anzeigen",
 	CLIFlagRightBookViewUsage:       "Seiten paarweise von rechts nach links anzeigen",
 	CLIFlagCircleBookViewUsage:      "überlappende Seitenpaare von links nach rechts anzeigen",
@@ -65,6 +75,7 @@ Optionen:
   --circle-view       überlappende Seitenpaare von links nach rechts anzeigen
   --right-circle-view
                       überlappende Seitenpaare von rechts nach links anzeigen
+  --clear-journal    lokales Journal für eine Datei oder einen Ordner löschen und beenden
   --env               comicread-Umgebung ausgeben und beenden
   -v, --version       Version ausgeben und beenden
   -h, --help          diese Hilfe anzeigen

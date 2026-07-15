@@ -14,11 +14,17 @@ var koMessages = map[string]string{
 	ReaderViewPages:            "페이지 %d/%d",
 	ReaderViewPageRange:        "페이지 %d-%d/%d",
 	ReaderViewRendering:        "렌더링 중",
+	ReaderViewBookmarks:        "북마크",
+	ReaderViewNoBookmarks:      "(북마크 없음)",
+	ReaderViewBookmarksHelp:    "위/아래 이동 | enter 열기 | esc 닫기",
 	ReaderViewHelp: `키
 
 ← →  이전 / 다음 페이지
 ↑ ↓  확대된 페이지 스크롤
 + -  확대 / 축소
+b    북마크 추가 / 제거
+v ← → 이전 / 다음 북마크
+c v  북마크
 q    종료
 
 ?    도움말 닫기`,
@@ -40,12 +46,16 @@ q    종료
 	CLIErrRunTUI:                    "TUI를 실행하는 중 오류: %w",
 	CLIErrParseArgs:                 "인수를 분석하는 중 오류: %w",
 	CLIErrOpenChapter:               "챕터를 열 수 없습니다: %w",
+	CLIErrOpenJournal:               "저널을 열 수 없습니다: %w",
+	CLIErrClearJournal:              "저널을 삭제할 수 없습니다: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal에는 파일 또는 디렉터리가 필요합니다",
 	CLIErrNoPages:                   "챕터에 읽을 수 있는 이미지 페이지가 없습니다",
 	CLIErrInspectInput:              "입력 %q를 확인할 수 없습니다: %w",
 	CLIErrUnsupportedFile:           "지원되지 않는 파일 %q: 지원 형식은 CBZ, PDF, EPUB 또는 이미지 디렉터리입니다",
 	CLIFlagGraphicsUsage:            "렌더러: auto, ascii, dots, kitty, sixel 또는 iterm2",
 	CLIFlagVersionUsage:             "버전을 출력하고 종료",
 	CLIFlagEnvUsage:                 "comicread 환경을 출력하고 종료",
+	CLIFlagClearJournalUsage:        "파일 또는 디렉터리의 로컬 저널을 삭제하고 종료",
 	CLIFlagBookViewUsage:            "왼쪽에서 오른쪽 순서로 페이지 쌍 표시",
 	CLIFlagRightBookViewUsage:       "오른쪽에서 왼쪽 순서로 페이지 쌍 표시",
 	CLIFlagCircleBookViewUsage:      "왼쪽에서 오른쪽 순서로 겹치는 페이지 쌍 표시",
@@ -65,6 +75,7 @@ q    종료
   --circle-view       왼쪽에서 오른쪽 순서로 겹치는 페이지 쌍 표시
   --right-circle-view
                       오른쪽에서 왼쪽 순서로 겹치는 페이지 쌍 표시
+  --clear-journal    파일 또는 디렉터리의 로컬 저널을 삭제하고 종료
   --env               comicread 환경을 출력하고 종료
   -v, --version       버전을 출력하고 종료
   -h, --help          이 도움말 표시

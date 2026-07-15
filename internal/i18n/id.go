@@ -14,11 +14,17 @@ var idMessages = map[string]string{
 	ReaderViewPages:            "halaman %d/%d",
 	ReaderViewPageRange:        "halaman %d-%d/%d",
 	ReaderViewRendering:        "merender",
+	ReaderViewBookmarks:        "Bookmark",
+	ReaderViewNoBookmarks:      "(tidak ada bookmark)",
+	ReaderViewBookmarksHelp:    "atas/bawah pindah | enter buka | esc tutup",
 	ReaderViewHelp: `Tombol
 
 ← →  halaman sebelumnya / berikutnya
 ↑ ↓  gulir halaman yang diperbesar
 + -  perbesar / perkecil
+b    tambah / hapus bookmark
+v ← → bookmark sebelumnya / berikutnya
+c v  bookmark
 q    keluar
 
 ?    tutup bantuan`,
@@ -40,12 +46,16 @@ q    keluar
 	CLIErrRunTUI:                    "kesalahan saat menjalankan TUI: %w",
 	CLIErrParseArgs:                 "kesalahan saat mengurai argumen: %w",
 	CLIErrOpenChapter:               "tidak dapat membuka bab: %w",
+	CLIErrOpenJournal:               "tidak dapat membuka jurnal: %w",
+	CLIErrClearJournal:              "tidak dapat menghapus jurnal: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal memerlukan berkas atau direktori",
 	CLIErrNoPages:                   "bab tidak berisi halaman gambar yang dapat dibaca",
 	CLIErrInspectInput:              "tidak dapat memeriksa masukan %q: %w",
 	CLIErrUnsupportedFile:           "berkas tidak didukung %q: format yang didukung adalah CBZ, PDF, EPUB, atau direktori gambar",
 	CLIFlagGraphicsUsage:            "perender: auto, ascii, dots, kitty, sixel, atau iterm2",
 	CLIFlagVersionUsage:             "tampilkan versi lalu keluar",
 	CLIFlagEnvUsage:                 "tampilkan lingkungan comicread lalu keluar",
+	CLIFlagClearJournalUsage:        "hapus jurnal lokal untuk berkas atau direktori lalu keluar",
 	CLIFlagBookViewUsage:            "tampilkan pasangan halaman dari kiri ke kanan",
 	CLIFlagRightBookViewUsage:       "tampilkan pasangan halaman dari kanan ke kiri",
 	CLIFlagCircleBookViewUsage:      "tampilkan pasangan halaman bertumpuk dari kiri ke kanan",
@@ -65,6 +75,7 @@ opsi:
   --circle-view       tampilkan pasangan halaman bertumpuk dari kiri ke kanan
   --right-circle-view
                       tampilkan pasangan halaman bertumpuk dari kanan ke kiri
+  --clear-journal    hapus jurnal lokal untuk berkas atau direktori lalu keluar
   --env               tampilkan lingkungan comicread lalu keluar
   -v, --version       tampilkan versi lalu keluar
   -h, --help          tampilkan bantuan ini

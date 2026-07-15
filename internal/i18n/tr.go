@@ -14,11 +14,17 @@ var trMessages = map[string]string{
 	ReaderViewPages:            "sayfalar %d/%d",
 	ReaderViewPageRange:        "sayfalar %d-%d/%d",
 	ReaderViewRendering:        "oluşturuluyor",
+	ReaderViewBookmarks:        "Yer imleri",
+	ReaderViewNoBookmarks:      "(yer imi yok)",
+	ReaderViewBookmarksHelp:    "yukarı/aşağı hareket | enter aç | esc kapat",
 	ReaderViewHelp: `Tuşlar
 
 ← →  önceki / sonraki sayfa
 ↑ ↓  yakınlaştırılmış sayfayı kaydır
 + -  yakınlaştır / uzaklaştır
+b    yer imi ekle / kaldır
+v ← → önceki / sonraki yer imi
+c v  yer imleri
 q    çıkış
 
 ?    yardımı kapat`,
@@ -40,12 +46,16 @@ q    çıkış
 	CLIErrRunTUI:                    "TUI çalıştırılırken hata oluştu: %w",
 	CLIErrParseArgs:                 "bağımsız değişkenler ayrıştırılırken hata oluştu: %w",
 	CLIErrOpenChapter:               "bölüm açılamadı: %w",
+	CLIErrOpenJournal:               "günlük açılamadı: %w",
+	CLIErrClearJournal:              "günlük silinemedi: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal bir dosya veya dizin gerektirir",
 	CLIErrNoPages:                   "bölüm okunabilir görüntü sayfası içermiyor",
 	CLIErrInspectInput:              "%q girdisi incelenemedi: %w",
 	CLIErrUnsupportedFile:           "desteklenmeyen dosya %q: desteklenen biçimler CBZ, PDF, EPUB veya görüntü dizinidir",
 	CLIFlagGraphicsUsage:            "oluşturucu: auto, ascii, dots, kitty, sixel veya iterm2",
 	CLIFlagVersionUsage:             "sürümü göster ve çık",
 	CLIFlagEnvUsage:                 "comicread ortamını göster ve çık",
+	CLIFlagClearJournalUsage:        "dosya veya dizin için yerel günlüğü sil ve çık",
 	CLIFlagBookViewUsage:            "sayfa çiftlerini soldan sağa göster",
 	CLIFlagRightBookViewUsage:       "sayfa çiftlerini sağdan sola göster",
 	CLIFlagCircleBookViewUsage:      "örtüşen sayfa çiftlerini soldan sağa göster",
@@ -65,6 +75,7 @@ seçenekler:
   --circle-view       örtüşen sayfa çiftlerini soldan sağa göster
   --right-circle-view
                       örtüşen sayfa çiftlerini sağdan sola göster
+  --clear-journal    dosya veya dizin için yerel günlüğü sil ve çık
   --env               comicread ortamını göster ve çık
   -v, --version       sürümü göster ve çık
   -h, --help          bu yardımı göster

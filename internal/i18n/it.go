@@ -14,11 +14,17 @@ var itMessages = map[string]string{
 	ReaderViewPages:            "pagine %d/%d",
 	ReaderViewPageRange:        "pagine %d-%d/%d",
 	ReaderViewRendering:        "rendering",
+	ReaderViewBookmarks:        "Segnalibri",
+	ReaderViewNoBookmarks:      "(nessun segnalibro)",
+	ReaderViewBookmarksHelp:    "su/giù sposta | enter apri | esc chiudi",
 	ReaderViewHelp: `Tasti
 
 ← →  pagina precedente / successiva
 ↑ ↓  scorri una pagina ingrandita
 + -  ingrandisci / riduci
+b    aggiungi / rimuovi segnalibro
+v ← → segnalibro precedente / successivo
+c v  segnalibri
 q    esci
 
 ?    chiudi l'aiuto`,
@@ -40,12 +46,16 @@ q    esci
 	CLIErrRunTUI:                    "errore nell'avvio della TUI: %w",
 	CLIErrParseArgs:                 "errore nell'analisi degli argomenti: %w",
 	CLIErrOpenChapter:               "impossibile aprire il capitolo: %w",
+	CLIErrOpenJournal:               "impossibile aprire il registro: %w",
+	CLIErrClearJournal:              "impossibile eliminare il registro: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal richiede un file o una directory",
 	CLIErrNoPages:                   "il capitolo non contiene pagine immagine leggibili",
 	CLIErrInspectInput:              "impossibile controllare l'input %q: %w",
 	CLIErrUnsupportedFile:           "file non supportato %q: i formati supportati sono CBZ, PDF, EPUB o una cartella di immagini",
 	CLIFlagGraphicsUsage:            "renderer: auto, ascii, dots, kitty, sixel o iterm2",
 	CLIFlagVersionUsage:             "mostra la versione ed esci",
 	CLIFlagEnvUsage:                 "mostra l'ambiente comicread ed esci",
+	CLIFlagClearJournalUsage:        "rimuovi il registro locale per un file o una directory ed esci",
 	CLIFlagBookViewUsage:            "mostra coppie di pagine da sinistra a destra",
 	CLIFlagRightBookViewUsage:       "mostra coppie di pagine da destra a sinistra",
 	CLIFlagCircleBookViewUsage:      "mostra coppie di pagine sovrapposte da sinistra a destra",
@@ -65,6 +75,7 @@ opzioni:
   --circle-view       mostra coppie di pagine sovrapposte da sinistra a destra
   --right-circle-view
                       mostra coppie di pagine sovrapposte da destra a sinistra
+  --clear-journal    rimuovi il registro locale per un file o una directory ed esci
   --env               mostra l'ambiente comicread ed esci
   -v, --version       mostra la versione ed esci
   -h, --help          mostra questo aiuto

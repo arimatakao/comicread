@@ -14,11 +14,17 @@ var roMessages = map[string]string{
 	ReaderViewPages:            "pagini %d/%d",
 	ReaderViewPageRange:        "pagini %d-%d/%d",
 	ReaderViewRendering:        "se redă",
+	ReaderViewBookmarks:        "Semne de carte",
+	ReaderViewNoBookmarks:      "(fără semne de carte)",
+	ReaderViewBookmarksHelp:    "sus/jos mută | enter deschide | esc închide",
 	ReaderViewHelp: `Taste
 
 ← →  pagina anterioară / următoare
 ↑ ↓  derulează o pagină mărită
 + -  mărește / micșorează
+b    adaugă / elimină semn de carte
+v ← → semnul de carte anterior / următor
+c v  semne de carte
 q    ieșire
 
 ?    închide ajutorul`,
@@ -40,12 +46,16 @@ q    ieșire
 	CLIErrRunTUI:                    "eroare la pornirea TUI: %w",
 	CLIErrParseArgs:                 "eroare la analizarea argumentelor: %w",
 	CLIErrOpenChapter:               "nu se poate deschide capitolul: %w",
+	CLIErrOpenJournal:               "nu se poate deschide jurnalul: %w",
+	CLIErrClearJournal:              "nu se poate șterge jurnalul: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal necesită un fișier sau director",
 	CLIErrNoPages:                   "capitolul nu conține pagini imagine care pot fi citite",
 	CLIErrInspectInput:              "nu se poate inspecta intrarea %q: %w",
 	CLIErrUnsupportedFile:           "fișier neacceptat %q: formatele acceptate sunt CBZ, PDF, EPUB sau un director de imagini",
 	CLIFlagGraphicsUsage:            "renderer: auto, ascii, dots, kitty, sixel sau iterm2",
 	CLIFlagVersionUsage:             "afișează versiunea și ieși",
 	CLIFlagEnvUsage:                 "afișează mediul comicread și ieși",
+	CLIFlagClearJournalUsage:        "șterge jurnalul local pentru un fișier sau director și ieși",
 	CLIFlagBookViewUsage:            "afișează perechi de pagini de la stânga la dreapta",
 	CLIFlagRightBookViewUsage:       "afișează perechi de pagini de la dreapta la stânga",
 	CLIFlagCircleBookViewUsage:      "afișează perechi de pagini suprapuse de la stânga la dreapta",
@@ -65,6 +75,7 @@ opțiuni:
   --circle-view       afișează perechi de pagini suprapuse de la stânga la dreapta
   --right-circle-view
                       afișează perechi de pagini suprapuse de la dreapta la stânga
+  --clear-journal    șterge jurnalul local pentru un fișier sau director și ieși
   --env               afișează mediul comicread și ieși
   -v, --version       afișează versiunea și ieși
   -h, --help          afișează acest ajutor

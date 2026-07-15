@@ -14,11 +14,17 @@ var kaMessages = map[string]string{
 	ReaderViewPages:            "გვერდები %d/%d",
 	ReaderViewPageRange:        "გვერდები %d-%d/%d",
 	ReaderViewRendering:        "რენდერი",
+	ReaderViewBookmarks:        "სანიშნეები",
+	ReaderViewNoBookmarks:      "(სანიშნეები არ არის)",
+	ReaderViewBookmarksHelp:    "↑/↓ გადაადგილება | enter გახსნა | esc დახურვა",
 	ReaderViewHelp: `კლავიშები
 
 ← →  წინა / შემდეგი გვერდი
 ↑ ↓  გადიდებული გვერდის გადახვევა
 + -  გადიდება / დაპატარავება
+b    სანიშნის დამატება / წაშლა
+v ← → წინა / შემდეგი სანიშნე
+c v  სანიშნეები
 q    გასვლა
 
 ?    დახმარების დახურვა`,
@@ -40,12 +46,16 @@ q    გასვლა
 	CLIErrRunTUI:                    "TUI-ის გაშვების შეცდომა: %w",
 	CLIErrParseArgs:                 "არგუმენტების დამუშავების შეცდომა: %w",
 	CLIErrOpenChapter:               "თავის გახსნა ვერ მოხერხდა: %w",
+	CLIErrOpenJournal:               "ჟურნალის გახსნა ვერ მოხერხდა: %w",
+	CLIErrClearJournal:              "ჟურნალის წაშლა ვერ მოხერხდა: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal საჭიროებს ფაილს ან საქაღალდეს",
 	CLIErrNoPages:                   "თავი არ შეიცავს წასაკითხად გამოსადეგ გვერდებს",
 	CLIErrInspectInput:              "შეყვანილი მონაცემების %q შემოწმება ვერ მოხერხდა: %w",
 	CLIErrUnsupportedFile:           "მხარდაუჭერელი ფაილი %q: მხარდაჭერილი ფორმატებია — CBZ, PDF, EPUB ან სურათების საქაღალდე",
 	CLIFlagGraphicsUsage:            "რენდერერი: auto, ascii, dots, kitty, sixel ან iterm2",
 	CLIFlagVersionUsage:             "ვერსიის გამოტანა და დასრულება",
 	CLIFlagEnvUsage:                 "comicread-ის გარემოს გამოტანა და დასრულება",
+	CLIFlagClearJournalUsage:        "ფაილის ან საქაღალდის ადგილობრივი ჟურნალის წაშლა და დასრულება",
 	CLIFlagBookViewUsage:            "გვერდების წყვილებად ჩვენება მარცხნიდან მარჯვნივ",
 	CLIFlagRightBookViewUsage:       "გვერდების წყვილებად ჩვენება მარჯვნიდან მარცხნივ",
 	CLIFlagCircleBookViewUsage:      "გვერდების გადამფარავი წყვილებად ჩვენება მარცხნიდან მარჯვნივ",
@@ -65,6 +75,7 @@ q    გასვლა
   --circle-view       გვერდების გადამფარავი წყვილებად ჩვენება მარცხნიდან მარჯვნივ
   --right-circle-view
                       გვერდების გადამფარავი წყვილებად ჩვენება მარჯვნიდან მარცხნივ
+  --clear-journal    ფაილის ან საქაღალდის ადგილობრივი ჟურნალის წაშლა და დასრულება
   --env               comicread-ის გარემოს გამოტანა და დასრულება
   -v, --version       ვერსიის გამოტანა და დასრულება
   -h, --help          ამ დახმარების ჩვენება
