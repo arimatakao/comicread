@@ -6,6 +6,18 @@ func isHelpKey(key string) bool {
 	return key == "?"
 }
 
+func isBookmarkKey(key string) bool {
+	return key == "b"
+}
+
+func isBookmarkPrefixKey(key string) bool {
+	return key == "v"
+}
+
+func isBookmarkListPrefixKey(key string) bool {
+	return key == "c"
+}
+
 func isNextKey(key string) bool {
 	switch key {
 	case "right", "l", "space", "pgdown", "j":

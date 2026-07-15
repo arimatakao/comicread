@@ -1,6 +1,7 @@
 package reader
 
 import (
+	"strconv"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -21,6 +22,9 @@ func (m Model) content() string {
 	if m.showingHelp {
 		return "\n" + i18n.T(i18n.ReaderViewHelp)
 	}
+	if m.showingBookmarks {
+		return m.bookmarkList()
+	}
 	return m.header() + strings.Repeat("\n", m.height-1)
 }
 
@@ -34,11 +38,11 @@ func (m Model) header() string {
 	page := m.pageLabel()
 	pageWidth := len([]rune(page))
 	if pageWidth > m.width {
-		return fitLine(page, m.width)
+		return m.withBookmarkMarker(fitLine(page, m.width))
 	}
 
 	if !m.rendering {
-		return strings.Repeat(" ", (m.width-pageWidth)/2) + page
+		return m.withBookmarkMarker(strings.Repeat(" ", (m.width-pageWidth)/2) + page)
 	}
 
 	status := i18n.T(i18n.ReaderViewRendering)
@@ -46,10 +50,45 @@ func (m Model) header() string {
 	pageStart := (m.width - pageWidth) / 2
 	statusStart := m.width - statusWidth
 	if pageStart+pageWidth >= statusStart {
-		return strings.Repeat(" ", pageStart) + page
+		return m.withBookmarkMarker(strings.Repeat(" ", pageStart) + page)
 	}
 
-	return strings.Repeat(" ", pageStart) + page + strings.Repeat(" ", statusStart-pageStart-pageWidth) + status
+	return m.withBookmarkMarker(strings.Repeat(" ", pageStart) + page + strings.Repeat(" ", statusStart-pageStart-pageWidth) + status)
+}
+
+func (m Model) withBookmarkMarker(line string) string {
+	if !m.isCurrentPageBookmarked() || m.width < 1 {
+		return line
+	}
+	runes := []rune(line)
+	if len(runes) == 0 {
+		return "*"
+	}
+	runes[0] = '*'
+	return string(runes)
+}
+
+func (m Model) bookmarkList() string {
+	var content strings.Builder
+	content.WriteString(i18n.T(i18n.ReaderViewBookmarks))
+	content.WriteString("\n\n")
+	if len(m.bookmarks) == 0 {
+		content.WriteString(i18n.T(i18n.ReaderViewNoBookmarks))
+		content.WriteString("\n\n")
+	} else {
+		for index, page := range m.bookmarks {
+			prefix := "  "
+			if index == m.bookmarkIndex {
+				prefix = "> "
+			}
+			content.WriteString(prefix)
+			content.WriteString(strconv.Itoa(page))
+			content.WriteByte('\n')
+		}
+		content.WriteByte('\n')
+	}
+	content.WriteString(i18n.T(i18n.ReaderViewBookmarksHelp))
+	return content.String()
 }
 
 func (m Model) pageLabel() string {

@@ -33,7 +33,28 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyPressMsg:
 		key := msg.String()
 		switch {
+		case m.showingBookmarks:
+			switch key {
+			case "q", "esc":
+				m.closeBookmarks()
+				return m, m.renderPage()
+			case "up":
+				m.bookmarkIndex = max(0, m.bookmarkIndex-1)
+			case "down":
+				if len(m.bookmarks) > 0 {
+					m.bookmarkIndex = min(len(m.bookmarks)-1, m.bookmarkIndex+1)
+				}
+			case "enter":
+				if m.selectBookmark() {
+					m.closeBookmarks()
+					m.updateLayout()
+					return m, m.renderPage()
+				}
+			}
+			return m, nil
+
 		case key == "q", key == "esc", key == "ctrl+c":
+			m.saveCurrentPage()
 			return m, tea.Sequence(tea.Raw(m.backend.Clear(m.displayedArea)), tea.Quit)
 
 		case isHelpKey(key):
@@ -49,6 +70,40 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case m.showingHelp:
 			return m, nil
+
+		case m.bookmarkListPrefix:
+			m.bookmarkListPrefix = false
+			if key == "v" {
+				m.openBookmarks()
+				m.requestID++
+				m.layoutPending = false
+				m.rendering = false
+				return m, m.clearAndRepaint(m.displayedArea)
+			}
+
+		case m.bookmarkPrefix:
+			m.bookmarkPrefix = false
+			switch key {
+			case "left":
+				if m.moveBookmark(false) {
+					m.updateLayout()
+					return m, m.renderPage()
+				}
+			case "right":
+				if m.moveBookmark(true) {
+					m.updateLayout()
+					return m, m.renderPage()
+				}
+			}
+
+		case isBookmarkListPrefixKey(key):
+			m.bookmarkListPrefix = true
+
+		case isBookmarkPrefixKey(key):
+			m.bookmarkPrefix = true
+
+		case isBookmarkKey(key):
+			m.toggleBookmark()
 
 		case isZoomInKey(msg):
 			if m.zoomIn() {
@@ -74,6 +129,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case isNextKey(key):
 			if m.nextPage() {
+				m.saveCurrentPage()
 				m.updateLayout()
 				return m, m.renderPage()
 			}
@@ -81,6 +137,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case isPreviousKey(key):
 			if m.previousPage() {
+				m.saveCurrentPage()
 				m.updateLayout()
 				return m, m.renderPage()
 			}

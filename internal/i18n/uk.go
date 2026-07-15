@@ -14,11 +14,17 @@ var ukMessages = map[string]string{
 	ReaderViewPages:            "сторінки %d/%d",
 	ReaderViewPageRange:        "сторінки %d-%d/%d",
 	ReaderViewRendering:        "рендеринг",
+	ReaderViewBookmarks:        "Закладки",
+	ReaderViewNoBookmarks:      "(немає закладок)",
+	ReaderViewBookmarksHelp:    "вгору/вниз рух  enter відкрити  esc закрити",
 	ReaderViewHelp: `Клавіші
 
 ← →  попередня / наступна сторінка
 ↑ ↓  прокрутка збільшеної сторінки
 + -  збільшити / зменшити
+b    додати / видалити закладку
+v ← → попередня / наступна закладка
+c v  закладки
 q    вихід
 
 ?    закрити довідку`,
@@ -40,12 +46,16 @@ q    вихід
 	CLIErrRunTUI:                    "помилка запуску TUI: %w",
 	CLIErrParseArgs:                 "помилка розбору аргументів: %w",
 	CLIErrOpenChapter:               "не вдалося відкрити розділ: %w",
+	CLIErrOpenJournal:               "не вдалося відкрити журнал: %w",
+	CLIErrClearJournal:              "не вдалося очистити журнал: %w",
+	CLIErrClearJournalRequiresInput: "--clear-journal потребує файл або теку",
 	CLIErrNoPages:                   "розділ не містить придатних для читання сторінок",
 	CLIErrInspectInput:              "не вдалося перевірити вхідні дані %q: %w",
 	CLIErrUnsupportedFile:           "непідтримуваний файл %q: підтримувані формати — CBZ, PDF, EPUB або тека із зображеннями",
 	CLIFlagGraphicsUsage:            "рендерер: auto, ascii, dots, kitty, sixel або iterm2",
 	CLIFlagVersionUsage:             "вивести версію та завершити роботу",
 	CLIFlagEnvUsage:                 "вивести середовище comicread та завершити роботу",
+	CLIFlagClearJournalUsage:        "видалити локальний журнал для файлу або теки та завершити роботу",
 	CLIFlagBookViewUsage:            "показувати сторінки парами зліва направо",
 	CLIFlagRightBookViewUsage:       "показувати сторінки парами справа наліво",
 	CLIFlagCircleBookViewUsage:      "показувати перекривні пари сторінок зліва направо",
@@ -65,6 +75,7 @@ q    вихід
   --circle-view       показувати перекривні пари сторінок зліва направо
   --right-circle-view
                       показувати перекривні пари сторінок справа наліво
+  --clear-journal    видалити локальний журнал для файлу або теки та завершити роботу
   --env               вивести середовище comicread та завершити роботу
   -v, --version       вивести версію та завершити роботу
   -h, --help          показати цю довідку

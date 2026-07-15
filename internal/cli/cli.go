@@ -13,6 +13,7 @@ import (
 	"github.com/arimatakao/comicfile"
 	"github.com/arimatakao/comicread/internal/backend"
 	"github.com/arimatakao/comicread/internal/i18n"
+	"github.com/arimatakao/comicread/internal/journal"
 	"github.com/arimatakao/comicread/internal/tui/filepicker"
 	"github.com/arimatakao/comicread/internal/tui/loading"
 	"github.com/arimatakao/comicread/internal/tui/reader"
@@ -66,6 +67,12 @@ func Run(args []string) error {
 	if err := validateInput(path); err != nil {
 		return err
 	}
+	if options.clearJournal {
+		if err := journal.Clear(path); err != nil {
+			return fmt.Errorf(i18n.T(i18n.CLIErrClearJournal), err)
+		}
+		return nil
+	}
 
 	chapter, err := loading.Open(path, func() (comicfile.ContainerReader, error) {
 		return openChapter(path)
@@ -79,7 +86,11 @@ func Run(args []string) error {
 		return err
 	}
 
-	model := reader.NewWithBookView(filepath.Base(path), chapter, renderer, options.bookView)
+	progress, err := journal.Open(path)
+	if err != nil {
+		return fmt.Errorf(i18n.T(i18n.CLIErrOpenJournal), err)
+	}
+	model := reader.NewWithBookViewAndJournal(filepath.Base(path), chapter, renderer, options.bookView, progress)
 	program := tea.NewProgram(model)
 	if _, err := program.Run(); err != nil {
 		return fmt.Errorf(i18n.T(i18n.CLIErrRunTUI), err)
@@ -94,11 +105,12 @@ func parseArgs(args []string) (graphics, path string, version bool, err error) {
 }
 
 type options struct {
-	graphics string
-	path     string
-	version  bool
-	env      bool
-	bookView reader.ViewMode
+	graphics     string
+	path         string
+	version      bool
+	env          bool
+	clearJournal bool
+	bookView     reader.ViewMode
 }
 
 func parseOptions(args []string) (options, error) {
@@ -113,6 +125,7 @@ func parseOptions(args []string) (options, error) {
 	graphicsFlag := flags.String("graphics", graphics, i18n.T(i18n.CLIFlagGraphicsUsage))
 	versionFlag := flags.Bool("version", false, i18n.T(i18n.CLIFlagVersionUsage))
 	envFlag := flags.Bool("env", false, i18n.T(i18n.CLIFlagEnvUsage))
+	clearJournalFlag := flags.Bool("clear-journal", false, i18n.T(i18n.CLIFlagClearJournalUsage))
 	bookViewFlag := flags.Bool("book-view", false, i18n.T(i18n.CLIFlagBookViewUsage))
 	rightBookViewFlag := flags.Bool("right-view", false, i18n.T(i18n.CLIFlagRightBookViewUsage))
 	circleBookViewFlag := flags.Bool("circle-view", false, i18n.T(i18n.CLIFlagCircleBookViewUsage))
@@ -135,11 +148,14 @@ func parseOptions(args []string) (options, error) {
 	if *versionFlag {
 		return options{version: true}, nil
 	}
+	if *clearJournalFlag && flags.NArg() != 1 {
+		return options{}, &usageError{errors.New(i18n.T(i18n.CLIErrClearJournalRequiresInput))}
+	}
 	switch flags.NArg() {
 	case 0:
 		return options{graphics: *graphicsFlag, bookView: bookView}, nil
 	case 1:
-		return options{graphics: *graphicsFlag, path: flags.Arg(0), bookView: bookView}, nil
+		return options{graphics: *graphicsFlag, path: flags.Arg(0), clearJournal: *clearJournalFlag, bookView: bookView}, nil
 	default:
 		return options{}, &usageError{errors.New(i18n.T(i18n.CLIUsage))}
 	}
