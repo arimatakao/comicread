@@ -54,6 +54,7 @@ q    quitter
 	CLIErrUnsupportedFile:           "fichier non pris en charge %q : formats pris en charge : CBZ, PDF, EPUB ou dossier d'images",
 	CLIFlagGraphicsUsage:            "moteur de rendu : auto, ascii, dots, kitty, sixel ou iterm2",
 	CLIFlagVersionUsage:             "afficher la version et quitter",
+	CLIFlagUpdateUsage:              "vérifier les mises à jour et quitter",
 	CLIFlagEnvUsage:                 "afficher l'environnement comicread et quitter",
 	CLIFlagClearJournalUsage:        "supprimer le journal local d'un fichier ou dossier et quitter",
 	CLIFlagBookViewUsage:            "afficher les pages par paires de gauche à droite",
@@ -77,6 +78,7 @@ options :
                       afficher les paires de pages superposées de droite à gauche
   --clear-journal    supprimer le journal local d'un fichier ou dossier et quitter
   --env               afficher l'environnement comicread et quitter
+  --update            vérifier les mises à jour et quitter
   -v, --version       afficher la version et quitter
   -h, --help          afficher cette aide
 

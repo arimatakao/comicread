@@ -54,6 +54,7 @@ q    wyjście
 	CLIErrUnsupportedFile:           "nieobsługiwany plik %q: obsługiwane formaty to CBZ, PDF, EPUB lub katalog obrazów",
 	CLIFlagGraphicsUsage:            "renderer: auto, ascii, dots, kitty, sixel lub iterm2",
 	CLIFlagVersionUsage:             "wypisz wersję i zakończ",
+	CLIFlagUpdateUsage:              "sprawdź aktualizacje i zakończ",
 	CLIFlagEnvUsage:                 "wypisz środowisko comicread i zakończ",
 	CLIFlagClearJournalUsage:        "usuń lokalny dziennik dla pliku lub katalogu i zakończ",
 	CLIFlagBookViewUsage:            "pokaż pary stron od lewej do prawej",
@@ -77,6 +78,7 @@ opcje:
                       pokaż nakładające się pary stron od prawej do lewej
   --clear-journal    usuń lokalny dziennik dla pliku lub katalogu i zakończ
   --env               wypisz środowisko comicread i zakończ
+  --update            sprawdź aktualizacje i zakończ
   -v, --version       wypisz wersję i zakończ
   -h, --help          pokaż tę pomoc
 

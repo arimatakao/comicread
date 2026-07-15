@@ -6,6 +6,7 @@ $BinName = "comicread"
 $VersionInput = "latest"
 $AutoYes = $false
 $InstallDir = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Programs\comicread"
+$ReinstallConfirmed = $false
 
 function Show-Usage {
 @"
@@ -90,6 +91,75 @@ function Resolve-Version {
         return $script:VersionInput
     }
     return "v$($script:VersionInput)"
+}
+
+function Convert-ToVersionObject {
+    param([string]$Value)
+
+    if ([string]::IsNullOrWhiteSpace($Value)) {
+        return $null
+    }
+
+    $normalized = ($Value.Trim() -replace "^[vV]", "").Split("-")[0]
+    $parts = $normalized.Split(".")
+    if ($parts.Count -eq 0 -or $parts.Count -gt 4 -or ($parts | Where-Object { $_ -notmatch "^\d+$" })) {
+        return $null
+    }
+
+    $padded = @($parts)
+    while ($padded.Count -lt 4) {
+        $padded += "0"
+    }
+    return [version]::Parse(($padded -join "."))
+}
+
+function Get-InstalledVersion {
+    $candidates = @()
+    $localExe = Join-Path -Path $script:InstallDir -ChildPath "$BinName.exe"
+    if (Test-Path -Path $localExe -PathType Leaf) {
+        $candidates += $localExe
+    }
+    $command = Get-Command -Name $BinName -ErrorAction SilentlyContinue
+    if ($command) {
+        $candidates += $command.Source
+    }
+
+    foreach ($candidate in ($candidates | Select-Object -Unique)) {
+        try {
+            $output = & $candidate --version 2>$null
+            $match = [regex]::Match(($output | Out-String), "v?\d+(\.\d+){1,3}([-.+][0-9A-Za-z.-]+)?")
+            if ($match.Success) {
+                return $match.Value
+            }
+        }
+        catch {
+            continue
+        }
+    }
+    return $null
+}
+
+function Confirm-UpgradeIfNeeded {
+    param([string]$TargetVersion)
+
+    $installedVersion = Get-InstalledVersion
+    if (-not $installedVersion) {
+        return
+    }
+
+    $target = Convert-ToVersionObject -Value $TargetVersion
+    $installed = Convert-ToVersionObject -Value $installedVersion
+    if (-not $target -or -not $installed) {
+        return
+    }
+    if ($target -gt $installed) {
+        Confirm-Install "$BinName is already installed (version $installedVersion). Do you want to update to $TargetVersion?"
+        $script:ReinstallConfirmed = $true
+    }
+    elseif ($target -eq $installed) {
+        Confirm-Install "$BinName is already installed (version $installedVersion). Do you want to reinstall $TargetVersion?"
+        $script:ReinstallConfirmed = $true
+    }
 }
 
 function Get-WindowsArch {
@@ -199,7 +269,10 @@ function Main {
     $url = Find-ZipAssetUrl -Version $version
     $fileName = Split-Path -Path $url -Leaf
 
-    Confirm-Install "Install $BinName $version to $InstallDir?"
+    Confirm-UpgradeIfNeeded -TargetVersion $version
+    if (-not $script:ReinstallConfirmed) {
+        Confirm-Install "Install $BinName $version to $InstallDir?"
+    }
 
     $tempDir = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ("comicread-install-" + [guid]::NewGuid().ToString("N"))
     $zipPath = Join-Path -Path $tempDir -ChildPath $fileName

@@ -54,6 +54,7 @@ q    종료
 	CLIErrUnsupportedFile:           "지원되지 않는 파일 %q: 지원 형식은 CBZ, PDF, EPUB 또는 이미지 디렉터리입니다",
 	CLIFlagGraphicsUsage:            "렌더러: auto, ascii, dots, kitty, sixel 또는 iterm2",
 	CLIFlagVersionUsage:             "버전을 출력하고 종료",
+	CLIFlagUpdateUsage:              "업데이트를 확인하고 종료",
 	CLIFlagEnvUsage:                 "comicread 환경을 출력하고 종료",
 	CLIFlagClearJournalUsage:        "파일 또는 디렉터리의 로컬 저널을 삭제하고 종료",
 	CLIFlagBookViewUsage:            "왼쪽에서 오른쪽 순서로 페이지 쌍 표시",
@@ -77,6 +78,7 @@ q    종료
                       오른쪽에서 왼쪽 순서로 겹치는 페이지 쌍 표시
   --clear-journal    파일 또는 디렉터리의 로컬 저널을 삭제하고 종료
   --env               comicread 환경을 출력하고 종료
+  --update            업데이트를 확인하고 종료
   -v, --version       버전을 출력하고 종료
   -h, --help          이 도움말 표시
 

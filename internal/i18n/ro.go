@@ -54,6 +54,7 @@ q    ieșire
 	CLIErrUnsupportedFile:           "fișier neacceptat %q: formatele acceptate sunt CBZ, PDF, EPUB sau un director de imagini",
 	CLIFlagGraphicsUsage:            "renderer: auto, ascii, dots, kitty, sixel sau iterm2",
 	CLIFlagVersionUsage:             "afișează versiunea și ieși",
+	CLIFlagUpdateUsage:              "verifică actualizările și ieși",
 	CLIFlagEnvUsage:                 "afișează mediul comicread și ieși",
 	CLIFlagClearJournalUsage:        "șterge jurnalul local pentru un fișier sau director și ieși",
 	CLIFlagBookViewUsage:            "afișează perechi de pagini de la stânga la dreapta",
@@ -77,6 +78,7 @@ opțiuni:
                       afișează perechi de pagini suprapuse de la dreapta la stânga
   --clear-journal    șterge jurnalul local pentru un fișier sau director și ieși
   --env               afișează mediul comicread și ieși
+  --update            verifică actualizările și ieși
   -v, --version       afișează versiunea și ieși
   -h, --help          afișează acest ajutor
 

@@ -44,6 +44,9 @@ func Run(args []string) error {
 		fmt.Println(Version)
 		return nil
 	}
+	if options.update {
+		return checkForUpdate()
+	}
 	if options.env {
 		printEnvironment()
 		return nil
@@ -108,6 +111,7 @@ type options struct {
 	graphics     string
 	path         string
 	version      bool
+	update       bool
 	env          bool
 	clearJournal bool
 	bookView     reader.ViewMode
@@ -124,6 +128,7 @@ func parseOptions(args []string) (options, error) {
 	flags.SetOutput(io.Discard)
 	graphicsFlag := flags.String("graphics", graphics, i18n.T(i18n.CLIFlagGraphicsUsage))
 	versionFlag := flags.Bool("version", false, i18n.T(i18n.CLIFlagVersionUsage))
+	updateFlag := flags.Bool("update", false, i18n.T(i18n.CLIFlagUpdateUsage))
 	envFlag := flags.Bool("env", false, i18n.T(i18n.CLIFlagEnvUsage))
 	clearJournalFlag := flags.Bool("clear-journal", false, i18n.T(i18n.CLIFlagClearJournalUsage))
 	bookViewFlag := flags.Bool("book-view", false, i18n.T(i18n.CLIFlagBookViewUsage))
@@ -140,6 +145,9 @@ func parseOptions(args []string) (options, error) {
 	}
 	if *envFlag {
 		return options{env: true}, nil
+	}
+	if *updateFlag {
+		return options{update: true}, nil
 	}
 	bookView, err := selectedBookView(view, *bookViewFlag, *rightBookViewFlag, *circleBookViewFlag, *rightCircleBookViewFlag)
 	if err != nil {

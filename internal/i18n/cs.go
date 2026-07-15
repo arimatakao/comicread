@@ -54,6 +54,7 @@ q    ukončit
 	CLIErrUnsupportedFile:           "nepodporovaný soubor %q: podporované formáty jsou CBZ, PDF, EPUB nebo složka s obrázky",
 	CLIFlagGraphicsUsage:            "vykreslovač: auto, ascii, dots, kitty, sixel nebo iterm2",
 	CLIFlagVersionUsage:             "vypsat verzi a ukončit",
+	CLIFlagUpdateUsage:              "zkontrolovat aktualizace a ukončit",
 	CLIFlagEnvUsage:                 "vypsat prostředí comicread a ukončit",
 	CLIFlagClearJournalUsage:        "odstranit místní deník pro soubor nebo složku a ukončit",
 	CLIFlagBookViewUsage:            "zobrazit dvojice stránek zleva doprava",
@@ -77,6 +78,7 @@ volby:
                       zobrazit překrývající se dvojice stránek zprava doleva
   --clear-journal    odstranit místní deník pro soubor nebo složku a ukončit
   --env               vypsat prostředí comicread a ukončit
+  --update            zkontrolovat aktualizace a ukončit
   -v, --version       vypsat verzi a ukončit
   -h, --help          zobrazit tuto nápovědu
 

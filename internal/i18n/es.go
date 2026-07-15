@@ -54,6 +54,7 @@ q    salir
 	CLIErrUnsupportedFile:           "archivo no compatible %q: los formatos compatibles son CBZ, PDF, EPUB o un directorio de imágenes",
 	CLIFlagGraphicsUsage:            "renderizador: auto, ascii, dots, kitty, sixel o iterm2",
 	CLIFlagVersionUsage:             "mostrar la versión y salir",
+	CLIFlagUpdateUsage:              "buscar actualizaciones y salir",
 	CLIFlagEnvUsage:                 "mostrar el entorno de comicread y salir",
 	CLIFlagClearJournalUsage:        "eliminar el registro local de un archivo o directorio y salir",
 	CLIFlagBookViewUsage:            "mostrar pares de páginas de izquierda a derecha",
@@ -77,6 +78,7 @@ opciones:
                       mostrar pares de páginas superpuestas de derecha a izquierda
   --clear-journal    eliminar el registro local de un archivo o directorio y salir
   --env               mostrar el entorno de comicread y salir
+  --update            buscar actualizaciones y salir
   -v, --version       mostrar la versión y salir
   -h, --help          mostrar esta ayuda
 

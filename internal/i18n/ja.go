@@ -54,6 +54,7 @@ q    終了
 	CLIErrUnsupportedFile:           "未対応のファイル %q: 対応形式は CBZ、PDF、EPUB、または画像ディレクトリです",
 	CLIFlagGraphicsUsage:            "レンダラー: auto、ascii、dots、kitty、sixel、iterm2",
 	CLIFlagVersionUsage:             "バージョンを表示して終了",
+	CLIFlagUpdateUsage:              "更新を確認して終了",
 	CLIFlagEnvUsage:                 "comicread の環境を表示して終了",
 	CLIFlagClearJournalUsage:        "ファイルまたはディレクトリのローカルジャーナルを削除して終了",
 	CLIFlagBookViewUsage:            "ページの組を左から右へ表示",
@@ -77,6 +78,7 @@ q    終了
                       重なるページの組を右から左へ表示
   --clear-journal    ファイルまたはディレクトリのローカルジャーナルを削除して終了
   --env               comicread の環境を表示して終了
+  --update            更新を確認して終了
   -v, --version       バージョンを表示して終了
   -h, --help          このヘルプを表示
 

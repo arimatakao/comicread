@@ -75,6 +75,7 @@ const (
 	CLIErrUnsupportedFile           = "cli.err.unsupported_file"
 	CLIFlagGraphicsUsage            = "cli.flag.graphics_usage"
 	CLIFlagVersionUsage             = "cli.flag.version_usage"
+	CLIFlagUpdateUsage              = "cli.flag.update_usage"
 	CLIFlagEnvUsage                 = "cli.flag.env_usage"
 	CLIFlagClearJournalUsage        = "cli.flag.clear_journal_usage"
 	CLIFlagBookViewUsage            = "cli.flag.book_view_usage"

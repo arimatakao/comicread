@@ -54,6 +54,7 @@ q    quit
 	CLIErrUnsupportedFile:           "unsupported file %q: supported formats are CBZ, PDF, EPUB, or an image directory",
 	CLIFlagGraphicsUsage:            "renderer: auto, ascii, dots, kitty, sixel, or iterm2",
 	CLIFlagVersionUsage:             "print version and exit",
+	CLIFlagUpdateUsage:              "check for updates and exit",
 	CLIFlagEnvUsage:                 "print comicread environment and exit",
 	CLIFlagClearJournalUsage:        "remove the local journal for a file or directory and exit",
 	CLIFlagBookViewUsage:            "show pages left to right in pairs",
@@ -77,6 +78,7 @@ options:
                       show overlapping page pairs right to left
   --clear-journal    remove the local journal for a file or directory and exit
   --env               print comicread environment and exit
+  --update            check for updates and exit
   -v, --version       print version and exit
   -h, --help          show this help message
 

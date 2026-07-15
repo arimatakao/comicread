@@ -8,6 +8,7 @@ INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 VERSION_INPUT="latest"
 AUTO_YES="false"
 TMP_DIR=""
+REINSTALL_CONFIRMED="false"
 
 cleanup() {
   [ -z "${TMP_DIR:-}" ] || rm -rf "$TMP_DIR"
@@ -134,6 +135,67 @@ resolve_version() {
   fi
 }
 
+normalize_version() {
+  local value="${1#v}"
+  value="${value%%[-+]*}"
+  printf '%s\n' "$value"
+}
+
+version_to_sort_key() {
+  local version major minor patch extra
+  version="$(normalize_version "$1")"
+  IFS='.' read -r major minor patch extra <<EOF
+$version
+EOF
+  major="${major:-0}"
+  minor="${minor:-0}"
+  patch="${patch:-0}"
+  case "${major}.${minor}.${patch}" in
+    *[!0-9.]*|*..*) return 1 ;;
+  esac
+  printf '%010d%010d%010d\n' "$major" "$minor" "$patch"
+}
+
+is_version_newer() {
+  local target_key current_key
+  target_key="$(version_to_sort_key "$1")" || return 1
+  current_key="$(version_to_sort_key "$2")" || return 1
+  [ "$target_key" \> "$current_key" ]
+}
+
+get_installed_version() {
+  local candidate version_output match
+
+  for candidate in "${INSTALL_DIR}/${BIN_NAME}" "$(command -v "$BIN_NAME" 2>/dev/null || true)"; do
+    [ -n "$candidate" ] && [ -x "$candidate" ] || continue
+    version_output="$("$candidate" --version 2>/dev/null || true)"
+    match="$(printf '%s\n' "$version_output" | grep -Eo 'v?[0-9]+(\.[0-9]+){1,3}([-.+][0-9A-Za-z.-]+)?' | head -n1)"
+    if [ -n "$match" ]; then
+      printf '%s\n' "$match"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+confirm_upgrade_if_needed() {
+  local target_version="$1" installed_version=""
+  installed_version="$(get_installed_version || true)"
+  [ -n "$installed_version" ] || return 0
+
+  if is_version_newer "$target_version" "$installed_version"; then
+    confirm_install "${BIN_NAME} is already installed (version ${installed_version}). Do you want to update to ${target_version}?"
+    REINSTALL_CONFIRMED="true"
+    return 0
+  fi
+
+  if [ "$(normalize_version "$target_version")" = "$(normalize_version "$installed_version")" ]; then
+    confirm_install "${BIN_NAME} is already installed (version ${installed_version}). Do you want to reinstall ${target_version}?"
+    REINSTALL_CONFIRMED="true"
+  fi
+}
+
 path_contains_install_dir() {
   case ":${PATH:-}:" in
     *":${INSTALL_DIR}:"*) return 0 ;;
@@ -229,7 +291,10 @@ main() {
   archive="${BIN_NAME}_${version}_${os}_${arch}.tar.gz"
   url="https://github.com/${REPO}/releases/download/${version}/${archive}"
 
-  confirm_install "Install ${BIN_NAME} ${version} to ${INSTALL_DIR}?"
+  confirm_upgrade_if_needed "$version"
+  if [ "$REINSTALL_CONFIRMED" != "true" ]; then
+    confirm_install "Install ${BIN_NAME} ${version} to ${INSTALL_DIR}?"
+  fi
   TMP_DIR="$(mktemp -d)"
   trap cleanup EXIT HUP INT TERM
 

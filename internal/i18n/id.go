@@ -54,6 +54,7 @@ q    keluar
 	CLIErrUnsupportedFile:           "berkas tidak didukung %q: format yang didukung adalah CBZ, PDF, EPUB, atau direktori gambar",
 	CLIFlagGraphicsUsage:            "perender: auto, ascii, dots, kitty, sixel, atau iterm2",
 	CLIFlagVersionUsage:             "tampilkan versi lalu keluar",
+	CLIFlagUpdateUsage:              "periksa pembaruan lalu keluar",
 	CLIFlagEnvUsage:                 "tampilkan lingkungan comicread lalu keluar",
 	CLIFlagClearJournalUsage:        "hapus jurnal lokal untuk berkas atau direktori lalu keluar",
 	CLIFlagBookViewUsage:            "tampilkan pasangan halaman dari kiri ke kanan",
@@ -77,6 +78,7 @@ opsi:
                       tampilkan pasangan halaman bertumpuk dari kanan ke kiri
   --clear-journal    hapus jurnal lokal untuk berkas atau direktori lalu keluar
   --env               tampilkan lingkungan comicread lalu keluar
+  --update            periksa pembaruan lalu keluar
   -v, --version       tampilkan versi lalu keluar
   -h, --help          tampilkan bantuan ini
 

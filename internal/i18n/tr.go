@@ -54,6 +54,7 @@ q    çıkış
 	CLIErrUnsupportedFile:           "desteklenmeyen dosya %q: desteklenen biçimler CBZ, PDF, EPUB veya görüntü dizinidir",
 	CLIFlagGraphicsUsage:            "oluşturucu: auto, ascii, dots, kitty, sixel veya iterm2",
 	CLIFlagVersionUsage:             "sürümü göster ve çık",
+	CLIFlagUpdateUsage:              "güncellemeleri denetle ve çık",
 	CLIFlagEnvUsage:                 "comicread ortamını göster ve çık",
 	CLIFlagClearJournalUsage:        "dosya veya dizin için yerel günlüğü sil ve çık",
 	CLIFlagBookViewUsage:            "sayfa çiftlerini soldan sağa göster",
@@ -77,6 +78,7 @@ seçenekler:
                       örtüşen sayfa çiftlerini sağdan sola göster
   --clear-journal    dosya veya dizin için yerel günlüğü sil ve çık
   --env               comicread ortamını göster ve çık
+  --update            güncellemeleri denetle ve çık
   -v, --version       sürümü göster ve çık
   -h, --help          bu yardımı göster
 

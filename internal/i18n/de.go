@@ -54,6 +54,7 @@ q    beenden
 	CLIErrUnsupportedFile:           "nicht unterstützte Datei %q: unterstützte Formate sind CBZ, PDF, EPUB oder ein Bildordner",
 	CLIFlagGraphicsUsage:            "Renderer: auto, ascii, dots, kitty, sixel oder iterm2",
 	CLIFlagVersionUsage:             "Version ausgeben und beenden",
+	CLIFlagUpdateUsage:              "nach Updates suchen und beenden",
 	CLIFlagEnvUsage:                 "comicread-Umgebung ausgeben und beenden",
 	CLIFlagClearJournalUsage:        "lokales Journal für eine Datei oder einen Ordner löschen und beenden",
 	CLIFlagBookViewUsage:            "Seiten paarweise von links nach rechts anzeigen",
@@ -77,6 +78,7 @@ Optionen:
                       überlappende Seitenpaare von rechts nach links anzeigen
   --clear-journal    lokales Journal für eine Datei oder einen Ordner löschen und beenden
   --env               comicread-Umgebung ausgeben und beenden
+  --update            nach Updates suchen und beenden
   -v, --version       Version ausgeben und beenden
   -h, --help          diese Hilfe anzeigen
 

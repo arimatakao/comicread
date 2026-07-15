@@ -54,6 +54,7 @@ q    esci
 	CLIErrUnsupportedFile:           "file non supportato %q: i formati supportati sono CBZ, PDF, EPUB o una cartella di immagini",
 	CLIFlagGraphicsUsage:            "renderer: auto, ascii, dots, kitty, sixel o iterm2",
 	CLIFlagVersionUsage:             "mostra la versione ed esci",
+	CLIFlagUpdateUsage:              "verifica gli aggiornamenti ed esci",
 	CLIFlagEnvUsage:                 "mostra l'ambiente comicread ed esci",
 	CLIFlagClearJournalUsage:        "rimuovi il registro locale per un file o una directory ed esci",
 	CLIFlagBookViewUsage:            "mostra coppie di pagine da sinistra a destra",
@@ -77,6 +78,7 @@ opzioni:
                       mostra coppie di pagine sovrapposte da destra a sinistra
   --clear-journal    rimuovi il registro locale per un file o una directory ed esci
   --env               mostra l'ambiente comicread ed esci
+  --update            verifica gli aggiornamenti ed esci
   -v, --version       mostra la versione ed esci
   -h, --help          mostra questo aiuto
 

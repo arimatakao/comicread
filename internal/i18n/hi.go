@@ -54,6 +54,7 @@ q    बाहर निकलें
 	CLIErrUnsupportedFile:           "असमर्थित फ़ाइल %q: समर्थित प्रारूप CBZ, PDF, EPUB या छवियों की निर्देशिका हैं",
 	CLIFlagGraphicsUsage:            "रेंडरर: auto, ascii, dots, kitty, sixel या iterm2",
 	CLIFlagVersionUsage:             "संस्करण दिखाएँ और बाहर निकलें",
+	CLIFlagUpdateUsage:              "अपडेट जाँचें और बाहर निकलें",
 	CLIFlagEnvUsage:                 "comicread परिवेश दिखाएँ और बाहर निकलें",
 	CLIFlagClearJournalUsage:        "फ़ाइल या निर्देशिका का स्थानीय जर्नल हटाएँ और बाहर निकलें",
 	CLIFlagBookViewUsage:            "पृष्ठों के जोड़े बाएँ से दाएँ दिखाएँ",
@@ -77,6 +78,7 @@ q    बाहर निकलें
                       ओवरलैप होते पृष्ठों के जोड़े दाएँ से बाएँ दिखाएँ
   --clear-journal    फ़ाइल या निर्देशिका का स्थानीय जर्नल हटाएँ और बाहर निकलें
   --env               comicread परिवेश दिखाएँ और बाहर निकलें
+  --update            अपडेट जाँचें और बाहर निकलें
   -v, --version       संस्करण दिखाएँ और बाहर निकलें
   -h, --help          यह सहायता दिखाएँ
 
