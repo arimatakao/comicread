@@ -146,9 +146,10 @@ without an image protocol.
 # Print command help.
 comicread --help
 
-# Print the active environment settings or version.
+# Print the active environment settings, version, or available updates.
 comicread --env
 comicread --version
+comicread --update
 
 # Set the renderer default for this command.
 COMICREAD_GRAPHICS=sixel comicread /path/to/file.cbz
@@ -188,6 +189,10 @@ comicread --right-view /path/to/file.cbz
 # Show overlapping page pairs left to right or right to left.
 comicread --circle-view /path/to/file.cbz
 comicread --right-circle-view /path/to/file.cbz
+
+# Remove saved reading progress and bookmarks for a file or directory.
+comicread --clear-journal /path/to/file.cbz
+comicread --clear-journal /path/to/image-directory
 ```
 
 Environment variables:
