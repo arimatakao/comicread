@@ -39,7 +39,11 @@ function Get-RemoteLocale {
 }
 
 function Initialize-InstallerLocale {
-    $language = [Globalization.CultureInfo]::CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant()
+    $language = $env:LANG
+    if ([string]::IsNullOrWhiteSpace($language)) {
+        $language = [Globalization.CultureInfo]::CurrentUICulture.TwoLetterISOLanguageName
+    }
+    $language = ($language -split "[_@.]")[0].ToLowerInvariant()
     $content = $null
     if ($PSScriptRoot) {
         $localPath = Join-Path -Path $PSScriptRoot -ChildPath "installer\locales\$language.properties"

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"runtime"
 	"strconv"
 	"strings"
@@ -70,14 +71,19 @@ func printUpdateCommand() {
 }
 
 func updateCommand() string {
+	language := installerLanguage()
 	switch runtime.GOOS {
 	case "windows":
-		return `powershell -ExecutionPolicy Bypass -Command "iwr -useb https://raw.githubusercontent.com/arimatakao/comicread/main/install.ps1 | iex"`
+		return fmt.Sprintf(`powershell -ExecutionPolicy Bypass -Command "$env:LANG = '%s'; iwr -useb https://raw.githubusercontent.com/arimatakao/comicread/main/install.ps1 | iex"`, language)
 	case "darwin", "linux":
-		return "curl -fsSL https://raw.githubusercontent.com/arimatakao/comicread/main/install.sh | bash"
+		return fmt.Sprintf("curl -fsSL https://raw.githubusercontent.com/arimatakao/comicread/main/install.sh | LANG=%s bash", language)
 	default:
 		return ""
 	}
+}
+
+func installerLanguage() string {
+	return os.Getenv("COMICREAD_LANG")
 }
 
 func newerVersion(latest, current string) bool {
