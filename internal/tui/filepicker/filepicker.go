@@ -44,6 +44,7 @@ type pickerModel struct {
 	dir      string
 	entries  []entry
 	cursor   int
+	offset   int
 	selected string
 	err      error
 	width    int
@@ -82,6 +83,7 @@ func (m *pickerModel) readDir() error {
 	if m.cursor >= len(items) {
 		m.cursor = 0
 	}
+	m.keepCursorVisible()
 	return nil
 }
 
@@ -103,6 +105,7 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
+		m.keepCursorVisible()
 
 	case tea.KeyPressMsg:
 		switch msg.String() {
@@ -167,7 +170,32 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
+	m.keepCursorVisible()
 	return m, nil
+}
+
+func (m *pickerModel) keepCursorVisible() {
+	rows := m.entryRows()
+	if m.cursor < m.offset {
+		m.offset = m.cursor
+	}
+	if m.cursor >= m.offset+rows {
+		m.offset = m.cursor - rows + 1
+	}
+
+	maxOffset := max(0, len(m.entries)-rows)
+	m.offset = min(max(0, m.offset), maxOffset)
+}
+
+func (m pickerModel) entryRows() int {
+	const reservedRows = 5 // title, path, spacing, and help text
+	if m.height <= 0 {
+		return max(1, len(m.entries))
+	}
+	if m.height <= reservedRows {
+		return 1
+	}
+	return m.height - reservedRows
 }
 
 func (m pickerModel) View() tea.View {
@@ -177,7 +205,9 @@ func (m pickerModel) View() tea.View {
 	if len(m.entries) == 0 {
 		b.WriteString(i18n.T(i18n.FilepickerNoEntries))
 	}
-	for i, e := range m.entries {
+	end := min(len(m.entries), m.offset+m.entryRows())
+	for i := m.offset; i < end; i++ {
+		e := m.entries[i]
 		cursor := "  "
 		if i == m.cursor {
 			cursor = "> "
