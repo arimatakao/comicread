@@ -28,6 +28,7 @@ small: open a chapter, turn pages with the keyboard, and focus on reading.
 - **Native** application written in Go — no JavaScript, no Node.js required.
 - Reads **CBZ**, image-based **PDF** and **EPUB** files, and image directories.
 - Renders pages via **Kitty**, **Sixel**, or **iTerm2**, with ASCII/Braille-dot fallback in plain UTF-8 terminals.
+- Saves **bookmarks** and resumes each chapter at its **last-opened page**.
 - Supports **single**, **spread** (LTR/RTL), and **overlapping-page** views.
 - Offers **keyboard navigation**, **zoom/scroll**, help, and a **file picker**.
 - Localised in **15+ languages**.
