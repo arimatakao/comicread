@@ -7,14 +7,86 @@ $VersionInput = "latest"
 $AutoYes = $false
 $InstallDir = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Programs\comicread"
 $ReinstallConfirmed = $false
+$LocaleBaseUrl = "https://raw.githubusercontent.com/$Repo/main/installer/locales"
+$Messages = @{}
+
+function ConvertFrom-Properties {
+    param([string]$Content)
+
+    $properties = @{}
+    foreach ($line in ($Content -split "`r?`n")) {
+        if ([string]::IsNullOrWhiteSpace($line) -or $line.StartsWith("#")) {
+            continue
+        }
+        $separator = $line.IndexOf("=")
+        if ($separator -lt 1) {
+            continue
+        }
+        $properties[$line.Substring(0, $separator)] = $line.Substring($separator + 1)
+    }
+    return $properties
+}
+
+function Get-RemoteLocale {
+    param([string]$Language)
+
+    try {
+        return (Invoke-WebRequest -Uri "$script:LocaleBaseUrl/$Language.properties" -UseBasicParsing).Content
+    }
+    catch {
+        return $null
+    }
+}
+
+function Initialize-InstallerLocale {
+    $language = [Globalization.CultureInfo]::CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant()
+    $content = $null
+    if ($PSScriptRoot) {
+        $localPath = Join-Path -Path $PSScriptRoot -ChildPath "installer\locales\$language.properties"
+        if (Test-Path -Path $localPath -PathType Leaf) {
+            $content = Get-Content -Path $localPath -Raw -Encoding utf8
+        }
+        if (-not $content) {
+            $fallbackPath = Join-Path -Path $PSScriptRoot -ChildPath "installer\locales\en.properties"
+            if (Test-Path -Path $fallbackPath -PathType Leaf) {
+                $content = Get-Content -Path $fallbackPath -Raw -Encoding utf8
+            }
+        }
+    }
+    if (-not $content) {
+        $content = Get-RemoteLocale -Language $language
+    }
+    if (-not $content -and $language -ne "en") {
+        $content = Get-RemoteLocale -Language "en"
+    }
+    if ($content) {
+        $script:Messages = ConvertFrom-Properties -Content $content
+    }
+}
+
+function T {
+    param(
+        [string]$Key,
+        [object[]]$Values = @()
+    )
+
+    $message = $script:Messages[$Key]
+    if ([string]::IsNullOrEmpty($message)) {
+        return $Key
+    }
+    if ($Values.Count -eq 0) {
+        return $message
+    }
+    return [string]::Format($message, $Values)
+}
 
 function Show-Usage {
 @"
-Usage: powershell -File install.ps1 [--install-dir <path>] [-y|--yes] [version]
+$(T "usage" "powershell -File install.ps1 [--install-dir <path>] [-y|--yes] [version]")
 
-Install the latest comicread release, or a specified version.
+$(T "usage.description")
 
-Examples:
+$(T "usage.examples")
   powershell -File install.ps1
   powershell -File install.ps1 v1.2.3
   powershell -File install.ps1 --install-dir "`$env:USERPROFILE\bin"
@@ -35,14 +107,14 @@ function Parse-Args {
             "--yes" { $script:AutoYes = $true }
             "--install-dir" {
                 if ($i + 1 -ge $ArgsList.Count) {
-                    throw "Error: option '--install-dir' requires a value."
+                    throw (T "error.option_value" "--install-dir")
                 }
                 $i++
                 $script:InstallDir = $ArgsList[$i]
             }
             default {
                 if ($arg.StartsWith("-")) {
-                    throw "Error: unknown option '$arg'."
+                    throw (T "error.unknown_option" $arg)
                 }
                 $positional += $arg
             }
@@ -50,7 +122,7 @@ function Parse-Args {
     }
 
     if ($positional.Count -gt 1) {
-        throw "Error: too many version arguments."
+        throw (T "error.too_many_versions")
     }
     if ($positional.Count -eq 1) {
         $script:VersionInput = $positional[0]
@@ -66,7 +138,7 @@ function Confirm-Install {
 
     $answer = Read-Host "$Message [y/N]"
     if ($answer -notmatch "^(y|yes)$") {
-        Write-Host "Installation cancelled."
+        Write-Host (T "cancelled")
         exit 0
     }
 }
@@ -82,7 +154,7 @@ function Resolve-Version {
     if ($script:VersionInput -eq "latest") {
         $release = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/releases/latest"
         if (-not $release.tag_name) {
-            throw "Error: unable to resolve latest release tag."
+            throw (T "error.latest_version")
         }
         return [string]$release.tag_name
     }
@@ -153,11 +225,11 @@ function Confirm-UpgradeIfNeeded {
         return
     }
     if ($target -gt $installed) {
-        Confirm-Install "$BinName is already installed (version $installedVersion). Do you want to update to $TargetVersion?"
+        Confirm-Install (T "confirm.update" $installedVersion $TargetVersion)
         $script:ReinstallConfirmed = $true
     }
     elseif ($target -eq $installed) {
-        Confirm-Install "$BinName is already installed (version $installedVersion). Do you want to reinstall $TargetVersion?"
+        Confirm-Install (T "confirm.reinstall" $installedVersion $TargetVersion)
         $script:ReinstallConfirmed = $true
     }
 }
@@ -172,7 +244,7 @@ function Get-WindowsArch {
         "AMD64" { return "amd64" }
         "ARM64" { return "arm64" }
         "x86" { return "386" }
-        default { throw "Error: unsupported Windows architecture '$arch'." }
+        default { throw (T "error.unsupported_arch" $arch) }
     }
 }
 
@@ -188,7 +260,7 @@ function Find-ZipAssetUrl {
             return [string]$asset.browser_download_url
         }
     }
-    throw "Error: no Windows zip asset found for arch '$arch' in release '$Version'."
+    throw (T "error.zip_asset" $arch $Version)
 }
 
 function Download-File {
@@ -232,7 +304,8 @@ function Configure-EnvironmentValue {
     )
 
     while ($true) {
-        $value = Read-Host "  $Name ($($AllowedValues -join ' '); leave blank to skip)"
+        $prompt = T -Key "prompt.value" -Values @($Name, ($AllowedValues -join ' '))
+        $value = Read-Host $prompt
         if ([string]::IsNullOrWhiteSpace($value)) {
             return $false
         }
@@ -240,19 +313,19 @@ function Configure-EnvironmentValue {
             [Environment]::SetEnvironmentVariable($Name, $value, "User")
             return $true
         }
-        Write-Host "Invalid value. Choose one of: $($AllowedValues -join ' ')"
+        Write-Host (T "error.invalid_value" ($AllowedValues -join ' '))
     }
 }
 
 function Configure-Environment {
-    if ($script:AutoYes -or -not (Ask-YesNo "Configure comicread environment variables?")) {
+    if ($script:AutoYes -or -not (Ask-YesNo (T "environment.configure"))) {
         return $false
     }
 
-    Write-Host "Values will be saved in your user environment."
-    Write-Host "COMICREAD_GRAPHICS chooses how pages are rendered; auto detects terminal support."
-    Write-Host "COMICREAD_VIEW chooses the default page layout; leave it blank for single-page view."
-    Write-Host "COMICREAD_LANG chooses the language of the interface; the default is en."
+    Write-Host (T "environment.saved.user")
+    Write-Host (T "environment.graphics")
+    Write-Host (T "environment.view")
+    Write-Host (T "environment.language")
 
     $changed = $false
     if (Configure-EnvironmentValue -Name "COMICREAD_GRAPHICS" -AllowedValues @("auto", "ascii", "dots", "kitty", "sixel", "iterm2")) { $changed = $true }
@@ -264,6 +337,7 @@ function Configure-Environment {
 function Main {
     param([string[]]$CliArgs)
 
+    Initialize-InstallerLocale
     Parse-Args -ArgsList $CliArgs
     $version = Resolve-Version
     $url = Find-ZipAssetUrl -Version $version
@@ -271,7 +345,7 @@ function Main {
 
     Confirm-UpgradeIfNeeded -TargetVersion $version
     if (-not $script:ReinstallConfirmed) {
-        Confirm-Install "Install $BinName $version to $InstallDir?"
+        Confirm-Install (T "confirm.install" $version $InstallDir)
     }
 
     $tempDir = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ("comicread-install-" + [guid]::NewGuid().ToString("N"))
@@ -280,15 +354,15 @@ function Main {
 
     try {
         New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
-        Write-Host "Downloading $fileName..."
+        Write-Host (T "status.downloading" $fileName)
         Download-File -Url $url -OutFile $zipPath
         Unblock-File -Path $zipPath -ErrorAction SilentlyContinue
 
-        Write-Host "Extracting $fileName..."
+        Write-Host (T "status.extracting" $fileName)
         Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
         $sourceExe = Join-Path -Path $extractDir -ChildPath "$BinName.exe"
         if (-not (Test-Path -Path $sourceExe -PathType Leaf)) {
-            throw "Error: '$BinName.exe' was not found in archive '$fileName'."
+            throw (T "error.binary_missing" "$BinName.exe")
         }
 
         New-Item -ItemType Directory -Path $InstallDir -Force | Out-Null
@@ -297,9 +371,9 @@ function Main {
         $pathChanged = Ensure-UserPathContains -Dir $InstallDir
         $environmentChanged = Configure-Environment
 
-        Write-Host "comicread $version installed to $targetExe"
+        Write-Host (T "status.installed" $version $targetExe)
         if ($pathChanged -or $environmentChanged) {
-            Write-Host "Restart your terminal to use comicread."
+            Write-Host (T "status.restart")
         }
     }
     finally {

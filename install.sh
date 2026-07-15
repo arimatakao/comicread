@@ -9,27 +9,74 @@ VERSION_INPUT="latest"
 AUTO_YES="false"
 TMP_DIR=""
 REINSTALL_CONFIRMED="false"
+LOCALE_BASE_URL="https://raw.githubusercontent.com/${REPO}/main/installer/locales"
+LOCALE_FILE=""
+
+detect_locale() {
+  local locale
+  locale="${LC_ALL:-${LC_MESSAGES:-${LANG:-en}}}"
+  locale="${locale%%[_@.]*}"
+  printf '%s\n' "$(printf '%s' "$locale" | tr '[:upper:]' '[:lower:]')"
+}
+
+load_locale() {
+  local language="$1" script_dir local_file fallback_file downloaded_file
+  script_dir="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || true)"
+  local_file="${script_dir}/installer/locales/${language}.properties"
+  if [ -r "$local_file" ]; then
+    LOCALE_FILE="$local_file"
+    return
+  fi
+  fallback_file="${script_dir}/installer/locales/en.properties"
+  if [ -r "$fallback_file" ]; then
+    LOCALE_FILE="$fallback_file"
+    return
+  fi
+
+  command -v curl >/dev/null 2>&1 || return
+  downloaded_file="${TMP_DIR}/installer-${language}.properties"
+  if curl -fsSL "${LOCALE_BASE_URL}/${language}.properties" -o "$downloaded_file" && [ -s "$downloaded_file" ]; then
+    LOCALE_FILE="$downloaded_file"
+    return
+  fi
+
+  downloaded_file="${TMP_DIR}/installer-en.properties"
+  if curl -fsSL "${LOCALE_BASE_URL}/en.properties" -o "$downloaded_file" && [ -s "$downloaded_file" ]; then
+    LOCALE_FILE="$downloaded_file"
+  fi
+}
+
+t() {
+  local key="$1" message
+  shift
+  if [ -n "$LOCALE_FILE" ]; then
+    message="$(awk -v key="$key" 'index($0, key "=") == 1 { sub(/^[^=]*=/, ""); print; exit }' "$LOCALE_FILE")"
+  fi
+  [ -n "${message:-}" ] || message="$key"
+
+  if [ "$#" -eq 0 ]; then
+    printf '%s\n' "$message"
+  else
+    printf "${message}\\n" "$@"
+  fi
+}
 
 cleanup() {
   [ -z "${TMP_DIR:-}" ] || rm -rf "$TMP_DIR"
 }
 
 usage() {
-  cat <<'EOF'
-Usage: bash install.sh [-y|--yes] [version]
-
-Install the latest comicread release, or a specified version.
-
-Examples:
-  bash install.sh
-  bash install.sh v1.2.3
-  bash install.sh --yes
-EOF
+  t usage 'bash install.sh [-y|--yes] [version]'
+  printf '\n'
+  t usage.description
+  printf '\n'
+  t usage.examples
+  printf '%s\n' '  bash install.sh' '  bash install.sh v1.2.3' '  bash install.sh --yes'
 }
 
 require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then
-    printf "Error: required command '%s' is not installed.\n" "$1" >&2
+    t error.required_command "$1" >&2
     exit 1
   fi
 }
@@ -47,7 +94,7 @@ parse_args() {
         exit 0
         ;;
       -*)
-        printf "Error: unknown option '%s'.\n" "$1" >&2
+        t error.unknown_option "$1" >&2
         usage >&2
         exit 1
         ;;
@@ -57,7 +104,7 @@ parse_args() {
   done
 
   if [ "${#positional[@]}" -gt 1 ]; then
-    printf '%s\n' 'Error: too many version arguments.' >&2
+    t error.too_many_versions >&2
     usage >&2
     exit 1
   fi
@@ -74,7 +121,7 @@ read_answer() {
   elif [ -r /dev/tty ]; then
     read -r -p "$1" ANSWER < /dev/tty
   else
-    printf '%s\n' 'Error: interactive input requires a terminal; use --yes to continue.' >&2
+    t error.interactive_input >&2
     exit 1
   fi
 }
@@ -86,7 +133,7 @@ confirm_install() {
   case "$ANSWER" in
     y|Y|yes|YES) ;;
     *)
-      printf '%s\n' 'Installation cancelled.'
+      t cancelled
       exit 0
       ;;
   esac
@@ -105,7 +152,7 @@ normalize_os() {
     Linux) printf '%s\n' 'linux' ;;
     Darwin) printf '%s\n' 'darwin' ;;
     *)
-      printf "Error: unsupported OS '%s' (only Linux and macOS are supported).\n" "$(uname -s)" >&2
+      t error.unsupported_os "$(uname -s)" >&2
       exit 1
       ;;
   esac
@@ -117,7 +164,7 @@ normalize_arch() {
     aarch64|arm64) printf '%s\n' 'arm64' ;;
     i386|i686) printf '%s\n' '386' ;;
     *)
-      printf "Error: unsupported architecture '%s'.\n" "$(uname -m)" >&2
+      t error.unsupported_arch "$(uname -m)" >&2
       exit 1
       ;;
   esac
@@ -185,13 +232,13 @@ confirm_upgrade_if_needed() {
   [ -n "$installed_version" ] || return 0
 
   if is_version_newer "$target_version" "$installed_version"; then
-    confirm_install "${BIN_NAME} is already installed (version ${installed_version}). Do you want to update to ${target_version}?"
+    confirm_install "$(t confirm.update "$installed_version" "$target_version")"
     REINSTALL_CONFIRMED="true"
     return 0
   fi
 
   if [ "$(normalize_version "$target_version")" = "$(normalize_version "$installed_version")" ]; then
-    confirm_install "${BIN_NAME} is already installed (version ${installed_version}). Do you want to reinstall ${target_version}?"
+    confirm_install "$(t confirm.reinstall "$installed_version" "$target_version")"
     REINSTALL_CONFIRMED="true"
   fi
 }
@@ -233,7 +280,7 @@ configure_environment_value() {
   local target_file="$1" name="$2" values="$3"
 
   while :; do
-    read_answer "  ${name} (${values}; leave blank to skip): "
+    read_answer "$(t prompt.value "$name" "$values") "
     if [ -z "$ANSWER" ]; then
       return
     fi
@@ -243,23 +290,23 @@ configure_environment_value() {
         append_shell_line "$target_file" "export ${name}=${ANSWER}"
         return
         ;;
-      *) printf 'Invalid value. Choose one of: %s\n' "$values" >&2 ;;
+      *) t error.invalid_value "$values" >&2 ;;
     esac
   done
 }
 
 configure_environment() {
   [ "$AUTO_YES" = "true" ] && return
-  if ! ask_yes_no 'Configure comicread environment variables in your shell profile?'; then
+  if ! ask_yes_no "$(t environment.configure)"; then
     return
   fi
 
   local target_file
   target_file="$(shell_config_file)"
-  printf 'Values will be saved in %s.\n' "$target_file"
-  printf '%s\n' 'COMICREAD_GRAPHICS chooses how pages are rendered; auto detects terminal support.'
-  printf '%s\n' 'COMICREAD_VIEW chooses the default page layout; leave it blank for single-page view.'
-  printf '%s\n' 'COMICREAD_LANG chooses the language of the interface; the default is en.'
+  t environment.saved.shell "$target_file"
+  t environment.graphics
+  t environment.view
+  t environment.language
   configure_environment_value "$target_file" 'COMICREAD_GRAPHICS' 'auto ascii dots kitty sixel iterm2'
   configure_environment_value "$target_file" 'COMICREAD_VIEW' 'book-view right-view circle-view right-circle-view'
   configure_environment_value "$target_file" 'COMICREAD_LANG' 'en uk pl de fr es cs ro it ko ja id hi el tr kk ka'
@@ -270,8 +317,8 @@ install_binary() {
 
   mkdir -p "$INSTALL_DIR"
   if [ ! -w "$INSTALL_DIR" ]; then
-    printf "Error: '%s' is not writable.\n" "$INSTALL_DIR" >&2
-    printf 'Set a writable directory, for example: INSTALL_DIR=$HOME/.local/bin bash install.sh\n' >&2
+    t error.install_dir_writable "$INSTALL_DIR" >&2
+    t hint.install_dir_writable >&2
     exit 1
   fi
 
@@ -279,6 +326,9 @@ install_binary() {
 }
 
 main() {
+  TMP_DIR="$(mktemp -d)"
+  trap cleanup EXIT HUP INT TERM
+  load_locale "$(detect_locale)"
   parse_args "$@"
   require_cmd curl
   require_cmd tar
@@ -293,18 +343,16 @@ main() {
 
   confirm_upgrade_if_needed "$version"
   if [ "$REINSTALL_CONFIRMED" != "true" ]; then
-    confirm_install "Install ${BIN_NAME} ${version} to ${INSTALL_DIR}?"
+    confirm_install "$(t confirm.install "$version" "$INSTALL_DIR")"
   fi
-  TMP_DIR="$(mktemp -d)"
-  trap cleanup EXIT HUP INT TERM
 
-  printf 'Downloading %s...\n' "$archive"
+  t status.downloading "$archive"
   curl -fsSL "$url" -o "${TMP_DIR}/${archive}"
-  printf 'Extracting %s...\n' "$archive"
+  t status.extracting "$archive"
   tar -xzf "${TMP_DIR}/${archive}" -C "$TMP_DIR"
 
   if [ ! -f "${TMP_DIR}/${BIN_NAME}" ]; then
-    printf "Error: '%s' was not found in the archive.\n" "$BIN_NAME" >&2
+    t error.binary_missing "$BIN_NAME" >&2
     exit 1
   fi
 
@@ -312,9 +360,9 @@ main() {
   ensure_path_setup
   configure_environment
 
-  printf 'comicread %s installed to %s/%s\n' "$version" "$INSTALL_DIR" "$BIN_NAME"
+  t status.installed "$version" "${INSTALL_DIR}/${BIN_NAME}"
   if ! path_contains_install_dir; then
-    printf '%s\n' 'Restart your terminal to use comicread.'
+    t status.restart
   fi
 }
 
