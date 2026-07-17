@@ -42,6 +42,7 @@ func (f fakeChapter) TotalPages() int                     { return len(f.pages) 
 func (fakeChapter) ErrPages() int                         { return 0 }
 func (fakeChapter) Metadata() *metadata.Metadata          { return nil }
 func (f fakeChapter) Page(index int) (image.Image, error) { return f.pages[index], nil }
+func (fakeChapter) Close() error                          { return nil }
 
 type fakeBackend struct{}
 

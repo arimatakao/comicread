@@ -83,6 +83,7 @@ func Run(args []string) error {
 	if err != nil {
 		return err
 	}
+	defer chapter.Close()
 
 	renderer, err := backend.NewRenderer(options.graphics)
 	if err != nil {
@@ -218,6 +219,7 @@ func openChapter(path string) (comicfile.ContainerReader, error) {
 		return nil, fmt.Errorf(i18n.T(i18n.CLIErrOpenChapter), err)
 	}
 	if chapter.TotalPages() == 0 {
+		_ = chapter.Close()
 		return nil, errors.New(i18n.T(i18n.CLIErrNoPages))
 	}
 	return chapter, nil
