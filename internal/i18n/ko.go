@@ -31,7 +31,7 @@ q    종료
 
 	FilepickerHeader:      "comicread — 챕터 선택\n%s\n\n",
 	FilepickerNoEntries:   "  (지원되는 항목 없음)\n",
-	FilepickerHelp:        "\n↑/↓ 이동  |  ← 상위 디렉터리  |  → 디렉터리 들어가기  |  enter 파일 열기  |  s 강조 표시된 디렉터리 선택  |  o 디렉터리로 이동  |  q 종료\n",
+	FilepickerHelp:        "\n↑/↓ 이동\n← 상위 디렉터리\n→ 디렉터리 들어가기\nenter 파일 열기\ns 강조 표시된 디렉터리 선택\no 디렉터리로 이동\nq 종료\n",
 	FilepickerWindowTitle: "comicread — 파일 선택",
 	FilepickerGoToPrompt:  "\n디렉터리로 이동: %s\n",
 	FilepickerGoToErr:     "  오류: %s\n",

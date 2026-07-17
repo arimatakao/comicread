@@ -31,7 +31,7 @@ q    बाहर निकलें
 
 	FilepickerHeader:      "comicread — अध्याय चुनें\n%s\n\n",
 	FilepickerNoEntries:   "  (कोई समर्थित प्रविष्टि नहीं)\n",
-	FilepickerHelp:        "\n↑/↓ चलें  |  ← मूल निर्देशिका  |  → निर्देशिका में जाएँ  |  enter फ़ाइल खोलें  |  s चुनी हुई निर्देशिका चुनें  |  o निर्देशिका पर जाएँ  |  q बाहर निकलें\n",
+	FilepickerHelp:        "\n↑/↓ चलें\n← मूल निर्देशिका\n→ निर्देशिका में जाएँ\nenter फ़ाइल खोलें\ns चुनी हुई निर्देशिका चुनें\no निर्देशिका पर जाएँ\nq बाहर निकलें\n",
 	FilepickerWindowTitle: "comicread — फ़ाइल चुनें",
 	FilepickerGoToPrompt:  "\nनिर्देशिका पर जाएँ: %s\n",
 	FilepickerGoToErr:     "  त्रुटि: %s\n",

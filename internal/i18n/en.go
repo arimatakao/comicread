@@ -31,7 +31,7 @@ q    quit
 
 	FilepickerHeader:      "comicread — select a chapter\n%s\n\n",
 	FilepickerNoEntries:   "  (no supported entries)\n",
-	FilepickerHelp:        "\n↑/↓ move  |  ← parent dir  |  → enter dir  |  enter open file  |  s select highlighted directory  |  o go to directory  |  q quit\n",
+	FilepickerHelp:        "\n↑/↓  move\n←    parent dir\n→    enter dir\nenter  open file\ns      select highlighted directory\no      go to directory\nq      quit\n",
 	FilepickerWindowTitle: "comicread — pick a file",
 	FilepickerGoToPrompt:  "\nGo to directory: %s\n",
 	FilepickerGoToErr:     "  error: %s\n",

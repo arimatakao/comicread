@@ -31,7 +31,7 @@ q    вихід
 
 	FilepickerHeader:      "comicread — оберіть розділ\n%s\n\n",
 	FilepickerNoEntries:   "  (немає підтримуваних елементів)\n",
-	FilepickerHelp:        "\n↑/↓ рух  |  ← батьківська тека  |  → відкрити теку  |  enter відкрити файл  |  s обрати виділену теку  |  o перейти до теки  |  q вихід\n",
+	FilepickerHelp:        "\n↑/↓ рух\n← батьківська тека\n→ відкрити теку\nenter відкрити файл\ns обрати виділену теку\no перейти до теки\nq вихід\n",
 	FilepickerWindowTitle: "comicread — вибір файлу",
 	FilepickerGoToPrompt:  "\nПерейти до теки: %s\n",
 	FilepickerGoToErr:     "  помилка: %s\n",

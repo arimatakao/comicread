@@ -31,7 +31,7 @@ q    шығу
 
 	FilepickerHeader:      "comicread — тарауды таңдаңыз\n%s\n\n",
 	FilepickerNoEntries:   "  (қолдау көрсетілетін элементтер жоқ)\n",
-	FilepickerHelp:        "\n↑/↓ жылжу  |  ← аталық қалта  |  → қалтаны ашу  |  enter файлды ашу  |  s таңдалған қалтаны таңдау  |  o қалтаға өту  |  q шығу\n",
+	FilepickerHelp:        "\n↑/↓ жылжу\n← аталық қалта\n→ қалтаны ашу\nenter файлды ашу\ns таңдалған қалтаны таңдау\no қалтаға өту\nq шығу\n",
 	FilepickerWindowTitle: "comicread — файл таңдау",
 	FilepickerGoToPrompt:  "\nҚалтаға өту: %s\n",
 	FilepickerGoToErr:     "  қате: %s\n",

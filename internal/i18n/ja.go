@@ -31,7 +31,7 @@ q    終了
 
 	FilepickerHeader:      "comicread — チャプターを選択\n%s\n\n",
 	FilepickerNoEntries:   "  (対応する項目はありません)\n",
-	FilepickerHelp:        "\n↑/↓ 移動  |  ← 親ディレクトリ  |  → ディレクトリに入る  |  enter ファイルを開く  |  s 選択中のディレクトリを選ぶ  |  o ディレクトリへ移動  |  q 終了\n",
+	FilepickerHelp:        "\n↑/↓ 移動\n← 親ディレクトリ\n→ ディレクトリに入る\nenter ファイルを開く\ns 選択中のディレクトリを選ぶ\no ディレクトリへ移動\nq 終了\n",
 	FilepickerWindowTitle: "comicread — ファイルを選択",
 	FilepickerGoToPrompt:  "\nディレクトリへ移動: %s\n",
 	FilepickerGoToErr:     "  エラー: %s\n",

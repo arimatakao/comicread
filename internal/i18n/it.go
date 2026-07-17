@@ -31,7 +31,7 @@ q    esci
 
 	FilepickerHeader:      "comicread — seleziona un capitolo\n%s\n\n",
 	FilepickerNoEntries:   "  (nessuna voce supportata)\n",
-	FilepickerHelp:        "\n↑/↓ sposta  |  ← cartella superiore  |  → entra nella cartella  |  enter apri file  |  s seleziona la cartella evidenziata  |  o vai a una cartella  |  q esci\n",
+	FilepickerHelp:        "\n↑/↓ sposta\n← cartella superiore\n→ entra nella cartella\nenter apri file\ns seleziona la cartella evidenziata\no vai a una cartella\nq esci\n",
 	FilepickerWindowTitle: "comicread — scegli un file",
 	FilepickerGoToPrompt:  "\nVai alla cartella: %s\n",
 	FilepickerGoToErr:     "  errore: %s\n",

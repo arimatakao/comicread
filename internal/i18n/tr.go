@@ -31,7 +31,7 @@ q    çıkış
 
 	FilepickerHeader:      "comicread — bölüm seçin\n%s\n\n",
 	FilepickerNoEntries:   "  (desteklenen girdi yok)\n",
-	FilepickerHelp:        "\n↑/↓ hareket  |  ← üst dizin  |  → dizine gir  |  enter dosyayı aç  |  s vurgulanan dizini seç  |  o dizine git  |  q çıkış\n",
+	FilepickerHelp:        "\n↑/↓ hareket\n← üst dizin\n→ dizine gir\nenter dosyayı aç\ns vurgulanan dizini seç\no dizine git\nq çıkış\n",
 	FilepickerWindowTitle: "comicread — dosya seçin",
 	FilepickerGoToPrompt:  "\nDizine git: %s\n",
 	FilepickerGoToErr:     "  hata: %s\n",

@@ -31,7 +31,7 @@ q    keluar
 
 	FilepickerHeader:      "comicread — pilih bab\n%s\n\n",
 	FilepickerNoEntries:   "  (tidak ada entri yang didukung)\n",
-	FilepickerHelp:        "\n↑/↓ pindah  |  ← direktori induk  |  → masuk direktori  |  enter buka berkas  |  s pilih direktori yang disorot  |  o pergi ke direktori  |  q keluar\n",
+	FilepickerHelp:        "\n↑/↓ pindah\n← direktori induk\n→ masuk direktori\nenter buka berkas\ns pilih direktori yang disorot\no pergi ke direktori\nq keluar\n",
 	FilepickerWindowTitle: "comicread — pilih berkas",
 	FilepickerGoToPrompt:  "\nPergi ke direktori: %s\n",
 	FilepickerGoToErr:     "  kesalahan: %s\n",

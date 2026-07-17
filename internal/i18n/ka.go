@@ -31,7 +31,7 @@ q    გასვლა
 
 	FilepickerHeader:      "comicread — აირჩიეთ თავი\n%s\n\n",
 	FilepickerNoEntries:   "  (მხარდაჭერილი ელემენტები არ არის)\n",
-	FilepickerHelp:        "\n↑/↓ გადაადგილება  |  ← მშობელი საქაღალდე  |  → საქაღალდის გახსნა  |  enter ფაილის გახსნა  |  s მონიშნული საქაღალდის არჩევა  |  o საქაღალდეზე გადასვლა  |  q გასვლა\n",
+	FilepickerHelp:        "\n↑/↓ გადაადგილება\n← მშობელი საქაღალდე\n→ საქაღალდის გახსნა\nenter ფაილის გახსნა\ns მონიშნული საქაღალდის არჩევა\no საქაღალდეზე გადასვლა\nq გასვლა\n",
 	FilepickerWindowTitle: "comicread — ფაილის არჩევა",
 	FilepickerGoToPrompt:  "\nგადასვლა საქაღალდეზე: %s\n",
 	FilepickerGoToErr:     "  შეცდომა: %s\n",

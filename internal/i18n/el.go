@@ -31,7 +31,7 @@ q    έξοδος
 
 	FilepickerHeader:      "comicread — επιλέξτε κεφάλαιο\n%s\n\n",
 	FilepickerNoEntries:   "  (δεν υπάρχουν υποστηριζόμενες καταχωρήσεις)\n",
-	FilepickerHelp:        "\n↑/↓ μετακίνηση  |  ← γονικός κατάλογος  |  → είσοδος στον κατάλογο  |  enter άνοιγμα αρχείου  |  s επιλογή επισημασμένου καταλόγου  |  o μετάβαση σε κατάλογο  |  q έξοδος\n",
+	FilepickerHelp:        "\n↑/↓ μετακίνηση\n← γονικός κατάλογος\n→ είσοδος στον κατάλογο\nenter άνοιγμα αρχείου\ns επιλογή επισημασμένου καταλόγου\no μετάβαση σε κατάλογο\nq έξοδος\n",
 	FilepickerWindowTitle: "comicread — επιλογή αρχείου",
 	FilepickerGoToPrompt:  "\nΜετάβαση σε κατάλογο: %s\n",
 	FilepickerGoToErr:     "  σφάλμα: %s\n",

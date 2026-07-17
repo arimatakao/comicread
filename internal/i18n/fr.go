@@ -31,7 +31,7 @@ q    quitter
 
 	FilepickerHeader:      "comicread — sélectionner un chapitre\n%s\n\n",
 	FilepickerNoEntries:   "  (aucune entrée prise en charge)\n",
-	FilepickerHelp:        "\n↑/↓ déplacer  |  ← dossier parent  |  → entrer dans le dossier  |  enter ouvrir le fichier  |  s sélectionner le dossier surligné  |  o aller à un dossier  |  q quitter\n",
+	FilepickerHelp:        "\n↑/↓ déplacer\n← dossier parent\n→ entrer dans le dossier\nenter ouvrir le fichier\ns sélectionner le dossier surligné\no aller à un dossier\nq quitter\n",
 	FilepickerWindowTitle: "comicread — choisir un fichier",
 	FilepickerGoToPrompt:  "\nAller au dossier : %s\n",
 	FilepickerGoToErr:     "  erreur : %s\n",

@@ -31,7 +31,7 @@ q    wyjście
 
 	FilepickerHeader:      "comicread — wybierz rozdział\n%s\n\n",
 	FilepickerNoEntries:   "  (brak obsługiwanych elementów)\n",
-	FilepickerHelp:        "\n↑/↓ ruch  |  ← katalog nadrzędny  |  → wejdź do katalogu  |  enter otwórz plik  |  s wybierz zaznaczony katalog  |  o przejdź do katalogu  |  q wyjście\n",
+	FilepickerHelp:        "\n↑/↓ ruch\n← katalog nadrzędny\n→ wejdź do katalogu\nenter otwórz plik\ns wybierz zaznaczony katalog\no przejdź do katalogu\nq wyjście\n",
 	FilepickerWindowTitle: "comicread — wybór pliku",
 	FilepickerGoToPrompt:  "\nPrzejdź do katalogu: %s\n",
 	FilepickerGoToErr:     "  błąd: %s\n",

@@ -31,7 +31,7 @@ q    salir
 
 	FilepickerHeader:      "comicread — seleccionar un capítulo\n%s\n\n",
 	FilepickerNoEntries:   "  (no hay entradas compatibles)\n",
-	FilepickerHelp:        "\n↑/↓ mover  |  ← directorio superior  |  → entrar al directorio  |  enter abrir archivo  |  s seleccionar el directorio resaltado  |  o ir a un directorio  |  q salir\n",
+	FilepickerHelp:        "\n↑/↓ mover\n← directorio superior\n→ entrar al directorio\nenter abrir archivo\ns seleccionar el directorio resaltado\no ir a un directorio\nq salir\n",
 	FilepickerWindowTitle: "comicread — elegir un archivo",
 	FilepickerGoToPrompt:  "\nIr al directorio: %s\n",
 	FilepickerGoToErr:     "  error: %s\n",

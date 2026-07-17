@@ -31,7 +31,7 @@ q    ukončit
 
 	FilepickerHeader:      "comicread — vyberte kapitolu\n%s\n\n",
 	FilepickerNoEntries:   "  (žádné podporované položky)\n",
-	FilepickerHelp:        "\n↑/↓ pohyb  |  ← nadřazená složka  |  → vstoupit do složky  |  enter otevřít soubor  |  s vybrat zvýrazněnou složku  |  o přejít do adresáře  |  q ukončit\n",
+	FilepickerHelp:        "\n↑/↓ pohyb\n← nadřazená složka\n→ vstoupit do složky\nenter otevřít soubor\ns vybrat zvýrazněnou složku\no přejít do adresáře\nq ukončit\n",
 	FilepickerWindowTitle: "comicread — vybrat soubor",
 	FilepickerGoToPrompt:  "\nPřejít do adresáře: %s\n",
 	FilepickerGoToErr:     "  chyba: %s\n",

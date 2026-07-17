@@ -31,7 +31,7 @@ q    beenden
 
 	FilepickerHeader:      "comicread — Kapitel auswählen\n%s\n\n",
 	FilepickerNoEntries:   "  (keine unterstützten Einträge)\n",
-	FilepickerHelp:        "\n↑/↓ bewegen  |  ← übergeordneter Ordner  |  → Ordner öffnen  |  enter Datei öffnen  |  s markierten Ordner auswählen  |  o zu Ordner wechseln  |  q beenden\n",
+	FilepickerHelp:        "\n↑/↓ bewegen\n← übergeordneter Ordner\n→ Ordner öffnen\nenter Datei öffnen\ns markierten Ordner auswählen\no zu Ordner wechseln\nq beenden\n",
 	FilepickerWindowTitle: "comicread — Datei auswählen",
 	FilepickerGoToPrompt:  "\nZu Ordner wechseln: %s\n",
 	FilepickerGoToErr:     "  Fehler: %s\n",

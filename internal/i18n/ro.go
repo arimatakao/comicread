@@ -31,7 +31,7 @@ q    ieșire
 
 	FilepickerHeader:      "comicread — selectați un capitol\n%s\n\n",
 	FilepickerNoEntries:   "  (nicio intrare acceptată)\n",
-	FilepickerHelp:        "\n↑/↓ deplasare  |  ← director părinte  |  → intră în director  |  enter deschide fișierul  |  s selectează directorul evidențiat  |  o mergi la un director  |  q ieșire\n",
+	FilepickerHelp:        "\n↑/↓ deplasare\n← director părinte\n→ intră în director\nenter deschide fișierul\ns selectează directorul evidențiat\no mergi la un director\nq ieșire\n",
 	FilepickerWindowTitle: "comicread — alegeți un fișier",
 	FilepickerGoToPrompt:  "\nMergi la director: %s\n",
 	FilepickerGoToErr:     "  eroare: %s\n",
