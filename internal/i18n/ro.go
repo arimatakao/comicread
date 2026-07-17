@@ -67,6 +67,8 @@ q    ieșire
 	CLIFlagRightCircleBookViewUsage: "afișează perechi de pagini suprapuse de la dreapta la stânga",
 	CLIErrMultipleBookViews:         "poate fi utilizată o singură opțiune de vizualizare a cărții",
 	CLIErrInvalidView:               "valoare COMICREAD_VIEW neacceptată %q (se așteaptă: book-view, right-view, circle-view sau right-circle-view)",
+	CLIFlagOpenUsage:                "director de deschis în selectorul de fișiere (implicit: COMICREAD_DIR sau directorul curent)",
+	CLIErrOpenNotDir:                "deschide directorul %q: nu este un director",
 	CLIHelpHint:                     "rulați 'comicread --help' pentru ajutor",
 	CLIUsage:                        "utilizare: comicread [opțiuni] [fișier]",
 	CLIUsageFull: `comicread — un cititor de manga minimal pentru terminal
@@ -81,17 +83,20 @@ opțiuni:
   --right-circle-view
                       afișează perechi de pagini suprapuse de la dreapta la stânga
   --clear-journal    șterge jurnalul local pentru un fișier sau director și ieși
+  -o, --open string   director de deschis în selectorul de fișiere (implicit: COMICREAD_DIR sau directorul curent)
   --env               afișează mediul comicread și ieși
   --update            verifică actualizările și ieși
   -v, --version       afișează versiunea și ieși
   -h, --help          afișează acest ajutor
 
-Dacă nu este dat niciun fișier sau director, se deschide un selector interactiv de fișiere în directorul curent.
+Dacă nu este dat niciun fișier sau director, se deschide un selector interactiv de fișiere în COMICREAD_DIR
+(dacă este setat la un director valid) sau, altfel, în directorul curent.
 
 mediu:
   COMICREAD_GRAPHICS  renderer implicit: auto, ascii, dots, kitty, sixel sau iterm2
   COMICREAD_PRERENDERED_NEXT      pagini următoare pentru prerenderizare (implicit 1)
   COMICREAD_PRERENDERED_PREVIOUS  pagini anterioare pentru prerenderizare (implicit 1)
   COMICREAD_VIEW      vizualizare implicită: book-view, right-view, circle-view sau right-circle-view
-  COMICREAD_LANG      limba mesajelor: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk sau ka (implicit "en")`,
+  COMICREAD_LANG      limba mesajelor: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk sau ka (implicit "en")
+  COMICREAD_DIR       director implicit pentru selectorul de fișiere când nu este dată o cale`,
 }

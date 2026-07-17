@@ -67,6 +67,8 @@ q    wyjście
 	CLIFlagRightCircleBookViewUsage: "pokaż nakładające się pary stron od prawej do lewej",
 	CLIErrMultipleBookViews:         "można użyć tylko jednej opcji widoku książki",
 	CLIErrInvalidView:               "nieobsługiwana wartość COMICREAD_VIEW %q (dozwolone: book-view, right-view, circle-view lub right-circle-view)",
+	CLIFlagOpenUsage:                "katalog do otwarcia w wyborze plików (domyślnie: COMICREAD_DIR lub bieżący katalog)",
+	CLIErrOpenNotDir:                "otwórz katalog %q: nie jest katalogiem",
 	CLIHelpHint:                     "uruchom 'comicread --help', aby uzyskać pomoc",
 	CLIUsage:                        "użycie: comicread [opcje] [plik]",
 	CLIUsageFull: `comicread — minimalny czytnik mangi dla terminala
@@ -81,17 +83,20 @@ opcje:
   --right-circle-view
                       pokaż nakładające się pary stron od prawej do lewej
   --clear-journal    usuń lokalny dziennik dla pliku lub katalogu i zakończ
+  -o, --open string   katalog do otwarcia w wyborze plików (domyślnie: COMICREAD_DIR lub bieżący katalog)
   --env               wypisz środowisko comicread i zakończ
   --update            sprawdź aktualizacje i zakończ
   -v, --version       wypisz wersję i zakończ
   -h, --help          pokaż tę pomoc
 
-Jeśli nie podano pliku ani katalogu, w bieżącym katalogu otworzy się interaktywny wybór pliku.
+Jeśli nie podano pliku ani katalogu, interaktywny wybór pliku otworzy się w COMICREAD_DIR
+(jeśli ustawiono prawidłowy katalog) lub w bieżącym katalogu.
 
 zmienne środowiskowe:
   COMICREAD_GRAPHICS  domyślny renderer: auto, ascii, dots, kitty, sixel lub iterm2
   COMICREAD_PRERENDERED_NEXT      kolejne strony do wstępnego renderowania (domyślnie 1)
   COMICREAD_PRERENDERED_PREVIOUS  poprzednie strony do wstępnego renderowania (domyślnie 1)
   COMICREAD_VIEW      domyślny widok: book-view, right-view, circle-view lub right-circle-view
-  COMICREAD_LANG      język komunikatów: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk lub ka (domyślnie "en")`,
+  COMICREAD_LANG      język komunikatów: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk lub ka (domyślnie "en")
+  COMICREAD_DIR       domyślny katalog dla wyboru plików, gdy nie podano ścieżki`,
 }

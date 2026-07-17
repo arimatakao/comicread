@@ -67,6 +67,8 @@ q    quitter
 	CLIFlagRightCircleBookViewUsage: "afficher les paires de pages superposées de droite à gauche",
 	CLIErrMultipleBookViews:         "une seule option d'affichage de livre peut être utilisée",
 	CLIErrInvalidView:               "valeur COMICREAD_VIEW non prise en charge %q (attendu : book-view, right-view, circle-view ou right-circle-view)",
+	CLIFlagOpenUsage:                "dossier à ouvrir dans le sélecteur de fichiers (par défaut : COMICREAD_DIR ou le dossier actuel)",
+	CLIErrOpenNotDir:                "ouvrir le dossier %q : ce n'est pas un dossier",
 	CLIHelpHint:                     "exécutez 'comicread --help' pour l'aide",
 	CLIUsage:                        "utilisation : comicread [options] [fichier]",
 	CLIUsageFull: `comicread — un lecteur de mangas minimal pour le terminal
@@ -81,17 +83,20 @@ options :
   --right-circle-view
                       afficher les paires de pages superposées de droite à gauche
   --clear-journal    supprimer le journal local d'un fichier ou dossier et quitter
+  -o, --open string   dossier à ouvrir dans le sélecteur de fichiers (par défaut : COMICREAD_DIR ou le dossier actuel)
   --env               afficher l'environnement comicread et quitter
   --update            vérifier les mises à jour et quitter
   -v, --version       afficher la version et quitter
   -h, --help          afficher cette aide
 
-Si aucun fichier ou dossier n'est indiqué, un sélecteur de fichiers interactif s'ouvre dans le dossier actuel.
+Si aucun fichier ou dossier n'est indiqué, un sélecteur de fichiers interactif s'ouvre dans COMICREAD_DIR
+(s'il est défini sur un dossier valide) ou dans le dossier actuel sinon.
 
 environnement :
   COMICREAD_GRAPHICS  moteur de rendu par défaut : auto, ascii, dots, kitty, sixel ou iterm2
   COMICREAD_PRERENDERED_NEXT      pages suivantes à pré-rendre (par défaut 1)
   COMICREAD_PRERENDERED_PREVIOUS  pages précédentes à pré-rendre (par défaut 1)
   COMICREAD_VIEW      affichage par défaut : book-view, right-view, circle-view ou right-circle-view
-  COMICREAD_LANG      langue des messages : en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk ou ka (par défaut : "en")`,
+  COMICREAD_LANG      langue des messages : en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk ou ka (par défaut : "en")
+  COMICREAD_DIR       dossier par défaut du sélecteur de fichiers lorsqu'aucun chemin n'est indiqué`,
 }

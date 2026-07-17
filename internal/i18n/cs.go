@@ -67,6 +67,8 @@ q    ukončit
 	CLIFlagRightCircleBookViewUsage: "zobrazit překrývající se dvojice stránek zprava doleva",
 	CLIErrMultipleBookViews:         "lze použít pouze jednu možnost knižního zobrazení",
 	CLIErrInvalidView:               "nepodporovaná hodnota COMICREAD_VIEW %q (očekává se: book-view, right-view, circle-view nebo right-circle-view)",
+	CLIFlagOpenUsage:                "adresář k otevření ve výběru souborů (výchozí: COMICREAD_DIR nebo aktuální adresář)",
+	CLIErrOpenNotDir:                "otevřít adresář %q: není adresář",
 	CLIHelpHint:                     "nápovědu zobrazíte příkazem 'comicread --help'",
 	CLIUsage:                        "použití: comicread [volby] [soubor]",
 	CLIUsageFull: `comicread — minimalistická čtečka mangy pro terminál
@@ -81,17 +83,20 @@ volby:
   --right-circle-view
                       zobrazit překrývající se dvojice stránek zprava doleva
   --clear-journal    odstranit místní deník pro soubor nebo složku a ukončit
+  -o, --open string   adresář k otevření ve výběru souborů (výchozí: COMICREAD_DIR nebo aktuální adresář)
   --env               vypsat prostředí comicread a ukončit
   --update            zkontrolovat aktualizace a ukončit
   -v, --version       vypsat verzi a ukončit
   -h, --help          zobrazit tuto nápovědu
 
-Pokud není zadán soubor ani složka, otevře se v aktuální složce interaktivní výběr souboru.
+Pokud není zadán soubor ani složka, otevře se interaktivní výběr souboru v COMICREAD_DIR
+(je-li nastavena na platný adresář), jinak v aktuálním adresáři.
 
 prostředí:
   COMICREAD_GRAPHICS  výchozí vykreslovač: auto, ascii, dots, kitty, sixel nebo iterm2
   COMICREAD_PRERENDERED_NEXT      počet dalších stránek k předvykreslení (výchozí 1)
   COMICREAD_PRERENDERED_PREVIOUS  počet předchozích stránek k předvykreslení (výchozí 1)
   COMICREAD_VIEW      výchozí zobrazení: book-view, right-view, circle-view nebo right-circle-view
-  COMICREAD_LANG      jazyk zpráv: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk nebo ka (výchozí "en")`,
+  COMICREAD_LANG      jazyk zpráv: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk nebo ka (výchozí "en")
+  COMICREAD_DIR       výchozí adresář pro výběr souborů, když není zadána cesta`,
 }

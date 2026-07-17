@@ -67,6 +67,8 @@ q    बाहर निकलें
 	CLIFlagRightCircleBookViewUsage: "ओवरलैप होते पृष्ठों के जोड़े दाएँ से बाएँ दिखाएँ",
 	CLIErrMultipleBookViews:         "केवल एक पुस्तक दृश्य विकल्प इस्तेमाल किया जा सकता है",
 	CLIErrInvalidView:               "असमर्थित COMICREAD_VIEW मान %q (मान्य: book-view, right-view, circle-view या right-circle-view)",
+	CLIFlagOpenUsage:                "फ़ाइल चयनक में खोलने की निर्देशिका (डिफ़ॉल्ट: COMICREAD_DIR या वर्तमान निर्देशिका)",
+	CLIErrOpenNotDir:                "निर्देशिका खोलें %q: निर्देशिका नहीं है",
 	CLIHelpHint:                     "सहायता के लिए 'comicread --help' चलाएँ",
 	CLIUsage:                        "उपयोग: comicread [विकल्प] [फ़ाइल]",
 	CLIUsageFull: `comicread — टर्मिनल के लिए एक न्यूनतम मंगा रीडर
@@ -81,17 +83,20 @@ q    बाहर निकलें
   --right-circle-view
                       ओवरलैप होते पृष्ठों के जोड़े दाएँ से बाएँ दिखाएँ
   --clear-journal    फ़ाइल या निर्देशिका का स्थानीय जर्नल हटाएँ और बाहर निकलें
+  -o, --open string   फ़ाइल चयनक में खोलने की निर्देशिका (डिफ़ॉल्ट: COMICREAD_DIR या वर्तमान निर्देशिका)
   --env               comicread परिवेश दिखाएँ और बाहर निकलें
   --update            अपडेट जाँचें और बाहर निकलें
   -v, --version       संस्करण दिखाएँ और बाहर निकलें
   -h, --help          यह सहायता दिखाएँ
 
-यदि कोई फ़ाइल या निर्देशिका नहीं दी गई है, तो वर्तमान निर्देशिका में इंटरैक्टिव फ़ाइल चयनक खुलेगा।
+यदि कोई फ़ाइल या निर्देशिका नहीं दी गई है, तो COMICREAD_DIR में इंटरैक्टिव फ़ाइल चयनक खुलेगा
+(यदि यह मान्य निर्देशिका पर सेट है), अन्यथा वर्तमान निर्देशिका में खुलेगा।
 
 परिवेश:
   COMICREAD_GRAPHICS  डिफ़ॉल्ट रेंडरर: auto, ascii, dots, kitty, sixel या iterm2
   COMICREAD_PRERENDERED_NEXT      प्रीरेंडर करने के लिए अगली पृष्ठ संख्या (डिफ़ॉल्ट 1)
   COMICREAD_PRERENDERED_PREVIOUS  प्रीरेंडर करने के लिए पिछले पृष्ठ संख्या (डिफ़ॉल्ट 1)
   COMICREAD_VIEW      डिफ़ॉल्ट दृश्य: book-view, right-view, circle-view या right-circle-view
-  COMICREAD_LANG      संदेश की भाषा: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk या ka (डिफ़ॉल्ट "en")`,
+  COMICREAD_LANG      संदेश की भाषा: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk या ka (डिफ़ॉल्ट "en")
+  COMICREAD_DIR       पथ न दिए जाने पर फ़ाइल चयनक की डिफ़ॉल्ट निर्देशिका`,
 }

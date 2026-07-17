@@ -67,6 +67,8 @@ q    çıkış
 	CLIFlagRightCircleBookViewUsage: "örtüşen sayfa çiftlerini sağdan sola göster",
 	CLIErrMultipleBookViews:         "yalnızca bir kitap görünümü seçeneği kullanılabilir",
 	CLIErrInvalidView:               "desteklenmeyen COMICREAD_VIEW değeri %q (beklenen: book-view, right-view, circle-view veya right-circle-view)",
+	CLIFlagOpenUsage:                "dosya seçicide açılacak dizin (varsayılan: COMICREAD_DIR veya geçerli dizin)",
+	CLIErrOpenNotDir:                "dizini aç %q: dizin değil",
 	CLIHelpHint:                     "yardım için 'comicread --help' çalıştırın",
 	CLIUsage:                        "kullanım: comicread [seçenekler] [dosya]",
 	CLIUsageFull: `comicread — terminal için minimal bir manga okuyucusu
@@ -81,17 +83,20 @@ seçenekler:
   --right-circle-view
                       örtüşen sayfa çiftlerini sağdan sola göster
   --clear-journal    dosya veya dizin için yerel günlüğü sil ve çık
+  -o, --open string   dosya seçicide açılacak dizin (varsayılan: COMICREAD_DIR veya geçerli dizin)
   --env               comicread ortamını göster ve çık
   --update            güncellemeleri denetle ve çık
   -v, --version       sürümü göster ve çık
   -h, --help          bu yardımı göster
 
-Dosya veya dizin verilmezse, geçerli dizinde etkileşimli dosya seçici açılır.
+Dosya veya dizin verilmezse, COMICREAD_DIR içinde etkileşimli dosya seçici açılır
+(geçerli bir dizine ayarlanmışsa) veya aksi halde geçerli dizinde açılır.
 
 ortam:
   COMICREAD_GRAPHICS  varsayılan oluşturucu: auto, ascii, dots, kitty, sixel veya iterm2
   COMICREAD_PRERENDERED_NEXT      önceden oluşturulacak sonraki sayfalar (varsayılan 1)
   COMICREAD_PRERENDERED_PREVIOUS  önceden oluşturulacak önceki sayfalar (varsayılan 1)
   COMICREAD_VIEW      varsayılan görünüm: book-view, right-view, circle-view veya right-circle-view
-  COMICREAD_LANG      ileti dili: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk veya ka (varsayılan "en")`,
+  COMICREAD_LANG      ileti dili: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk veya ka (varsayılan "en")
+  COMICREAD_DIR       yol verilmediğinde dosya seçici için varsayılan dizin`,
 }

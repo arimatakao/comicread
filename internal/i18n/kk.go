@@ -67,6 +67,8 @@ q    шығу
 	CLIFlagRightCircleBookViewUsage: "беттерді оңнан солға қабаттасқан жұп етіп көрсету",
 	CLIErrMultipleBookViews:         "тек бір кітап көрінісі режимін көрсетуге болады",
 	CLIErrInvalidView:               "COMICREAD_VIEW %q мәні қолдау көрсетілмейді (мүмкін мәндер: book-view, right-view, circle-view немесе right-circle-view)",
+	CLIFlagOpenUsage:                "файл таңдағышта ашылатын қалта (әдепкі: COMICREAD_DIR немесе ағымдағы қалта)",
+	CLIErrOpenNotDir:                "қалтаны ашу %q: қалта емес",
 	CLIHelpHint:                     "анықтама алу үшін 'comicread --help' орындаңыз",
 	CLIUsage:                        "қолданылуы: comicread [опциялар] [файл]",
 	CLIUsageFull: `comicread - терминалға арналған минималистік манга оқырманы
@@ -81,17 +83,20 @@ q    шығу
   --right-circle-view
                       беттерді оңнан солға қабаттасқан жұп етіп көрсету
   --clear-journal    файл не қалта үшін жергілікті журналды жойып, жұмысты аяқтау
+  -o, --open string   файл таңдағышта ашылатын қалта (әдепкі: COMICREAD_DIR немесе ағымдағы қалта)
   --env               comicread ортасын шығарып, жұмысты аяқтау
   --update            жаңартуларды тексеріп, жұмысты аяқтау
   -v, --version       нұсқасын шығарып, жұмысты аяқтау
   -h, --help          осы анықтаманы көрсету
 
-Файл немесе қалта көрсетілмесе, ағымдағы қалтада интерактивті файл таңдау ашылады.
+Файл немесе қалта көрсетілмесе, интерактивті файл таңдау COMICREAD_DIR ішінде ашылады
+(егер ол дұрыс қалтаға орнатылса) немесе ағымдағы қалтада ашылады.
 
 орта айнымалылары:
   COMICREAD_GRAPHICS  әдепкі рендерер: auto, ascii, dots, kitty, sixel немесе iterm2
   COMICREAD_PRERENDERED_NEXT      алдын ала көрсетуге келесі беттер саны (әдепкі 1)
   COMICREAD_PRERENDERED_PREVIOUS  алдын ала көрсетуге алдыңғы беттер саны (әдепкі 1)
   COMICREAD_VIEW      әдепкі режим: book-view, right-view, circle-view немесе right-circle-view
-  COMICREAD_LANG   хабарлама тілі: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk немесе ka (әдепкі "en")`,
+  COMICREAD_LANG   хабарлама тілі: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk немесе ka (әдепкі "en")
+  COMICREAD_DIR    жол көрсетілмегенде файл таңдағышқа арналған әдепкі қалта`,
 }

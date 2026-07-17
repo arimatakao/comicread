@@ -67,6 +67,8 @@ q    έξοδος
 	CLIFlagRightCircleBookViewUsage: "εμφάνιση επικαλυπτόμενων ζευγών σελίδων από δεξιά προς τα αριστερά",
 	CLIErrMultipleBookViews:         "μπορεί να χρησιμοποιηθεί μόνο μία επιλογή προβολής βιβλίου",
 	CLIErrInvalidView:               "μη υποστηριζόμενη τιμή COMICREAD_VIEW %q (αναμένονται: book-view, right-view, circle-view ή right-circle-view)",
+	CLIFlagOpenUsage:                "κατάλογος για άνοιγμα στον επιλογέα αρχείων (προεπιλογή: COMICREAD_DIR ή ο τρέχων κατάλογος)",
+	CLIErrOpenNotDir:                "άνοιγμα καταλόγου %q: δεν είναι κατάλογος",
 	CLIHelpHint:                     "εκτελέστε 'comicread --help' για βοήθεια",
 	CLIUsage:                        "χρήση: comicread [επιλογές] [αρχείο]",
 	CLIUsageFull: `comicread — ένας μινιμαλιστικός αναγνώστης manga για τερματικό
@@ -81,17 +83,20 @@ q    έξοδος
   --right-circle-view
                       εμφάνιση επικαλυπτόμενων ζευγών σελίδων από δεξιά προς τα αριστερά
   --clear-journal    διαγραφή τοπικού ημερολογίου για αρχείο ή κατάλογο και έξοδος
+  -o, --open string   κατάλογος για άνοιγμα στον επιλογέα αρχείων (προεπιλογή: COMICREAD_DIR ή ο τρέχων κατάλογος)
   --env               εμφάνιση περιβάλλοντος comicread και έξοδος
   --update            έλεγχος ενημερώσεων και έξοδος
   -v, --version       εμφάνιση έκδοσης και έξοδος
   -h, --help          εμφάνιση αυτής της βοήθειας
 
-Αν δεν δοθεί αρχείο ή κατάλογος, ανοίγει διαδραστική επιλογή αρχείου στον τρέχοντα κατάλογο.
+Αν δεν δοθεί αρχείο ή κατάλογος, ανοίγει διαδραστική επιλογή αρχείου στο COMICREAD_DIR
+(αν έχει οριστεί σε έγκυρο κατάλογο) ή αλλιώς στον τρέχοντα κατάλογο.
 
 περιβάλλον:
   COMICREAD_GRAPHICS  προεπιλεγμένος αποδότης: auto, ascii, dots, kitty, sixel ή iterm2
   COMICREAD_PRERENDERED_NEXT      επόμενες σελίδες για προαπόδοση (προεπιλογή 1)
   COMICREAD_PRERENDERED_PREVIOUS  προηγούμενες σελίδες για προαπόδοση (προεπιλογή 1)
   COMICREAD_VIEW      προεπιλεγμένη προβολή: book-view, right-view, circle-view ή right-circle-view
-  COMICREAD_LANG      γλώσσα μηνυμάτων: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk ή ka (προεπιλογή "en")`,
+  COMICREAD_LANG      γλώσσα μηνυμάτων: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk ή ka (προεπιλογή "en")
+  COMICREAD_DIR       προεπιλεγμένος κατάλογος για τον επιλογέα αρχείων όταν δεν δίνεται διαδρομή`,
 }

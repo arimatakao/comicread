@@ -67,6 +67,8 @@ q    beenden
 	CLIFlagRightCircleBookViewUsage: "überlappende Seitenpaare von rechts nach links anzeigen",
 	CLIErrMultipleBookViews:         "nur eine Buchansichtsoption darf verwendet werden",
 	CLIErrInvalidView:               "nicht unterstützter COMICREAD_VIEW-Wert %q (erwartet: book-view, right-view, circle-view oder right-circle-view)",
+	CLIFlagOpenUsage:                "im Dateiauswahldialog zu öffnender Ordner (Standard: COMICREAD_DIR oder aktueller Ordner)",
+	CLIErrOpenNotDir:                "Ordner öffnen %q: kein Ordner",
 	CLIHelpHint:                     "für Hilfe 'comicread --help' ausführen",
 	CLIUsage:                        "Aufruf: comicread [Optionen] [Datei]",
 	CLIUsageFull: `comicread — ein minimaler Manga-Reader für das Terminal
@@ -81,17 +83,20 @@ Optionen:
   --right-circle-view
                       überlappende Seitenpaare von rechts nach links anzeigen
   --clear-journal    lokales Journal für eine Datei oder einen Ordner löschen und beenden
+  -o, --open string   im Dateiauswahldialog zu öffnender Ordner (Standard: COMICREAD_DIR oder aktueller Ordner)
   --env               comicread-Umgebung ausgeben und beenden
   --update            nach Updates suchen und beenden
   -v, --version       Version ausgeben und beenden
   -h, --help          diese Hilfe anzeigen
 
-Wenn keine Datei und kein Ordner angegeben ist, öffnet sich im aktuellen Ordner eine interaktive Dateiauswahl.
+Wenn keine Datei und kein Ordner angegeben ist, öffnet sich eine interaktive Dateiauswahl in COMICREAD_DIR
+(falls auf einen gültigen Ordner gesetzt), sonst im aktuellen Ordner.
 
 Umgebung:
   COMICREAD_GRAPHICS  Standard-Renderer: auto, ascii, dots, kitty, sixel oder iterm2
   COMICREAD_PRERENDERED_NEXT      nächste Seiten vorab rendern (Standard 1)
   COMICREAD_PRERENDERED_PREVIOUS  vorherige Seiten vorab rendern (Standard 1)
   COMICREAD_VIEW      Standardansicht: book-view, right-view, circle-view oder right-circle-view
-  COMICREAD_LANG      Sprache der Meldungen: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk oder ka (Standard: "en")`,
+  COMICREAD_LANG      Sprache der Meldungen: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk oder ka (Standard: "en")
+  COMICREAD_DIR       Standardordner für die Dateiauswahl, wenn kein Pfad angegeben ist`,
 }

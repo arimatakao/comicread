@@ -67,6 +67,8 @@ q    გასვლა
 	CLIFlagRightCircleBookViewUsage: "გვერდების გადამფარავი წყვილებად ჩვენება მარჯვნიდან მარცხნივ",
 	CLIErrMultipleBookViews:         "მხოლოდ ერთი წიგნის ხედვის რეჟიმის მითითებაა შესაძლებელი",
 	CLIErrInvalidView:               "COMICREAD_VIEW-ის მხარდაუჭერელი მნიშვნელობა %q (შესაძლებელია: book-view, right-view, circle-view ან right-circle-view)",
+	CLIFlagOpenUsage:                "საქაღალდე ფაილის ამრჩევში გასახსნელად (ნაგულისხმევი: COMICREAD_DIR ან მიმდინარე საქაღალდე)",
+	CLIErrOpenNotDir:                "საქაღალდის გახსნა %q: არ არის საქაღალდე",
 	CLIHelpHint:                     "დახმარებისთვის გაუშვით 'comicread --help'",
 	CLIUsage:                        "გამოყენება: comicread [პარამეტრები] [ფაილი]",
 	CLIUsageFull: `comicread - მინიმალისტური მანგის წამკითხველი ტერმინალისთვის
@@ -81,17 +83,20 @@ q    გასვლა
   --right-circle-view
                       გვერდების გადამფარავი წყვილებად ჩვენება მარჯვნიდან მარცხნივ
   --clear-journal    ფაილის ან საქაღალდის ადგილობრივი ჟურნალის წაშლა და დასრულება
+  -o, --open string   საქაღალდე ფაილის ამრჩევში გასახსნელად (ნაგულისხმევი: COMICREAD_DIR ან მიმდინარე საქაღალდე)
   --env               comicread-ის გარემოს გამოტანა და დასრულება
   --update            განახლებების შემოწმება და დასრულება
   -v, --version       ვერსიის გამოტანა და დასრულება
   -h, --help          ამ დახმარების ჩვენება
 
-თუ ფაილი ან საქაღალდე მითითებული არ არის, გაიხსნება ინტერაქტიული ფაილის არჩევა მიმდინარე საქაღალდეში.
+თუ ფაილი ან საქაღალდე მითითებული არ არის, გაიხსნება ინტერაქტიული ფაილის არჩევა COMICREAD_DIR-ში
+(თუ იგი სწორ საქაღალდეზეა დაყენებული) ან მიმდინარე საქაღალდეში.
 
 გარემოს ცვლადები:
   COMICREAD_GRAPHICS  ნაგულისხმევი რენდერერი: auto, ascii, dots, kitty, sixel ან iterm2
   COMICREAD_PRERENDERED_NEXT      შემდეგი გვერდები წინასწარი რენდერისთვის (ნაგულისხმევი 1)
   COMICREAD_PRERENDERED_PREVIOUS  წინა გვერდები წინასწარი რენდერისთვის (ნაგულისხმევი 1)
   COMICREAD_VIEW      ნაგულისხმევი რეჟიმი: book-view, right-view, circle-view ან right-circle-view
-  COMICREAD_LANG   შეტყობინებების ენა: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk ან ka (ნაგულისხმევი "en")`,
+  COMICREAD_LANG   შეტყობინებების ენა: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk ან ka (ნაგულისხმევი "en")
+  COMICREAD_DIR    ფაილის ამრჩევის ნაგულისხმევი საქაღალდე, როცა გზა მითითებული არაა`,
 }

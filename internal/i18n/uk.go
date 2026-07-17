@@ -67,6 +67,8 @@ q    вихід
 	CLIFlagRightCircleBookViewUsage: "показувати перекривні пари сторінок справа наліво",
 	CLIErrMultipleBookViews:         "можна вказати лише один режим книжкового перегляду",
 	CLIErrInvalidView:               "непідтримуване значення COMICREAD_VIEW %q (можливі: book-view, right-view, circle-view або right-circle-view)",
+	CLIFlagOpenUsage:                "тека для відкриття у виборі файлів (за замовчуванням: COMICREAD_DIR або поточна тека)",
+	CLIErrOpenNotDir:                "відкрити теку %q: не є текою",
 	CLIHelpHint:                     "виконайте 'comicread --help' для довідки",
 	CLIUsage:                        "використання: comicread [опції] [файл]",
 	CLIUsageFull: `comicread - мінімалістична манга-читалка для термінала
@@ -81,17 +83,20 @@ q    вихід
   --right-circle-view
                       показувати перекривні пари сторінок справа наліво
   --clear-journal    видалити локальний журнал для файлу або теки та завершити роботу
+  -o, --open string   тека для відкриття у виборі файлів (за замовчуванням: COMICREAD_DIR або поточна тека)
   --env               вивести середовище comicread та завершити роботу
   --update            перевірити оновлення та завершити роботу
   -v, --version       вивести версію та завершити роботу
   -h, --help          показати цю довідку
 
-Якщо файл або тека не вказані, відкриється інтерактивний вибір файлу в поточній теці.
+Якщо файл або тека не вказані, відкриється інтерактивний вибір файлу в COMICREAD_DIR
+(якщо задано коректну теку) або поточній теці.
 
 змінні середовища:
   COMICREAD_GRAPHICS  рендерер за замовчуванням: auto, ascii, dots, kitty, sixel або iterm2
   COMICREAD_PRERENDERED_NEXT      кількість наступних сторінок для пререндеру (за замовчуванням 1)
   COMICREAD_PRERENDERED_PREVIOUS  кількість попередніх сторінок для пререндеру (за замовчуванням 1)
   COMICREAD_VIEW      режим за замовчуванням: book-view, right-view, circle-view або right-circle-view
-  COMICREAD_LANG   мова повідомлень: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk або ka (за замовчуванням "en")`,
+  COMICREAD_LANG   мова повідомлень: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk або ka (за замовчуванням "en")
+  COMICREAD_DIR    тека за замовчуванням для вибору файлів, коли шлях не вказано`,
 }
