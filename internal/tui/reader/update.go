@@ -30,6 +30,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, m.renderPage()
 
+	case itermImageReadyMsg:
+		if msg.requestID != m.requestID || msg.page != m.page || m.showingHelp || m.showingBookmarks {
+			return m, nil
+		}
+		return m, tea.Raw(msg.output)
+
 	case tea.KeyPressMsg:
 		key := msg.String()
 		switch {
@@ -176,7 +182,10 @@ func (m Model) clearAndRepaint(area backend.Area) tea.Cmd {
 	if m.backend.Name() != "iterm2" {
 		return clear
 	}
-	return tea.Sequence(clear, tea.Raw(m.repaintText()))
+	// iTerm2 removes inline images only by clearing the whole display. Tell
+	// Bubble Tea about that reset so it redraws its text layer itself; writing
+	// the text through tea.Raw would leave its cursor state out of sync.
+	return tea.Sequence(clear, tea.ClearScreen)
 }
 
 func (m Model) clearAndRender(area backend.Area, output string) tea.Cmd {
@@ -185,7 +194,11 @@ func (m Model) clearAndRender(area backend.Area, output string) tea.Cmd {
 	if m.backend.Name() != "iterm2" || area.Cols < 1 || area.Rows < 1 {
 		return tea.Sequence(clear, image)
 	}
-	return tea.Sequence(clear, tea.Raw(m.repaintText()), image)
+	return tea.Sequence(
+		clear,
+		tea.ClearScreen,
+		renderItermImageAfterClear(m.requestID, m.page, output),
+	)
 }
 
 func (m *Model) nextPage() bool {

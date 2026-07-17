@@ -28,12 +28,6 @@ func (m Model) content() string {
 	return m.header() + strings.Repeat("\n", m.height-1)
 }
 
-// repaintText restores Bubble Tea's text layer after iTerm2 erases the whole
-// display to remove a previous inline image.
-func (m Model) repaintText() string {
-	return "\x1b[H" + m.content()
-}
-
 func (m Model) header() string {
 	page := m.pageLabel()
 	pageWidth := len([]rune(page))

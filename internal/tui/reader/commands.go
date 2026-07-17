@@ -23,6 +23,12 @@ func renderAfterLayout(layoutID uint64) tea.Cmd {
 	})
 }
 
+func renderItermImageAfterClear(requestID uint64, page int, output string) tea.Cmd {
+	return tea.Tick(layoutRenderDelay, func(time.Time) tea.Msg {
+		return itermImageReadyMsg{requestID: requestID, page: page, output: output}
+	})
+}
+
 func (m *Model) renderPage() tea.Cmd {
 	if m.area.Cols < 1 || m.area.Rows < 1 {
 		return nil
