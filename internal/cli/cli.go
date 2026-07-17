@@ -62,11 +62,11 @@ func Run(args []string) error {
 
 	path := options.path
 	if path == "" {
-		cwd, err := defaultDir()
+		dir, err := pickerDir(options.open, options.openSet)
 		if err != nil {
-			return fmt.Errorf(i18n.T(i18n.CLIErrGetWorkingDir), err)
+			return err
 		}
-		path, err = filepicker.Pick(cwd)
+		path, err = filepicker.Pick(dir)
 		if err != nil {
 			if errors.Is(err, tea.ErrInterrupted) {
 				return nil
@@ -133,16 +133,35 @@ func Run(args []string) error {
 	return nil
 }
 
-// defaultDir returns the directory the file picker should open initially.
-// COMICREAD_DIR is used when set to a valid, existing directory; otherwise
-// the current working directory is used.
-func defaultDir() (string, error) {
-	if dir := os.Getenv("COMICREAD_DIR"); dir != "" {
-		if info, err := os.Stat(dir); err == nil && info.IsDir() {
-			return dir, nil
+// pickerDir returns the directory the file picker should open initially.
+// If -o/--open was given with a value, it is used and must be a valid,
+// existing directory. If -o/--open was given with no value, the current
+// working directory is used, bypassing COMICREAD_DIR. Otherwise
+// COMICREAD_DIR is used when set to a valid, existing directory; failing
+// that, the current working directory is used.
+func pickerDir(open string, openSet bool) (string, error) {
+	if open != "" {
+		info, err := os.Stat(open)
+		if err != nil {
+			return "", fmt.Errorf(i18n.T(i18n.CLIErrInspectInput), open, err)
+		}
+		if !info.IsDir() {
+			return "", errors.New(i18n.T(i18n.CLIErrOpenNotDir, open))
+		}
+		return open, nil
+	}
+	if !openSet {
+		if dir := os.Getenv("COMICREAD_DIR"); dir != "" {
+			if info, err := os.Stat(dir); err == nil && info.IsDir() {
+				return dir, nil
+			}
 		}
 	}
-	return os.Getwd()
+	cwd, err := os.Getwd()
+	if err != nil {
+		return "", fmt.Errorf(i18n.T(i18n.CLIErrGetWorkingDir), err)
+	}
+	return cwd, nil
 }
 
 func parseArgs(args []string) (graphics, path string, version bool, err error) {
@@ -153,6 +172,8 @@ func parseArgs(args []string) (graphics, path string, version bool, err error) {
 type options struct {
 	graphics     string
 	path         string
+	open         string
+	openSet      bool
 	version      bool
 	update       bool
 	env          bool
@@ -160,7 +181,28 @@ type options struct {
 	bookView     reader.ViewMode
 }
 
+// normalizeOpenFlag rewrites a bare, value-less -o/--open into an explicit
+// empty value (-o= / --open=) so the flag package accepts it instead of
+// erroring with "flag needs an argument", and so it is still reported as
+// set by flags.Visit.
+func normalizeOpenFlag(args []string) []string {
+	out := make([]string, 0, len(args))
+	for i, arg := range args {
+		if arg == "--" {
+			out = append(out, args[i:]...)
+			break
+		}
+		if (arg == "-o" || arg == "--open") && (i+1 >= len(args) || strings.HasPrefix(args[i+1], "-")) {
+			out = append(out, arg+"=")
+			continue
+		}
+		out = append(out, arg)
+	}
+	return out
+}
+
 func parseOptions(args []string) (options, error) {
+	args = normalizeOpenFlag(args)
 	graphics := os.Getenv("COMICREAD_GRAPHICS")
 	if graphics == "" {
 		graphics = "auto"
@@ -178,7 +220,9 @@ func parseOptions(args []string) (options, error) {
 	rightBookViewFlag := flags.Bool("right-view", false, i18n.T(i18n.CLIFlagRightBookViewUsage))
 	circleBookViewFlag := flags.Bool("circle-view", false, i18n.T(i18n.CLIFlagCircleBookViewUsage))
 	rightCircleBookViewFlag := flags.Bool("right-circle-view", false, i18n.T(i18n.CLIFlagRightCircleBookViewUsage))
+	openFlag := flags.String("open", "", i18n.T(i18n.CLIFlagOpenUsage))
 	flags.BoolVar(versionFlag, "v", false, i18n.T(i18n.CLIFlagVersionUsage))
+	flags.StringVar(openFlag, "o", "", i18n.T(i18n.CLIFlagOpenUsage))
 	if err := flags.Parse(args); err != nil {
 		if errors.Is(err, flag.ErrHelp) {
 			fmt.Println(i18n.T(i18n.CLIUsageFull))
@@ -186,6 +230,12 @@ func parseOptions(args []string) (options, error) {
 		}
 		return options{}, &usageError{fmt.Errorf(i18n.T(i18n.CLIErrParseArgs), err)}
 	}
+	openSet := false
+	flags.Visit(func(f *flag.Flag) {
+		if f.Name == "open" || f.Name == "o" {
+			openSet = true
+		}
+	})
 	if *envFlag {
 		return options{env: true}, nil
 	}
@@ -204,7 +254,7 @@ func parseOptions(args []string) (options, error) {
 	}
 	switch flags.NArg() {
 	case 0:
-		return options{graphics: *graphicsFlag, bookView: bookView}, nil
+		return options{graphics: *graphicsFlag, open: *openFlag, openSet: openSet, bookView: bookView}, nil
 	case 1:
 		return options{graphics: *graphicsFlag, path: flags.Arg(0), clearJournal: *clearJournalFlag, bookView: bookView}, nil
 	default:

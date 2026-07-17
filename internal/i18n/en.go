@@ -67,6 +67,8 @@ q    quit
 	CLIFlagRightCircleBookViewUsage: "show overlapping page pairs right to left",
 	CLIErrMultipleBookViews:         "only one book view option may be used",
 	CLIErrInvalidView:               "unsupported COMICREAD_VIEW %q (want book-view, right-view, circle-view, or right-circle-view)",
+	CLIFlagOpenUsage:                "directory to open in the file picker (default: COMICREAD_DIR or the current directory)",
+	CLIErrOpenNotDir:                "open directory %q: not a directory",
 	CLIHelpHint:                     "run 'comicread --help' for usage",
 	CLIUsage:                        "usage: comicread [options] [file]",
 	CLIUsageFull: `comicread - a minimal terminal manga reader
@@ -81,6 +83,7 @@ options:
   --right-circle-view
                       show overlapping page pairs right to left
   --clear-journal    remove the local journal for a file or directory and exit
+  -o, --open string   directory to open in the file picker (default: COMICREAD_DIR or the current directory)
   --env               print comicread environment and exit
   --update            check for updates and exit
   -v, --version       print version and exit
