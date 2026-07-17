@@ -191,7 +191,7 @@ func renderOutput(chapter comicfile.ContainerReader, renderer backend.Renderer, 
 
 func (m Model) zoomedArea() backend.Area {
 	aspect := m.currentPageAspect() * float64(m.zoom) / 100
-	return imageArea(m.width, m.height, aspect)
+	return m.imageArea(aspect)
 }
 
 // zoomedImage returns the visible vertical part of a page at the selected

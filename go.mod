@@ -9,6 +9,7 @@ require (
 	github.com/fandasy/ASCIIimage/v2 v2.2.8
 	github.com/imjasonh/dots v0.0.0-20260521180724-9419fd6aaca0
 	golang.org/x/image v0.41.0
+	golang.org/x/sys v0.46.0
 )
 
 require (
@@ -39,7 +40,6 @@ require (
 	golang.org/x/crypto v0.52.0 // indirect
 	golang.org/x/net v0.54.0 // indirect
 	golang.org/x/sync v0.21.0 // indirect
-	golang.org/x/sys v0.46.0 // indirect
 	golang.org/x/term v0.43.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

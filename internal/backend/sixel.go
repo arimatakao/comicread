@@ -7,6 +7,7 @@ import (
 	"image/color/palette"
 	stdraw "image/draw"
 	"strings"
+	"sync"
 
 	"github.com/BourgeoisBear/rasterm"
 	"golang.org/x/image/draw"
@@ -17,14 +18,42 @@ const (
 	sixelCellHeight = 16
 )
 
-// Sixel renders images with the DEC Sixel graphics protocol. It assumes the
-// common 8 by 16 pixel terminal cell, which matches the layout calculation in
-// the TUI.
-type Sixel struct{}
+// Sixel renders images with the DEC Sixel graphics protocol.
+type Sixel struct {
+	mu         sync.RWMutex
+	cellWidth  int
+	cellHeight int
+}
 
-func NewSixel() *Sixel { return &Sixel{} }
+func NewSixel() *Sixel {
+	return &Sixel{cellWidth: sixelCellWidth, cellHeight: sixelCellHeight}
+}
 
 func (*Sixel) Name() string { return "sixel" }
+
+// SetCellSize updates the pixel dimensions used to translate character-cell
+// layout coordinates into a Sixel raster. Invalid measurements keep the last
+// known dimensions.
+func (s *Sixel) SetCellSize(width, height int) {
+	if width < 1 || height < 1 {
+		return
+	}
+	s.mu.Lock()
+	s.cellWidth = width
+	s.cellHeight = height
+	s.mu.Unlock()
+}
+
+func (s *Sixel) CellAspect() float64 {
+	width, height := s.cellSize()
+	return float64(width) / float64(height)
+}
+
+func (s *Sixel) cellSize() (width, height int) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return s.cellWidth, s.cellHeight
+}
 
 // RenderSpread draws a book spread as one raster. Some Sixel terminals do not
 // preserve horizontal cursor placement between consecutive sixel commands, so
@@ -39,25 +68,26 @@ func (s *Sixel) RenderSpread(images []image.Image, areas []Area) (string, error)
 		return "", fmt.Errorf("invalid sixel spread area: %+v", spread)
 	}
 
-	canvas := image.NewNRGBA(image.Rect(0, 0, spread.Cols*sixelCellWidth, spread.Rows*sixelCellHeight))
+	cellWidth, cellHeight := s.cellSize()
+	canvas := image.NewNRGBA(image.Rect(0, 0, spread.Cols*cellWidth, spread.Rows*cellHeight))
 	for index, img := range images {
 		area := areas[index]
 		if img == nil || area.Cols < 1 || area.Rows < 1 {
 			return "", fmt.Errorf("invalid sixel spread page")
 		}
 		rect := image.Rect(
-			(area.X-spread.X)*sixelCellWidth,
-			(area.Y-spread.Y)*sixelCellHeight,
-			(area.X-spread.X+area.Cols)*sixelCellWidth,
-			(area.Y-spread.Y+area.Rows)*sixelCellHeight,
+			(area.X-spread.X)*cellWidth,
+			(area.Y-spread.Y)*cellHeight,
+			(area.X-spread.X+area.Cols)*cellWidth,
+			(area.Y-spread.Y+area.Rows)*cellHeight,
 		)
 		draw.CatmullRom.Scale(canvas, rect, img, img.Bounds(), draw.Over, nil)
 	}
 
-	return s.Render(canvas, spread)
+	return s.render(canvas, spread, cellWidth, cellHeight)
 }
 
-func (*Sixel) Render(img image.Image, area Area) (string, error) {
+func (s *Sixel) Render(img image.Image, area Area) (string, error) {
 	if img == nil {
 		return "", fmt.Errorf("render nil image")
 	}
@@ -65,7 +95,12 @@ func (*Sixel) Render(img image.Image, area Area) (string, error) {
 		return "", fmt.Errorf("invalid terminal area: %+v", area)
 	}
 
-	width, height := area.Cols*sixelCellWidth, area.Rows*sixelCellHeight
+	cellWidth, cellHeight := s.cellSize()
+	return s.render(img, area, cellWidth, cellHeight)
+}
+
+func (*Sixel) render(img image.Image, area Area, cellWidth, cellHeight int) (string, error) {
+	width, height := area.Cols*cellWidth, area.Rows*cellHeight
 	resized := image.NewNRGBA(image.Rect(0, 0, width, height))
 	draw.CatmullRom.Scale(resized, resized.Bounds(), img, img.Bounds(), draw.Over, nil)
 
@@ -90,12 +125,13 @@ func (*Sixel) Render(img image.Image, area Area) (string, error) {
 
 // Clear replaces the prior image rectangle with the terminal background,
 // preserving the header and footer Bubble Tea draws in the alternate screen.
-func (*Sixel) Clear(area Area) string {
+func (s *Sixel) Clear(area Area) string {
 	if area.X < 1 || area.Y < 1 || area.Cols < 1 || area.Rows < 1 {
 		return ""
 	}
 
-	width, height := area.Cols*sixelCellWidth, area.Rows*sixelCellHeight
+	cellWidth, cellHeight := s.cellSize()
+	width, height := area.Cols*cellWidth, area.Rows*cellHeight
 	// CSI erase commands only affect text cells. A Sixel raster with P2=0 and
 	// zero-valued pixels paints the entire raster with the terminal background
 	// color. Some terminals ignore a raster that contains attributes only, so
@@ -149,3 +185,4 @@ func unionArea(areas []Area) Area {
 
 var _ Renderer = (*Sixel)(nil)
 var _ SpreadRenderer = (*Sixel)(nil)
+var _ CellSizeRenderer = (*Sixel)(nil)

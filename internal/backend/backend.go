@@ -21,3 +21,11 @@ type Renderer interface {
 type SpreadRenderer interface {
 	RenderSpread([]image.Image, []Area) (string, error)
 }
+
+// CellSizeRenderer uses the terminal's pixel dimensions for a character cell.
+// Sixel rasters are sized in pixels, so they need this information to match a
+// layout expressed in character cells.
+type CellSizeRenderer interface {
+	SetCellSize(width, height int)
+	CellAspect() float64
+}

@@ -111,7 +111,7 @@ func (m *Model) updateLayout() {
 		}
 	}
 	if !m.isBookView() {
-		m.area = imageArea(m.width, m.height, imageAspect(m.layoutImages[0])*float64(m.zoom)/100)
+		m.area = m.imageArea(imageAspect(m.layoutImages[0]) * float64(m.zoom) / 100)
 		m.pageAreas[0] = m.area
 		return
 	}
@@ -120,12 +120,20 @@ func (m *Model) updateLayout() {
 		if page < 0 {
 			continue
 		}
-		m.pageAreas[slot] = bookImageArea(m.width, m.height, slot, imageAspect(m.layoutImages[slot])*float64(m.zoom)/100)
+		m.pageAreas[slot] = m.bookImageArea(slot, imageAspect(m.layoutImages[slot])*float64(m.zoom)/100)
 	}
 	m.area = unionAreas(m.pageAreas[0], m.pageAreas[1])
 }
 
 func bookImageArea(width, height, slot int, imageAspect float64) backend.Area {
+	return bookImageAreaWithCellAspect(width, height, slot, imageAspect, 0.5)
+}
+
+func (m Model) bookImageArea(slot int, imageAspect float64) backend.Area {
+	return bookImageAreaWithCellAspect(m.width, m.height, slot, imageAspect, m.cellAspect())
+}
+
+func bookImageAreaWithCellAspect(width, height, slot int, imageAspect, cellAspect float64) backend.Area {
 	const gap = 1
 
 	availableRows := height - 1
@@ -146,12 +154,15 @@ func bookImageArea(width, height, slot int, imageAspect float64) backend.Area {
 	if imageAspect <= 0 {
 		imageAspect = 1
 	}
+	if cellAspect <= 0 {
+		cellAspect = 0.5
+	}
 
 	cols := panelCols
-	rows := max(1, int(float64(cols)*0.5/imageAspect))
+	rows := max(1, int(float64(cols)*cellAspect/imageAspect))
 	if rows > availableRows {
 		rows = availableRows
-		cols = max(1, int(float64(rows)*imageAspect/0.5))
+		cols = max(1, int(float64(rows)*imageAspect/cellAspect))
 		cols = min(cols, panelCols)
 	}
 	return backend.Area{

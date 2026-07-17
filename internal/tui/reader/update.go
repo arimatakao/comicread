@@ -11,6 +11,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
+		m.updateCellSize()
 		m.updateLayout()
 		if m.showingHelp {
 			return m, nil
@@ -279,14 +280,23 @@ func (m Model) currentPageAspect() float64 {
 }
 
 func imageArea(width, height int, imageAspect float64) backend.Area {
-	const cellAspect = 0.5 // typical terminal cell width / height in pixels
+	return imageAreaWithCellAspect(width, height, imageAspect, 0.5)
+}
 
+func (m Model) imageArea(imageAspect float64) backend.Area {
+	return imageAreaWithCellAspect(m.width, m.height, imageAspect, m.cellAspect())
+}
+
+func imageAreaWithCellAspect(width, height int, imageAspect, cellAspect float64) backend.Area {
 	availableRows := height - 1 // one header row
 	if width < 1 || availableRows < 1 {
 		return backend.Area{}
 	}
 	if imageAspect <= 0 {
 		imageAspect = 1
+	}
+	if cellAspect <= 0 {
+		cellAspect = 0.5
 	}
 
 	cols := width
