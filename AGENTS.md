@@ -37,6 +37,7 @@ DO NOT:
 - Update README.md
 - Add new external dependencies/packages
 - Update/add tests (*_test.go)
+- Update i18n for languages other than en.
 
 Do these only if the user explicitly asks for it.
 
