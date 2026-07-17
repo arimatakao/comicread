@@ -258,18 +258,30 @@ Add these to your shell configuration file (such as `.bashrc`, `.zshrc`, or `.pr
 | `left`, `h`, `backspace`, `k`, `PageUp` | Previous page |
 | `+`, `-` | Zoom in or out |
 | `up`, `down` | Scroll a zoomed page |
+| `b` | Add or remove a bookmark on the current page |
+| `v` then `left` or `right` | Go to the previous or next bookmark |
+| `c` then `v` | Open the bookmark list |
 | `?` | Open or close help |
 | `q`, `Esc`, `Ctrl+C` | Quit |
+
+#### Bookmark list
+
+| Keys | Action |
+| --- | --- |
+| `up`, `down` | Move selection |
+| `Enter` | Open the selected bookmark |
+| `q`, `Esc` | Close the list |
 
 #### File picker
 
 | Keys | Action |
 | --- | --- |
-| `up`, `down` | Move selection |
-| `left` | Open the parent directory |
-| `right` | Enter the selected directory |
+| `up`, `k`, `down`, `j` | Move selection |
+| `left`, `h` | Open the parent directory |
+| `right`, `l` | Enter the selected directory |
 | `Enter` | Open the selected file |
 | `s` | Open the selected directory |
+| `o` | Enter a directory path |
 | `q`, `Esc`, `Ctrl+C` | Quit |
 
 ## Dependency licenses
