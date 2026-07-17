@@ -172,6 +172,8 @@ func (m pickerModel) entryPath(e entry) string {
 // directory cannot be read.
 func (m *pickerModel) enterDir(path string) tea.Cmd {
 	m.dir = path
+	m.cursor = 0
+	m.offset = 0
 	if err := m.readDir(); err != nil {
 		m.err = err
 		return tea.Quit
