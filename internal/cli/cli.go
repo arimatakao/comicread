@@ -1,13 +1,16 @@
 package cli
 
 import (
+	"context"
 	"errors"
 	"flag"
 	"fmt"
 	"io"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"strings"
+	"syscall"
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicfile"
@@ -52,6 +55,11 @@ func Run(args []string) error {
 		return nil
 	}
 
+	// ctx is cancelled on SIGINT/SIGTERM so every stage below can shut down
+	// gracefully: save reading progress, clear the image and close the chapter.
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
 	path := options.path
 	if path == "" {
 		cwd, err := os.Getwd()
@@ -60,6 +68,9 @@ func Run(args []string) error {
 		}
 		path, err = filepicker.Pick(cwd)
 		if err != nil {
+			if errors.Is(err, tea.ErrInterrupted) {
+				return nil
+			}
 			return fmt.Errorf(i18n.T(i18n.CLIErrPickFile), err)
 		}
 		if path == "" {
@@ -81,7 +92,15 @@ func Run(args []string) error {
 		return openChapter(path)
 	})
 	if err != nil {
+		if errors.Is(err, tea.ErrInterrupted) {
+			return nil
+		}
 		return err
+	}
+	if chapter == nil {
+		// The loading screen was terminated by a signal before the chapter
+		// finished opening; there is nothing to read or clean up.
+		return nil
 	}
 	defer chapter.Close()
 
@@ -95,8 +114,19 @@ func Run(args []string) error {
 		return fmt.Errorf(i18n.T(i18n.CLIErrOpenJournal), err)
 	}
 	model := reader.NewWithBookViewAndJournal(filepath.Base(path), chapter, renderer, options.bookView, progress)
-	program := tea.NewProgram(model)
+	// Bubble Tea's own SIGINT/SIGTERM handler stops the event loop without
+	// consulting the model, skipping progress saving and image cleanup. It is
+	// disabled here and signals are routed through ctx instead, so an external
+	// termination follows the same path as pressing the quit key.
+	program := tea.NewProgram(model, tea.WithoutSignalHandler())
+	go func() {
+		<-ctx.Done()
+		program.Send(reader.ExternalQuitMsg{})
+	}()
 	if _, err := program.Run(); err != nil {
+		if errors.Is(err, tea.ErrInterrupted) {
+			return nil
+		}
 		return fmt.Errorf(i18n.T(i18n.CLIErrRunTUI), err)
 	}
 

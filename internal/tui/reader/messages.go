@@ -25,3 +25,8 @@ type itermImageReadyMsg struct {
 // pagePrefetchedMsg marks completion of background page preparation. The
 // payload itself is held in readerCache, so the update loop need not handle it.
 type pagePrefetchedMsg struct{}
+
+// ExternalQuitMsg requests the same graceful shutdown as the quit key. It is
+// sent from outside the program when the process receives SIGINT or SIGTERM,
+// so reading progress is saved and the displayed image is cleared before exit.
+type ExternalQuitMsg struct{}

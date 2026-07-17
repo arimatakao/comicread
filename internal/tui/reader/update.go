@@ -23,6 +23,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, tea.Raw(msg.output)
 
+	case ExternalQuitMsg:
+		return m.quit()
+
 	case tea.KeyPressMsg:
 		return m.handleKey(msg)
 
@@ -51,6 +54,13 @@ func (m Model) handleResize(msg tea.WindowSizeMsg) (tea.Model, tea.Cmd) {
 	return m, renderAfterLayout(m.layoutID)
 }
 
+// quit saves reading progress and clears the displayed image before stopping
+// the program. Both the quit keys and ExternalQuitMsg go through this path.
+func (m Model) quit() (tea.Model, tea.Cmd) {
+	m.saveCurrentPage()
+	return m, tea.Sequence(tea.Raw(m.backend.Clear(m.displayedArea)), tea.Quit)
+}
+
 func (m Model) handleKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	if m.showingBookmarks {
 		return m.handleBookmarksKey(msg.String())
@@ -59,8 +69,7 @@ func (m Model) handleKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	act := keyAction(msg)
 	switch {
 	case act == actionQuit:
-		m.saveCurrentPage()
-		return m, tea.Sequence(tea.Raw(m.backend.Clear(m.displayedArea)), tea.Quit)
+		return m.quit()
 
 	case act == actionHelp:
 		return m.toggleHelp()
