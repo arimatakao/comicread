@@ -424,6 +424,7 @@ main() {
   t status.installed "$version" "${INSTALL_DIR}/${BIN_NAME}"
   if ! path_contains_install_dir || [ "$ENVIRONMENT_CHANGED" = "true" ]; then
     t status.restart
+    t status.reload_shell "$(shell_config_file)"
   fi
 }
 
