@@ -62,7 +62,7 @@ func Run(args []string) error {
 
 	path := options.path
 	if path == "" {
-		cwd, err := os.Getwd()
+		cwd, err := defaultDir()
 		if err != nil {
 			return fmt.Errorf(i18n.T(i18n.CLIErrGetWorkingDir), err)
 		}
@@ -133,6 +133,18 @@ func Run(args []string) error {
 	return nil
 }
 
+// defaultDir returns the directory the file picker should open initially.
+// COMICREAD_DIR is used when set to a valid, existing directory; otherwise
+// the current working directory is used.
+func defaultDir() (string, error) {
+	if dir := os.Getenv("COMICREAD_DIR"); dir != "" {
+		if info, err := os.Stat(dir); err == nil && info.IsDir() {
+			return dir, nil
+		}
+	}
+	return os.Getwd()
+}
+
 func parseArgs(args []string) (graphics, path string, version bool, err error) {
 	options, err := parseOptions(args)
 	return options.graphics, options.path, options.version, err
@@ -201,7 +213,7 @@ func parseOptions(args []string) (options, error) {
 }
 
 func printEnvironment() {
-	for _, name := range []string{"COMICREAD_GRAPHICS", "COMICREAD_PRERENDERED_NEXT", "COMICREAD_PRERENDERED_PREVIOUS", "COMICREAD_VIEW", "COMICREAD_LANG"} {
+	for _, name := range []string{"COMICREAD_GRAPHICS", "COMICREAD_PRERENDERED_NEXT", "COMICREAD_PRERENDERED_PREVIOUS", "COMICREAD_VIEW", "COMICREAD_LANG", "COMICREAD_DIR"} {
 		fmt.Printf("%s=%q\n", name, os.Getenv(name))
 	}
 }

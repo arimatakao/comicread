@@ -86,12 +86,14 @@ options:
   -v, --version       print version and exit
   -h, --help          show this help message
 
-If no file or directory is given, an interactive file picker opens in the current directory.
+If no file or directory is given, an interactive file picker opens in COMICREAD_DIR
+(if set to a valid directory) or the current directory otherwise.
 
 environment:
   COMICREAD_GRAPHICS  renderer default: auto, ascii, dots, kitty, sixel, or iterm2
   COMICREAD_PRERENDERED_NEXT      next pages to pre-render (default 1)
   COMICREAD_PRERENDERED_PREVIOUS  previous pages to pre-render (default 1)
   COMICREAD_VIEW      default view: book-view, right-view, circle-view, or right-circle-view
-  COMICREAD_LANG   message language: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk, or ka (default "en")`,
+  COMICREAD_LANG   message language: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk, or ka (default "en")
+  COMICREAD_DIR    default directory for the file picker when no path is given`,
 }
