@@ -8,6 +8,7 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
+	"github.com/arimatakao/comicfile"
 	"github.com/arimatakao/comicread/internal/backend"
 )
 
@@ -55,56 +56,100 @@ func (m *Model) renderPage() tea.Cmd {
 			}
 		}
 
-		images := make([]image.Image, 0, len(pages))
-		pageAreas := make([]backend.Area, 0, len(pages))
-		for slot, pageIndex := range pages {
-			if pageIndex < 0 {
-				continue
-			}
-			var img image.Image
-			var err error
-			if cache == nil {
-				img, err = chapter.Page(pageIndex)
-			} else {
-				img, err = cache.page(chapter, pageIndex)
-			}
-			if err != nil {
-				return pageRenderedMsg{requestID: requestID, page: page, err: err}
-			}
-			images = append(images, zoomedImage(img, zoom, scroll))
-			pageAreas = append(pageAreas, areas[slot])
-		}
-
-		if spreadRenderer, ok := renderer.(backend.SpreadRenderer); ok && len(images) > 1 {
-			output, err := spreadRenderer.RenderSpread(images, pageAreas)
-			if err != nil {
-				return pageRenderedMsg{requestID: requestID, page: page, err: err}
-			}
-			if renderer.Name() != "kitty" && cache != nil {
-				cache.storeRender(key, output)
-			}
-			return pageRenderedMsg{requestID: requestID, page: page, area: area, output: output}
-		}
-
-		var output strings.Builder
-		for index, img := range images {
-			rendered, err := renderer.Render(img, pageAreas[index])
-			if err != nil {
-				return pageRenderedMsg{requestID: requestID, page: page, err: err}
-			}
-			output.WriteString(rendered)
+		output, err := renderOutput(chapter, renderer, cache, pages, areas, zoom, scroll)
+		if err != nil {
+			return pageRenderedMsg{requestID: requestID, page: page, err: err}
 		}
 		result := pageRenderedMsg{
 			requestID: requestID,
 			page:      page,
 			area:      area,
-			output:    output.String(),
+			output:    output,
 		}
 		if renderer.Name() != "kitty" && cache != nil {
 			cache.storeRender(key, result.output)
 		}
 		return result
 	}
+}
+
+// preRenderNext prepares the next visible page or spread without emitting any
+// terminal output. A later navigation can then use the render cache directly.
+func (m Model) preRenderNext() tea.Cmd {
+	if !m.canNextPage() || m.cache == nil {
+		return nil
+	}
+
+	next := m
+	next.page++
+	next.scroll = 0
+
+	return func() tea.Msg {
+		if !next.cache.prefetchMu.TryLock() {
+			return pagePrefetchedMsg{}
+		}
+		defer next.cache.prefetchMu.Unlock()
+
+		// updateLayout obtains page aspect ratios through the decoded-image cache.
+		// It runs here so opening the next page never delays the current display.
+		next.updateLayout()
+		pages := next.pageSlots()
+
+		// Kitty output contains image IDs allocated while encoding. It cannot be
+		// safely replayed later, but decoding now still avoids file I/O on paging.
+		if next.backend.Name() == "kitty" {
+			return pagePrefetchedMsg{}
+		}
+
+		key := renderKey{
+			pages: pages, areas: next.pageAreas, width: next.width, height: next.height,
+			zoom: next.zoom, scroll: next.scroll, view: next.bookView, renderer: next.backend.Name(),
+		}
+		if _, ok := next.cache.render(key); ok {
+			return pagePrefetchedMsg{}
+		}
+		output, err := renderOutput(next.chapter, next.backend, next.cache, pages, next.pageAreas, next.zoom, next.scroll)
+		if err == nil {
+			next.cache.storeRender(key, output)
+		}
+		return pagePrefetchedMsg{}
+	}
+}
+
+func renderOutput(chapter comicfile.ContainerReader, renderer backend.Renderer, cache *readerCache, pages [2]int, areas [2]backend.Area, zoom int, scroll float64) (string, error) {
+	images := make([]image.Image, 0, len(pages))
+	pageAreas := make([]backend.Area, 0, len(pages))
+	for slot, pageIndex := range pages {
+		if pageIndex < 0 {
+			continue
+		}
+		var img image.Image
+		var err error
+		if cache == nil {
+			img, err = chapter.Page(pageIndex)
+		} else {
+			img, err = cache.page(chapter, pageIndex)
+		}
+		if err != nil {
+			return "", err
+		}
+		images = append(images, zoomedImage(img, zoom, scroll))
+		pageAreas = append(pageAreas, areas[slot])
+	}
+
+	if spreadRenderer, ok := renderer.(backend.SpreadRenderer); ok && len(images) > 1 {
+		return spreadRenderer.RenderSpread(images, pageAreas)
+	}
+
+	var output strings.Builder
+	for index, img := range images {
+		rendered, err := renderer.Render(img, pageAreas[index])
+		if err != nil {
+			return "", err
+		}
+		output.WriteString(rendered)
+	}
+	return output.String(), nil
 }
 
 func (m Model) zoomedArea() backend.Area {

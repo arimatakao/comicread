@@ -159,7 +159,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.status = ""
 		oldArea := m.displayedArea
 		m.displayedArea = msg.area
-		return m, m.clearAndRender(oldArea, msg.output)
+		return m, tea.Batch(m.clearAndRender(oldArea, msg.output), m.preRenderNext())
 	}
 
 	return m, nil

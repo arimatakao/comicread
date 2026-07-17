@@ -13,3 +13,7 @@ type pageRenderedMsg struct {
 type renderAfterLayoutMsg struct {
 	layoutID uint64
 }
+
+// pagePrefetchedMsg marks completion of background page preparation. The
+// payload itself is held in readerCache, so the update loop need not handle it.
+type pagePrefetchedMsg struct{}

@@ -14,10 +14,12 @@ const renderCacheSize = 4
 // Source images are independent from zoom and terminal size; rendered protocol
 // payloads are not, so they remain a small LRU.
 type readerCache struct {
-	mu        sync.Mutex
-	images    map[int]image.Image
-	renders   map[renderKey]string
-	renderLRU []renderKey
+	mu         sync.Mutex
+	loadMu     sync.Mutex
+	prefetchMu sync.Mutex
+	images     map[int]image.Image
+	renders    map[renderKey]string
+	renderLRU  []renderKey
 }
 
 type renderKey struct {
@@ -39,6 +41,18 @@ func newReaderCache() *readerCache {
 }
 
 func (c *readerCache) page(chapter comicfile.ContainerReader, index int) (image.Image, error) {
+	c.mu.Lock()
+	if img, ok := c.images[index]; ok {
+		c.mu.Unlock()
+		return img, nil
+	}
+	c.mu.Unlock()
+
+	// Container readers are not assumed to support concurrent reads. Keep the
+	// potentially slow decode outside the map lock, but serialize it with other
+	// page loads from foreground rendering and prefetching.
+	c.loadMu.Lock()
+	defer c.loadMu.Unlock()
 	c.mu.Lock()
 	if img, ok := c.images[index]; ok {
 		c.mu.Unlock()
