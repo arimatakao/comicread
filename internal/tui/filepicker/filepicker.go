@@ -123,38 +123,23 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 		case "s":
+			m.selected = m.dir
 			if len(m.entries) > 0 && m.entries[m.cursor].isDir {
-				e := m.entries[m.cursor]
-				if e.name == ".." {
-					m.selected = filepath.Dir(m.dir)
-				} else {
-					m.selected = filepath.Join(m.dir, e.name)
-				}
-			} else {
-				m.selected = m.dir
+				m.selected = m.entryPath(m.entries[m.cursor])
 			}
 			return m, tea.Quit
 
 		case "left", "h":
-			m.dir = filepath.Dir(m.dir)
-			if err := m.readDir(); err != nil {
-				m.err = err
-				return m, tea.Quit
+			if cmd := m.enterDir(filepath.Dir(m.dir)); cmd != nil {
+				return m, cmd
 			}
 
 		case "right", "l":
 			if len(m.entries) == 0 || !m.entries[m.cursor].isDir {
 				return m, nil
 			}
-			e := m.entries[m.cursor]
-			if e.name == ".." {
-				m.dir = filepath.Dir(m.dir)
-			} else {
-				m.dir = filepath.Join(m.dir, e.name)
-			}
-			if err := m.readDir(); err != nil {
-				m.err = err
-				return m, tea.Quit
+			if cmd := m.enterDir(m.entryPath(m.entries[m.cursor])); cmd != nil {
+				return m, cmd
 			}
 
 		case "enter":
@@ -172,6 +157,26 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	m.keepCursorVisible()
 	return m, nil
+}
+
+// entryPath resolves an entry to an absolute path; ".." points at the parent
+// of the current directory.
+func (m pickerModel) entryPath(e entry) string {
+	if e.name == ".." {
+		return filepath.Dir(m.dir)
+	}
+	return filepath.Join(m.dir, e.name)
+}
+
+// enterDir switches the picker to path. It returns a quit command when the
+// directory cannot be read.
+func (m *pickerModel) enterDir(path string) tea.Cmd {
+	m.dir = path
+	if err := m.readDir(); err != nil {
+		m.err = err
+		return tea.Quit
+	}
+	return nil
 }
 
 func (m *pickerModel) keepCursorVisible() {

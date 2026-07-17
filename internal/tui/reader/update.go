@@ -9,21 +9,7 @@ import (
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		m.width = msg.Width
-		m.height = msg.Height
-		m.updateCellSize()
-		m.updateLayout()
-		if m.showingHelp {
-			return m, nil
-		}
-		if m.area.Cols < 1 || m.area.Rows < 1 {
-			m.layoutPending = false
-			m.status = i18n.T(i18n.ReaderStatusTerminalTooSmall)
-			return m, m.clearAndRepaint(m.displayedArea)
-		}
-		m.layoutID++
-		m.layoutPending = true
-		return m, renderAfterLayout(m.layoutID)
+		return m.handleResize(msg)
 
 	case renderAfterLayoutMsg:
 		if msg.layoutID != m.layoutID || !m.layoutPending {
@@ -38,144 +24,188 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Raw(msg.output)
 
 	case tea.KeyPressMsg:
-		key := msg.String()
-		switch {
-		case m.showingBookmarks:
-			switch key {
-			case "q", "esc":
-				m.closeBookmarks()
-				return m, m.renderPage()
-			case "up":
-				m.bookmarkIndex = max(0, m.bookmarkIndex-1)
-			case "down":
-				if len(m.bookmarks) > 0 {
-					m.bookmarkIndex = min(len(m.bookmarks)-1, m.bookmarkIndex+1)
-				}
-			case "enter":
-				if m.selectBookmark() {
-					m.closeBookmarks()
-					m.updateLayout()
-					return m, m.renderPage()
-				}
-			}
-			return m, nil
-
-		case key == "q", key == "esc", key == "ctrl+c":
-			m.saveCurrentPage()
-			return m, tea.Sequence(tea.Raw(m.backend.Clear(m.displayedArea)), tea.Quit)
-
-		case isHelpKey(key):
-			m.showingHelp = !m.showingHelp
-			m.status = ""
-			if m.showingHelp {
-				m.requestID++
-				if m.cache != nil {
-					m.cache.latestRequest.Store(m.requestID)
-				}
-				m.layoutPending = false
-				m.rendering = false
-				return m, m.clearAndRepaint(m.displayedArea)
-			}
-			return m, m.renderPage()
-
-		case m.showingHelp:
-			return m, nil
-
-		case m.bookmarkListPrefix:
-			m.bookmarkListPrefix = false
-			if key == "v" {
-				m.openBookmarks()
-				m.requestID++
-				if m.cache != nil {
-					m.cache.latestRequest.Store(m.requestID)
-				}
-				m.layoutPending = false
-				m.rendering = false
-				return m, m.clearAndRepaint(m.displayedArea)
-			}
-
-		case m.bookmarkPrefix:
-			m.bookmarkPrefix = false
-			switch key {
-			case "left":
-				if m.moveBookmark(false) {
-					m.updateLayout()
-					return m, m.renderPage()
-				}
-			case "right":
-				if m.moveBookmark(true) {
-					m.updateLayout()
-					return m, m.renderPage()
-				}
-			}
-
-		case isBookmarkListPrefixKey(key):
-			m.bookmarkListPrefix = true
-
-		case isBookmarkPrefixKey(key):
-			m.bookmarkPrefix = true
-
-		case isBookmarkKey(key):
-			m.toggleBookmark()
-
-		case isZoomInKey(msg):
-			if m.zoomIn() {
-				m.updateLayout()
-				return m, m.renderPage()
-			}
-
-		case isZoomOutKey(msg):
-			if m.zoomOut() {
-				m.updateLayout()
-				return m, m.renderPage()
-			}
-
-		case isScrollDownKey(key):
-			if m.scrollDown() {
-				return m, m.renderPage()
-			}
-
-		case isScrollUpKey(key):
-			if m.scrollUp() {
-				return m, m.renderPage()
-			}
-
-		case isNextKey(key):
-			if m.nextPage() {
-				m.saveCurrentPage()
-				m.updateLayout()
-				return m, m.renderPage()
-			}
-			m.status = i18n.T(i18n.ReaderStatusLastPage)
-
-		case isPreviousKey(key):
-			if m.previousPage() {
-				m.saveCurrentPage()
-				m.updateLayout()
-				return m, m.renderPage()
-			}
-			m.status = i18n.T(i18n.ReaderStatusFirstPage)
-		}
+		return m.handleKey(msg)
 
 	case pageRenderedMsg:
-		if msg.requestID != m.requestID || msg.page != m.page {
-			return m, nil
-		}
-
-		m.rendering = false
-		if msg.err != nil {
-			m.renderError = msg.err
-			m.status = i18n.T(i18n.ReaderStatusRenderError, msg.err)
-			return m, nil
-		}
-
-		m.status = ""
-		oldArea := m.displayedArea
-		m.displayedArea = msg.area
-		return m, tea.Batch(m.clearAndRender(oldArea, msg.output), m.preRenderAround())
+		return m.handlePageRendered(msg)
 	}
 
 	return m, nil
+}
+
+func (m Model) handleResize(msg tea.WindowSizeMsg) (tea.Model, tea.Cmd) {
+	m.width = msg.Width
+	m.height = msg.Height
+	m.updateCellSize()
+	m.updateLayout()
+	if m.showingHelp {
+		return m, nil
+	}
+	if m.area.Cols < 1 || m.area.Rows < 1 {
+		m.layoutPending = false
+		m.status = i18n.T(i18n.ReaderStatusTerminalTooSmall)
+		return m, m.clearAndRepaint(m.displayedArea)
+	}
+	m.layoutID++
+	m.layoutPending = true
+	return m, renderAfterLayout(m.layoutID)
+}
+
+func (m Model) handleKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
+	if m.showingBookmarks {
+		return m.handleBookmarksKey(msg.String())
+	}
+
+	act := keyAction(msg)
+	switch {
+	case act == actionQuit:
+		m.saveCurrentPage()
+		return m, tea.Sequence(tea.Raw(m.backend.Clear(m.displayedArea)), tea.Quit)
+
+	case act == actionHelp:
+		return m.toggleHelp()
+
+	case m.showingHelp:
+		return m, nil
+
+	case m.bookmarkListPrefix:
+		m.bookmarkListPrefix = false
+		if act == actionBookmarkPrefix { // "c v" opens the bookmark list
+			m.openBookmarks()
+			m.invalidateRender()
+			return m, m.clearAndRepaint(m.displayedArea)
+		}
+		return m, nil
+
+	case m.bookmarkPrefix:
+		m.bookmarkPrefix = false
+		switch msg.String() {
+		case "left":
+			if m.moveBookmark(false) {
+				return m, m.rerender()
+			}
+		case "right":
+			if m.moveBookmark(true) {
+				return m, m.rerender()
+			}
+		}
+		return m, nil
+	}
+
+	return m.handleReaderAction(act)
+}
+
+func (m Model) handleReaderAction(act action) (tea.Model, tea.Cmd) {
+	switch act {
+	case actionBookmarkListPrefix:
+		m.bookmarkListPrefix = true
+
+	case actionBookmarkPrefix:
+		m.bookmarkPrefix = true
+
+	case actionBookmark:
+		m.toggleBookmark()
+
+	case actionZoomIn:
+		if m.zoomIn() {
+			return m, m.rerender()
+		}
+
+	case actionZoomOut:
+		if m.zoomOut() {
+			return m, m.rerender()
+		}
+
+	case actionScrollDown:
+		if m.scrollDown() {
+			return m, m.renderPage()
+		}
+
+	case actionScrollUp:
+		if m.scrollUp() {
+			return m, m.renderPage()
+		}
+
+	case actionNext:
+		if m.nextPage() {
+			m.saveCurrentPage()
+			return m, m.rerender()
+		}
+		m.status = i18n.T(i18n.ReaderStatusLastPage)
+
+	case actionPrevious:
+		if m.previousPage() {
+			m.saveCurrentPage()
+			return m, m.rerender()
+		}
+		m.status = i18n.T(i18n.ReaderStatusFirstPage)
+	}
+
+	return m, nil
+}
+
+func (m Model) handleBookmarksKey(key string) (tea.Model, tea.Cmd) {
+	switch key {
+	case "q", "esc":
+		m.closeBookmarks()
+		return m, m.renderPage()
+	case "up":
+		m.bookmarkIndex = max(0, m.bookmarkIndex-1)
+	case "down":
+		if len(m.bookmarks) > 0 {
+			m.bookmarkIndex = min(len(m.bookmarks)-1, m.bookmarkIndex+1)
+		}
+	case "enter":
+		if m.selectBookmark() {
+			m.closeBookmarks()
+			return m, m.rerender()
+		}
+	}
+	return m, nil
+}
+
+func (m Model) toggleHelp() (tea.Model, tea.Cmd) {
+	m.showingHelp = !m.showingHelp
+	m.status = ""
+	if m.showingHelp {
+		m.invalidateRender()
+		return m, m.clearAndRepaint(m.displayedArea)
+	}
+	return m, m.renderPage()
+}
+
+func (m Model) handlePageRendered(msg pageRenderedMsg) (tea.Model, tea.Cmd) {
+	if msg.requestID != m.requestID || msg.page != m.page {
+		return m, nil
+	}
+
+	m.rendering = false
+	if msg.err != nil {
+		m.renderError = msg.err
+		m.status = i18n.T(i18n.ReaderStatusRenderError, msg.err)
+		return m, nil
+	}
+
+	m.status = ""
+	oldArea := m.displayedArea
+	m.displayedArea = msg.area
+	return m, tea.Batch(m.clearAndRender(oldArea, msg.output), m.preRenderAround())
+}
+
+// invalidateRender abandons any in-flight render so its output is dropped.
+func (m *Model) invalidateRender() {
+	m.requestID++
+	if m.cache != nil {
+		m.cache.latestRequest.Store(m.requestID)
+	}
+	m.layoutPending = false
+	m.rendering = false
+}
+
+// rerender recomputes the page layout and renders the current position.
+func (m *Model) rerender() tea.Cmd {
+	m.updateLayout()
+	return m.renderPage()
 }
 
 func (m Model) clearAndRepaint(area backend.Area) tea.Cmd {
@@ -277,40 +307,4 @@ func (m Model) currentPageAspect() float64 {
 		return 1
 	}
 	return imageAspect(img)
-}
-
-func imageArea(width, height int, imageAspect float64) backend.Area {
-	return imageAreaWithCellAspect(width, height, imageAspect, 0.5)
-}
-
-func (m Model) imageArea(imageAspect float64) backend.Area {
-	return imageAreaWithCellAspect(m.width, m.height, imageAspect, m.cellAspect())
-}
-
-func imageAreaWithCellAspect(width, height int, imageAspect, cellAspect float64) backend.Area {
-	availableRows := height - 1 // one header row
-	if width < 1 || availableRows < 1 {
-		return backend.Area{}
-	}
-	if imageAspect <= 0 {
-		imageAspect = 1
-	}
-	if cellAspect <= 0 {
-		cellAspect = 0.5
-	}
-
-	cols := width
-	rows := max(1, int(float64(cols)*cellAspect/imageAspect))
-	if rows > availableRows {
-		rows = availableRows
-		cols = max(1, int(float64(rows)*imageAspect/cellAspect))
-	}
-	cols = min(cols, width)
-
-	return backend.Area{
-		X:    1 + (width-cols)/2,
-		Y:    2 + (availableRows-rows)/2,
-		Cols: cols,
-		Rows: rows,
-	}
 }

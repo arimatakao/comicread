@@ -33,6 +33,29 @@ func newReaderCache(limit int) *readerCache {
 	return &readerCache{limit: max(1, limit), renders: make(map[renderKey]string)}
 }
 
+func (m Model) currentRenderKey() renderKey {
+	return renderKey{
+		pages: m.pageSlots(), areas: m.pageAreas, width: m.width, height: m.height,
+		zoom: m.zoom, scroll: m.scroll, view: m.bookView, renderer: m.backend.Name(),
+	}
+}
+
+// cachedRender returns a stored render when replaying it is safe. Kitty
+// payloads carry image IDs allocated during encoding; replaying one would
+// conflict with its placement lifecycle, so kitty always renders freshly.
+func (m Model) cachedRender(key renderKey) (string, bool) {
+	if m.cache == nil || m.backend.Name() == "kitty" {
+		return "", false
+	}
+	return m.cache.render(key)
+}
+
+func (m Model) storeCachedRender(key renderKey, output string) {
+	if m.cache != nil && m.backend.Name() != "kitty" {
+		m.cache.storeRender(key, output)
+	}
+}
+
 func (c *readerCache) render(key renderKey) (string, bool) {
 	c.mu.Lock()
 	defer c.mu.Unlock()

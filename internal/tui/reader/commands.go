@@ -36,64 +36,41 @@ func (m *Model) renderPage() tea.Cmd {
 
 	m.layoutPending = false
 	m.requestID++
-	requestID := m.requestID
-	page := m.page
-	pages := m.pageSlots()
-	images := m.layoutImages
-	chapter := m.chapter
-	renderer := m.backend
-	zoom := m.zoom
-	scroll := m.scroll
-	areas := m.pageAreas
-	area := m.area
-	cache := m.cache
-	key := renderKey{
-		pages: pages, areas: areas, width: m.width, height: m.height,
-		zoom: zoom, scroll: scroll, view: m.bookView, renderer: renderer.Name(),
-	}
 	m.rendering = true
 	m.renderError = nil
-	if cache != nil {
-		cache.latestRequest.Store(requestID)
+	if m.cache != nil {
+		m.cache.latestRequest.Store(m.requestID)
 	}
 
+	s := *m
+	key := s.currentRenderKey()
 	return func() tea.Msg {
-		// Kitty payloads carry image IDs allocated during encoding. Replaying one
-		// would conflict with its placement lifecycle, so render it freshly.
-		if renderer.Name() != "kitty" && cache != nil {
-			if output, ok := cache.render(key); ok {
-				return pageRenderedMsg{requestID: requestID, page: page, area: area, output: output}
-			}
+		if output, ok := s.cachedRender(key); ok {
+			return s.renderedMsg(output)
 		}
-		if cache != nil {
-			cache.renderMu.Lock()
-			defer cache.renderMu.Unlock()
-			if cache.latestRequest.Load() != requestID {
-				return pageRenderedMsg{requestID: requestID, page: page}
+		if s.cache != nil {
+			s.cache.renderMu.Lock()
+			defer s.cache.renderMu.Unlock()
+			if s.cache.latestRequest.Load() != s.requestID {
+				return pageRenderedMsg{requestID: s.requestID, page: s.page}
 			}
 			// A pre-render may have completed while this request waited.
-			if renderer.Name() != "kitty" {
-				if output, ok := cache.render(key); ok {
-					return pageRenderedMsg{requestID: requestID, page: page, area: area, output: output}
-				}
+			if output, ok := s.cachedRender(key); ok {
+				return s.renderedMsg(output)
 			}
 		}
 
-		output, err := renderOutput(chapter, renderer, pages, images, areas, zoom, scroll)
+		output, err := renderOutput(s.chapter, s.backend, key.pages, s.layoutImages, s.pageAreas, s.zoom, s.scroll)
 		if err != nil {
-			return pageRenderedMsg{requestID: requestID, page: page, err: err}
+			return pageRenderedMsg{requestID: s.requestID, page: s.page, err: err}
 		}
-		result := pageRenderedMsg{
-			requestID: requestID,
-			page:      page,
-			area:      area,
-			output:    output,
-		}
-		if renderer.Name() != "kitty" && cache != nil {
-			cache.storeRender(key, result.output)
-		}
-		return result
+		s.storeCachedRender(key, output)
+		return s.renderedMsg(output)
 	}
+}
+
+func (m Model) renderedMsg(output string) pageRenderedMsg {
+	return pageRenderedMsg{requestID: m.requestID, page: m.page, area: m.area, output: output}
 }
 
 // preRenderAround prepares the configured number of adjacent reader positions
@@ -124,16 +101,11 @@ func (m Model) preRenderAround() tea.Cmd {
 			next.scroll = 0
 			// Keep the images decoded for layout and reuse them for this render.
 			next.updateLayout()
-			pages := next.pageSlots()
-			images := next.layoutImages
-			key := renderKey{
-				pages: pages, areas: next.pageAreas, width: next.width, height: next.height,
-				zoom: next.zoom, scroll: next.scroll, view: next.bookView, renderer: next.backend.Name(),
-			}
+			key := next.currentRenderKey()
 			if _, ok := m.cache.render(key); ok {
 				continue
 			}
-			output, err := renderOutput(next.chapter, next.backend, pages, images, next.pageAreas, next.zoom, next.scroll)
+			output, err := renderOutput(next.chapter, next.backend, key.pages, next.layoutImages, next.pageAreas, next.zoom, next.scroll)
 			if err == nil && m.cache.latestRequest.Load() == requestID {
 				m.cache.storeRender(key, output)
 			}

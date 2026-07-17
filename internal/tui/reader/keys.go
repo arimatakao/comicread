@@ -2,52 +2,53 @@ package reader
 
 import tea "charm.land/bubbletea/v2"
 
-func isHelpKey(key string) bool {
-	return key == "?"
-}
+// action names a reader command that one or more keys are bound to.
+type action uint8
 
-func isBookmarkKey(key string) bool {
-	return key == "b"
-}
+const (
+	actionNone action = iota
+	actionQuit
+	actionHelp
+	actionBookmark
+	actionBookmarkPrefix
+	actionBookmarkListPrefix
+	actionNext
+	actionPrevious
+	actionScrollDown
+	actionScrollUp
+	actionZoomIn
+	actionZoomOut
+)
 
-func isBookmarkPrefixKey(key string) bool {
-	return key == "v"
-}
-
-func isBookmarkListPrefixKey(key string) bool {
-	return key == "c"
-}
-
-func isNextKey(key string) bool {
-	switch key {
+// keyAction maps a key press to the reader action it is bound to.
+func keyAction(msg tea.KeyPressMsg) action {
+	switch msg.String() {
+	case "q", "esc", "ctrl+c":
+		return actionQuit
+	case "?":
+		return actionHelp
+	case "b":
+		return actionBookmark
+	case "v":
+		return actionBookmarkPrefix
+	case "c":
+		return actionBookmarkListPrefix
 	case "right", "l", "space", "pgdown", "j":
-		return true
-	default:
-		return false
-	}
-}
-
-func isPreviousKey(key string) bool {
-	switch key {
+		return actionNext
 	case "left", "h", "backspace", "pgup", "k":
-		return true
-	default:
-		return false
+		return actionPrevious
+	case "down":
+		return actionScrollDown
+	case "up":
+		return actionScrollUp
 	}
-}
 
-func isScrollDownKey(key string) bool {
-	return key == "down"
-}
-
-func isScrollUpKey(key string) bool {
-	return key == "up"
-}
-
-func isZoomInKey(key tea.KeyPressMsg) bool {
-	return key.Text == "+" || key.Code == '+' || key.ShiftedCode == '+' || key.Code == tea.KeyKpPlus
-}
-
-func isZoomOutKey(key tea.KeyPressMsg) bool {
-	return key.Text == "-" || key.Code == '-' || key.ShiftedCode == '-' || key.Code == tea.KeyKpMinus
+	// Zoom keys are matched on the key code so keypad variants work too.
+	switch {
+	case msg.Text == "+" || msg.Code == '+' || msg.ShiftedCode == '+' || msg.Code == tea.KeyKpPlus:
+		return actionZoomIn
+	case msg.Text == "-" || msg.Code == '-' || msg.ShiftedCode == '-' || msg.Code == tea.KeyKpMinus:
+		return actionZoomOut
+	}
+	return actionNone
 }
