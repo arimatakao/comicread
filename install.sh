@@ -9,6 +9,7 @@ VERSION_INPUT="latest"
 AUTO_YES="false"
 TMP_DIR=""
 REINSTALL_CONFIRMED="false"
+ENVIRONMENT_CHANGED="false"
 LOCALE_BASE_URL="https://raw.githubusercontent.com/${REPO}/main/installer/locales"
 LOCALE_FILE=""
 
@@ -277,10 +278,10 @@ ensure_path_setup() {
 }
 
 configure_environment_value() {
-  local target_file="$1" name="$2" values="$3"
+  local target_file="$1" name="$2" question="$3" values="$4"
 
   while :; do
-    read_answer "$(t prompt.value "$name" "$values") "
+    read_answer "$(t prompt.value "$question" "$values") "
     if [ -z "$ANSWER" ]; then
       return
     fi
@@ -288,11 +289,70 @@ configure_environment_value() {
     case "${name}:${ANSWER}" in
       COMICREAD_GRAPHICS:auto|COMICREAD_GRAPHICS:ascii|COMICREAD_GRAPHICS:dots|COMICREAD_GRAPHICS:kitty|COMICREAD_GRAPHICS:sixel|COMICREAD_GRAPHICS:iterm2|COMICREAD_VIEW:book-view|COMICREAD_VIEW:right-view|COMICREAD_VIEW:circle-view|COMICREAD_VIEW:right-circle-view|COMICREAD_LANG:en|COMICREAD_LANG:uk|COMICREAD_LANG:pl|COMICREAD_LANG:de|COMICREAD_LANG:fr|COMICREAD_LANG:es|COMICREAD_LANG:cs|COMICREAD_LANG:ro|COMICREAD_LANG:it|COMICREAD_LANG:ko|COMICREAD_LANG:ja|COMICREAD_LANG:id|COMICREAD_LANG:hi|COMICREAD_LANG:el|COMICREAD_LANG:tr|COMICREAD_LANG:kk|COMICREAD_LANG:ka)
         append_shell_line "$target_file" "export ${name}=${ANSWER}"
+        ENVIRONMENT_CHANGED="true"
         return
         ;;
       *) t error.invalid_value "$values" >&2 ;;
     esac
   done
+}
+
+configure_non_negative_integer() {
+  local target_file="$1" name="$2" question="$3"
+
+  while :; do
+    read_answer "$(t prompt.value "$question" "$(t value.non_negative_integer)") "
+    if [ -z "$ANSWER" ]; then
+      return
+    fi
+    case "$ANSWER" in
+      *[!0-9]*) t error.invalid_value "$(t value.non_negative_integer)" >&2 ;;
+      *)
+        append_shell_line "$target_file" "export ${name}=${ANSWER}"
+        ENVIRONMENT_CHANGED="true"
+        return
+        ;;
+    esac
+  done
+}
+
+configure_directory() {
+  local target_file="$1" name="$2" question="$3"
+
+  while :; do
+    read_answer "$(t prompt.value "$question" "$(t value.existing_directory)") "
+    if [ -z "$ANSWER" ]; then
+      return
+    fi
+    if [ -d "$ANSWER" ]; then
+      append_shell_line "$target_file" "export ${name}=\"${ANSWER}\""
+      ENVIRONMENT_CHANGED="true"
+      return
+    fi
+    t error.invalid_value "$(t value.existing_directory)" >&2
+  done
+}
+
+print_language_options() {
+  t environment.languages
+  printf '%s\n' \
+    'English - en' \
+    'Українська - uk' \
+    'Polski - pl' \
+    'Deutsch - de' \
+    'Français - fr' \
+    'Español - es' \
+    'Čeština - cs' \
+    'Română - ro' \
+    'Italiano - it' \
+    '한국어 - ko' \
+    '日本語 - ja' \
+    'Bahasa Indonesia - id' \
+    'हिन्दी - hi' \
+    'Ελληνικά - el' \
+    'Türkçe - tr' \
+    'Қазақша - kk' \
+    'ქართული - ka'
 }
 
 configure_environment() {
@@ -304,12 +364,13 @@ configure_environment() {
   local target_file
   target_file="$(shell_config_file)"
   t environment.saved.shell "$target_file"
-  t environment.graphics
-  t environment.view
-  t environment.language
-  configure_environment_value "$target_file" 'COMICREAD_GRAPHICS' 'auto ascii dots kitty sixel iterm2'
-  configure_environment_value "$target_file" 'COMICREAD_VIEW' 'book-view right-view circle-view right-circle-view'
-  configure_environment_value "$target_file" 'COMICREAD_LANG' 'en uk pl de fr es cs ro it ko ja id hi el tr kk ka'
+  print_language_options
+  configure_environment_value "$target_file" 'COMICREAD_LANG' "$(t environment.language)" 'en uk pl de fr es cs ro it ko ja id hi el tr kk ka'
+  configure_environment_value "$target_file" 'COMICREAD_GRAPHICS' "$(t environment.graphics)" 'auto ascii dots kitty sixel iterm2'
+  configure_environment_value "$target_file" 'COMICREAD_VIEW' "$(t environment.view)" 'book-view right-view circle-view right-circle-view'
+  configure_non_negative_integer "$target_file" 'COMICREAD_PRERENDERED_NEXT' "$(t environment.prerendered_next)"
+  configure_non_negative_integer "$target_file" 'COMICREAD_PRERENDERED_PREVIOUS' "$(t environment.prerendered_previous)"
+  configure_directory "$target_file" 'COMICREAD_DIR' "$(t environment.directory)"
 }
 
 install_binary() {
@@ -361,7 +422,7 @@ main() {
   configure_environment
 
   t status.installed "$version" "${INSTALL_DIR}/${BIN_NAME}"
-  if ! path_contains_install_dir; then
+  if ! path_contains_install_dir || [ "$ENVIRONMENT_CHANGED" = "true" ]; then
     t status.restart
   fi
 }

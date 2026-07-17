@@ -304,11 +304,12 @@ function Ensure-UserPathContains {
 function Configure-EnvironmentValue {
     param(
         [string]$Name,
+        [string]$Question,
         [string[]]$AllowedValues
     )
 
     while ($true) {
-        $prompt = T -Key "prompt.value" -Values @($Name, ($AllowedValues -join ' '))
+        $prompt = T -Key "prompt.value" -Values @($Question, ($AllowedValues -join ' '))
         $value = Read-Host $prompt
         if ([string]::IsNullOrWhiteSpace($value)) {
             return $false
@@ -321,20 +322,81 @@ function Configure-EnvironmentValue {
     }
 }
 
+function Configure-NonNegativeIntegerEnvironmentValue {
+    param(
+        [string]$Name,
+        [string]$Question
+    )
+
+    while ($true) {
+        $value = Read-Host (T -Key "prompt.value" -Values @($Question, (T "value.non_negative_integer")))
+        if ([string]::IsNullOrWhiteSpace($value)) {
+            return $false
+        }
+        if ($value -match "^\d+$") {
+            [Environment]::SetEnvironmentVariable($Name, $value, "User")
+            return $true
+        }
+        Write-Host (T "error.invalid_value" (T "value.non_negative_integer"))
+    }
+}
+
+function Configure-DirectoryEnvironmentValue {
+    param(
+        [string]$Name,
+        [string]$Question
+    )
+
+    while ($true) {
+        $value = Read-Host (T -Key "prompt.value" -Values @($Question, (T "value.existing_directory")))
+        if ([string]::IsNullOrWhiteSpace($value)) {
+            return $false
+        }
+        if (Test-Path -Path $value -PathType Container) {
+            [Environment]::SetEnvironmentVariable($Name, $value, "User")
+            return $true
+        }
+        Write-Host (T "error.invalid_value" (T "value.existing_directory"))
+    }
+}
+
+function Show-LanguageOptions {
+    Write-Host (T "environment.languages")
+    @(
+        "English - en",
+        "Українська - uk",
+        "Polski - pl",
+        "Deutsch - de",
+        "Français - fr",
+        "Español - es",
+        "Čeština - cs",
+        "Română - ro",
+        "Italiano - it",
+        "한국어 - ko",
+        "日本語 - ja",
+        "Bahasa Indonesia - id",
+        "हिन्दी - hi",
+        "Ελληνικά - el",
+        "Türkçe - tr",
+        "Қазақша - kk",
+        "ქართული - ka"
+    ) | ForEach-Object { Write-Host $_ }
+}
+
 function Configure-Environment {
     if ($script:AutoYes -or -not (Ask-YesNo (T "environment.configure"))) {
         return $false
     }
 
     Write-Host (T "environment.saved.user")
-    Write-Host (T "environment.graphics")
-    Write-Host (T "environment.view")
-    Write-Host (T "environment.language")
-
     $changed = $false
-    if (Configure-EnvironmentValue -Name "COMICREAD_GRAPHICS" -AllowedValues @("auto", "ascii", "dots", "kitty", "sixel", "iterm2")) { $changed = $true }
-    if (Configure-EnvironmentValue -Name "COMICREAD_VIEW" -AllowedValues @("book-view", "right-view", "circle-view", "right-circle-view")) { $changed = $true }
-    if (Configure-EnvironmentValue -Name "COMICREAD_LANG" -AllowedValues @("en", "uk", "pl", "de", "fr", "es", "cs", "ro", "it", "ko", "ja", "id", "hi", "el", "tr")) { $changed = $true }
+    Show-LanguageOptions
+    if (Configure-EnvironmentValue -Name "COMICREAD_LANG" -Question (T "environment.language") -AllowedValues @("en", "uk", "pl", "de", "fr", "es", "cs", "ro", "it", "ko", "ja", "id", "hi", "el", "tr", "kk", "ka")) { $changed = $true }
+    if (Configure-EnvironmentValue -Name "COMICREAD_GRAPHICS" -Question (T "environment.graphics") -AllowedValues @("auto", "ascii", "dots", "kitty", "sixel", "iterm2")) { $changed = $true }
+    if (Configure-EnvironmentValue -Name "COMICREAD_VIEW" -Question (T "environment.view") -AllowedValues @("book-view", "right-view", "circle-view", "right-circle-view")) { $changed = $true }
+    if (Configure-NonNegativeIntegerEnvironmentValue -Name "COMICREAD_PRERENDERED_NEXT" -Question (T "environment.prerendered_next")) { $changed = $true }
+    if (Configure-NonNegativeIntegerEnvironmentValue -Name "COMICREAD_PRERENDERED_PREVIOUS" -Question (T "environment.prerendered_previous")) { $changed = $true }
+    if (Configure-DirectoryEnvironmentValue -Name "COMICREAD_DIR" -Question (T "environment.directory")) { $changed = $true }
     return $changed
 }
 
