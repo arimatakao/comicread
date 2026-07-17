@@ -62,6 +62,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.status = ""
 			if m.showingHelp {
 				m.requestID++
+				if m.cache != nil {
+					m.cache.latestRequest.Store(m.requestID)
+				}
 				m.layoutPending = false
 				m.rendering = false
 				return m, m.clearAndRepaint(m.displayedArea)
@@ -76,6 +79,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if key == "v" {
 				m.openBookmarks()
 				m.requestID++
+				if m.cache != nil {
+					m.cache.latestRequest.Store(m.requestID)
+				}
 				m.layoutPending = false
 				m.rendering = false
 				return m, m.clearAndRepaint(m.displayedArea)
