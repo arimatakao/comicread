@@ -31,12 +31,16 @@ q    έξοδος
 
 	FilepickerHeader:      "comicread — επιλέξτε κεφάλαιο\n%s\n\n",
 	FilepickerNoEntries:   "  (δεν υπάρχουν υποστηριζόμενες καταχωρήσεις)\n",
-	FilepickerHelp:        "\n↑/↓ μετακίνηση  |  ← γονικός κατάλογος  |  → είσοδος στον κατάλογο  |  enter άνοιγμα αρχείου  |  s επιλογή επισημασμένου καταλόγου  |  q έξοδος\n",
+	FilepickerHelp:        "\n↑/↓ μετακίνηση  |  ← γονικός κατάλογος  |  → είσοδος στον κατάλογο  |  enter άνοιγμα αρχείου  |  s επιλογή επισημασμένου καταλόγου  |  o μετάβαση σε κατάλογο  |  q έξοδος\n",
 	FilepickerWindowTitle: "comicread — επιλογή αρχείου",
+	FilepickerGoToPrompt:  "\nΜετάβαση σε κατάλογο: %s\n",
+	FilepickerGoToErr:     "  σφάλμα: %s\n",
 
 	FilepickerErrResolveDir: "δεν είναι δυνατός ο προσδιορισμός του καταλόγου %q: %w",
 	FilepickerErrReadDir:    "δεν είναι δυνατή η ανάγνωση του καταλόγου %q: %w",
 	FilepickerErrRunPicker:  "σφάλμα κατά την εκκίνηση της επιλογής αρχείου: %w",
+	FilepickerErrEmptyPath:  "η διαδρομή είναι κενή",
+	FilepickerErrNotDir:     "το %q δεν είναι κατάλογος",
 
 	LoadingViewOpening:     "άνοιγμα του %s…",
 	LoadingViewWindowTitle: "comicread — άνοιγμα",

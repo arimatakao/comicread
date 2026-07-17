@@ -31,12 +31,16 @@ q    wyjście
 
 	FilepickerHeader:      "comicread — wybierz rozdział\n%s\n\n",
 	FilepickerNoEntries:   "  (brak obsługiwanych elementów)\n",
-	FilepickerHelp:        "\n↑/↓ ruch  |  ← katalog nadrzędny  |  → wejdź do katalogu  |  enter otwórz plik  |  s wybierz zaznaczony katalog  |  q wyjście\n",
+	FilepickerHelp:        "\n↑/↓ ruch  |  ← katalog nadrzędny  |  → wejdź do katalogu  |  enter otwórz plik  |  s wybierz zaznaczony katalog  |  o przejdź do katalogu  |  q wyjście\n",
 	FilepickerWindowTitle: "comicread — wybór pliku",
+	FilepickerGoToPrompt:  "\nPrzejdź do katalogu: %s\n",
+	FilepickerGoToErr:     "  błąd: %s\n",
 
 	FilepickerErrResolveDir: "nie można ustalić katalogu %q: %w",
 	FilepickerErrReadDir:    "nie można odczytać katalogu %q: %w",
 	FilepickerErrRunPicker:  "błąd uruchamiania wyboru pliku: %w",
+	FilepickerErrEmptyPath:  "ścieżka jest pusta",
+	FilepickerErrNotDir:     "%q nie jest katalogiem",
 
 	LoadingViewOpening:     "otwieranie %s…",
 	LoadingViewWindowTitle: "comicread — otwieranie",

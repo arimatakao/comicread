@@ -31,12 +31,16 @@ q    გასვლა
 
 	FilepickerHeader:      "comicread — აირჩიეთ თავი\n%s\n\n",
 	FilepickerNoEntries:   "  (მხარდაჭერილი ელემენტები არ არის)\n",
-	FilepickerHelp:        "\n↑/↓ გადაადგილება  |  ← მშობელი საქაღალდე  |  → საქაღალდის გახსნა  |  enter ფაილის გახსნა  |  s მონიშნული საქაღალდის არჩევა  |  q გასვლა\n",
+	FilepickerHelp:        "\n↑/↓ გადაადგილება  |  ← მშობელი საქაღალდე  |  → საქაღალდის გახსნა  |  enter ფაილის გახსნა  |  s მონიშნული საქაღალდის არჩევა  |  o საქაღალდეზე გადასვლა  |  q გასვლა\n",
 	FilepickerWindowTitle: "comicread — ფაილის არჩევა",
+	FilepickerGoToPrompt:  "\nგადასვლა საქაღალდეზე: %s\n",
+	FilepickerGoToErr:     "  შეცდომა: %s\n",
 
 	FilepickerErrResolveDir: "საქაღალდის %q დადგენა ვერ მოხერხდა: %w",
 	FilepickerErrReadDir:    "საქაღალდის %q წაკითხვა ვერ მოხერხდა: %w",
 	FilepickerErrRunPicker:  "ფაილის არჩევის შეცდომა: %w",
+	FilepickerErrEmptyPath:  "ბილიკი ცარიელია",
+	FilepickerErrNotDir:     "%q არ არის საქაღალდე",
 
 	LoadingViewOpening:     "%s იხსნება…",
 	LoadingViewWindowTitle: "comicread — იხსნება",

@@ -31,12 +31,16 @@ q    beenden
 
 	FilepickerHeader:      "comicread — Kapitel auswählen\n%s\n\n",
 	FilepickerNoEntries:   "  (keine unterstützten Einträge)\n",
-	FilepickerHelp:        "\n↑/↓ bewegen  |  ← übergeordneter Ordner  |  → Ordner öffnen  |  enter Datei öffnen  |  s markierten Ordner auswählen  |  q beenden\n",
+	FilepickerHelp:        "\n↑/↓ bewegen  |  ← übergeordneter Ordner  |  → Ordner öffnen  |  enter Datei öffnen  |  s markierten Ordner auswählen  |  o zu Ordner wechseln  |  q beenden\n",
 	FilepickerWindowTitle: "comicread — Datei auswählen",
+	FilepickerGoToPrompt:  "\nZu Ordner wechseln: %s\n",
+	FilepickerGoToErr:     "  Fehler: %s\n",
 
 	FilepickerErrResolveDir: "Ordner %q kann nicht bestimmt werden: %w",
 	FilepickerErrReadDir:    "Ordner %q kann nicht gelesen werden: %w",
 	FilepickerErrRunPicker:  "Fehler beim Starten der Dateiauswahl: %w",
+	FilepickerErrEmptyPath:  "Pfad ist leer",
+	FilepickerErrNotDir:     "%q ist kein Ordner",
 
 	LoadingViewOpening:     "%s wird geöffnet…",
 	LoadingViewWindowTitle: "comicread — wird geöffnet",

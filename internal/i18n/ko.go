@@ -31,12 +31,16 @@ q    종료
 
 	FilepickerHeader:      "comicread — 챕터 선택\n%s\n\n",
 	FilepickerNoEntries:   "  (지원되는 항목 없음)\n",
-	FilepickerHelp:        "\n↑/↓ 이동  |  ← 상위 디렉터리  |  → 디렉터리 들어가기  |  enter 파일 열기  |  s 강조 표시된 디렉터리 선택  |  q 종료\n",
+	FilepickerHelp:        "\n↑/↓ 이동  |  ← 상위 디렉터리  |  → 디렉터리 들어가기  |  enter 파일 열기  |  s 강조 표시된 디렉터리 선택  |  o 디렉터리로 이동  |  q 종료\n",
 	FilepickerWindowTitle: "comicread — 파일 선택",
+	FilepickerGoToPrompt:  "\n디렉터리로 이동: %s\n",
+	FilepickerGoToErr:     "  오류: %s\n",
 
 	FilepickerErrResolveDir: "디렉터리 %q를 확인할 수 없습니다: %w",
 	FilepickerErrReadDir:    "디렉터리 %q를 읽을 수 없습니다: %w",
 	FilepickerErrRunPicker:  "파일 선택기를 실행하는 중 오류: %w",
+	FilepickerErrEmptyPath:  "경로가 비어 있습니다",
+	FilepickerErrNotDir:     "%q은(는) 디렉터리가 아닙니다",
 
 	LoadingViewOpening:     "%s 여는 중…",
 	LoadingViewWindowTitle: "comicread — 여는 중",

@@ -31,12 +31,16 @@ q    шығу
 
 	FilepickerHeader:      "comicread — тарауды таңдаңыз\n%s\n\n",
 	FilepickerNoEntries:   "  (қолдау көрсетілетін элементтер жоқ)\n",
-	FilepickerHelp:        "\n↑/↓ жылжу  |  ← аталық қалта  |  → қалтаны ашу  |  enter файлды ашу  |  s таңдалған қалтаны таңдау  |  q шығу\n",
+	FilepickerHelp:        "\n↑/↓ жылжу  |  ← аталық қалта  |  → қалтаны ашу  |  enter файлды ашу  |  s таңдалған қалтаны таңдау  |  o қалтаға өту  |  q шығу\n",
 	FilepickerWindowTitle: "comicread — файл таңдау",
+	FilepickerGoToPrompt:  "\nҚалтаға өту: %s\n",
+	FilepickerGoToErr:     "  қате: %s\n",
 
 	FilepickerErrResolveDir: "%q қалтасын анықтау мүмкін болмады: %w",
 	FilepickerErrReadDir:    "%q қалтасын оқу мүмкін болмады: %w",
 	FilepickerErrRunPicker:  "файл таңдау қатесі: %w",
+	FilepickerErrEmptyPath:  "жол бос",
+	FilepickerErrNotDir:     "%q қалта емес",
 
 	LoadingViewOpening:     "%s ашылуда…",
 	LoadingViewWindowTitle: "comicread — ашылуда",

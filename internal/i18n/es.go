@@ -31,12 +31,16 @@ q    salir
 
 	FilepickerHeader:      "comicread — seleccionar un capítulo\n%s\n\n",
 	FilepickerNoEntries:   "  (no hay entradas compatibles)\n",
-	FilepickerHelp:        "\n↑/↓ mover  |  ← directorio superior  |  → entrar al directorio  |  enter abrir archivo  |  s seleccionar el directorio resaltado  |  q salir\n",
+	FilepickerHelp:        "\n↑/↓ mover  |  ← directorio superior  |  → entrar al directorio  |  enter abrir archivo  |  s seleccionar el directorio resaltado  |  o ir a un directorio  |  q salir\n",
 	FilepickerWindowTitle: "comicread — elegir un archivo",
+	FilepickerGoToPrompt:  "\nIr al directorio: %s\n",
+	FilepickerGoToErr:     "  error: %s\n",
 
 	FilepickerErrResolveDir: "no se puede resolver el directorio %q: %w",
 	FilepickerErrReadDir:    "no se puede leer el directorio %q: %w",
 	FilepickerErrRunPicker:  "error al ejecutar el selector de archivos: %w",
+	FilepickerErrEmptyPath:  "la ruta está vacía",
+	FilepickerErrNotDir:     "%q no es un directorio",
 
 	LoadingViewOpening:     "abriendo %s…",
 	LoadingViewWindowTitle: "comicread — abriendo",

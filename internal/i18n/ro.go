@@ -31,12 +31,16 @@ q    ieșire
 
 	FilepickerHeader:      "comicread — selectați un capitol\n%s\n\n",
 	FilepickerNoEntries:   "  (nicio intrare acceptată)\n",
-	FilepickerHelp:        "\n↑/↓ deplasare  |  ← director părinte  |  → intră în director  |  enter deschide fișierul  |  s selectează directorul evidențiat  |  q ieșire\n",
+	FilepickerHelp:        "\n↑/↓ deplasare  |  ← director părinte  |  → intră în director  |  enter deschide fișierul  |  s selectează directorul evidențiat  |  o mergi la un director  |  q ieșire\n",
 	FilepickerWindowTitle: "comicread — alegeți un fișier",
+	FilepickerGoToPrompt:  "\nMergi la director: %s\n",
+	FilepickerGoToErr:     "  eroare: %s\n",
 
 	FilepickerErrResolveDir: "nu se poate determina directorul %q: %w",
 	FilepickerErrReadDir:    "nu se poate citi directorul %q: %w",
 	FilepickerErrRunPicker:  "eroare la pornirea selectorului de fișiere: %w",
+	FilepickerErrEmptyPath:  "calea este goală",
+	FilepickerErrNotDir:     "%q nu este un director",
 
 	LoadingViewOpening:     "se deschide %s…",
 	LoadingViewWindowTitle: "comicread — deschidere",

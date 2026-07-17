@@ -31,12 +31,16 @@ q    बाहर निकलें
 
 	FilepickerHeader:      "comicread — अध्याय चुनें\n%s\n\n",
 	FilepickerNoEntries:   "  (कोई समर्थित प्रविष्टि नहीं)\n",
-	FilepickerHelp:        "\n↑/↓ चलें  |  ← मूल निर्देशिका  |  → निर्देशिका में जाएँ  |  enter फ़ाइल खोलें  |  s चुनी हुई निर्देशिका चुनें  |  q बाहर निकलें\n",
+	FilepickerHelp:        "\n↑/↓ चलें  |  ← मूल निर्देशिका  |  → निर्देशिका में जाएँ  |  enter फ़ाइल खोलें  |  s चुनी हुई निर्देशिका चुनें  |  o निर्देशिका पर जाएँ  |  q बाहर निकलें\n",
 	FilepickerWindowTitle: "comicread — फ़ाइल चुनें",
+	FilepickerGoToPrompt:  "\nनिर्देशिका पर जाएँ: %s\n",
+	FilepickerGoToErr:     "  त्रुटि: %s\n",
 
 	FilepickerErrResolveDir: "निर्देशिका %q निर्धारित नहीं की जा सकती: %w",
 	FilepickerErrReadDir:    "निर्देशिका %q पढ़ी नहीं जा सकती: %w",
 	FilepickerErrRunPicker:  "फ़ाइल चयनक चलाने में त्रुटि: %w",
+	FilepickerErrEmptyPath:  "पथ खाली है",
+	FilepickerErrNotDir:     "%q एक निर्देशिका नहीं है",
 
 	LoadingViewOpening:     "%s खोला जा रहा है…",
 	LoadingViewWindowTitle: "comicread — खोल रहा है",

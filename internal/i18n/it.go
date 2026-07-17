@@ -31,12 +31,16 @@ q    esci
 
 	FilepickerHeader:      "comicread — seleziona un capitolo\n%s\n\n",
 	FilepickerNoEntries:   "  (nessuna voce supportata)\n",
-	FilepickerHelp:        "\n↑/↓ sposta  |  ← cartella superiore  |  → entra nella cartella  |  enter apri file  |  s seleziona la cartella evidenziata  |  q esci\n",
+	FilepickerHelp:        "\n↑/↓ sposta  |  ← cartella superiore  |  → entra nella cartella  |  enter apri file  |  s seleziona la cartella evidenziata  |  o vai a una cartella  |  q esci\n",
 	FilepickerWindowTitle: "comicread — scegli un file",
+	FilepickerGoToPrompt:  "\nVai alla cartella: %s\n",
+	FilepickerGoToErr:     "  errore: %s\n",
 
 	FilepickerErrResolveDir: "impossibile risolvere la cartella %q: %w",
 	FilepickerErrReadDir:    "impossibile leggere la cartella %q: %w",
 	FilepickerErrRunPicker:  "errore nell'avvio del selettore file: %w",
+	FilepickerErrEmptyPath:  "il percorso è vuoto",
+	FilepickerErrNotDir:     "%q non è una cartella",
 
 	LoadingViewOpening:     "apertura di %s…",
 	LoadingViewWindowTitle: "comicread — apertura",

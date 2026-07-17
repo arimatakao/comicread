@@ -31,12 +31,16 @@ q    çıkış
 
 	FilepickerHeader:      "comicread — bölüm seçin\n%s\n\n",
 	FilepickerNoEntries:   "  (desteklenen girdi yok)\n",
-	FilepickerHelp:        "\n↑/↓ hareket  |  ← üst dizin  |  → dizine gir  |  enter dosyayı aç  |  s vurgulanan dizini seç  |  q çıkış\n",
+	FilepickerHelp:        "\n↑/↓ hareket  |  ← üst dizin  |  → dizine gir  |  enter dosyayı aç  |  s vurgulanan dizini seç  |  o dizine git  |  q çıkış\n",
 	FilepickerWindowTitle: "comicread — dosya seçin",
+	FilepickerGoToPrompt:  "\nDizine git: %s\n",
+	FilepickerGoToErr:     "  hata: %s\n",
 
 	FilepickerErrResolveDir: "%q dizini çözümlenemedi: %w",
 	FilepickerErrReadDir:    "%q dizini okunamadı: %w",
 	FilepickerErrRunPicker:  "dosya seçici çalıştırılırken hata oluştu: %w",
+	FilepickerErrEmptyPath:  "yol boş",
+	FilepickerErrNotDir:     "%q bir dizin değil",
 
 	LoadingViewOpening:     "%s açılıyor…",
 	LoadingViewWindowTitle: "comicread — açılıyor",

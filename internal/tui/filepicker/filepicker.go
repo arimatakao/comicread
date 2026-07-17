@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode/utf8"
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicread/internal/i18n"
@@ -49,6 +50,10 @@ type pickerModel struct {
 	err      error
 	width    int
 	height   int
+
+	goToInput bool
+	goToPath  string
+	goToErr   string
 }
 
 func newModel(dir string) (pickerModel, error) {
@@ -108,9 +113,19 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.keepCursorVisible()
 
 	case tea.KeyPressMsg:
+		if m.goToInput {
+			return m.updateGoToInput(msg)
+		}
+
 		switch msg.String() {
 		case "q", "esc", "ctrl+c":
 			return m, tea.Quit
+
+		case "o":
+			m.goToInput = true
+			m.goToPath = ""
+			m.goToErr = ""
+			return m, nil
 
 		case "up", "k":
 			if m.cursor > 0 {
@@ -156,6 +171,53 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	m.keepCursorVisible()
+	return m, nil
+}
+
+// updateGoToInput handles key presses while the user is typing a directory
+// path to jump to (triggered by "o").
+func (m pickerModel) updateGoToInput(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
+	switch msg.String() {
+	case "esc":
+		m.goToInput = false
+		m.goToPath = ""
+		m.goToErr = ""
+
+	case "enter":
+		path := strings.TrimSpace(m.goToPath)
+		if path == "" {
+			m.goToErr = i18n.T(i18n.FilepickerErrEmptyPath)
+			return m, nil
+		}
+		abs, err := filepath.Abs(path)
+		if err != nil {
+			m.goToErr = fmt.Sprintf(i18n.T(i18n.FilepickerErrResolveDir), path, err)
+			return m, nil
+		}
+		info, err := os.Stat(abs)
+		if err != nil || !info.IsDir() {
+			m.goToErr = fmt.Sprintf(i18n.T(i18n.FilepickerErrNotDir), abs)
+			return m, nil
+		}
+		m.goToInput = false
+		m.goToPath = ""
+		m.goToErr = ""
+		if cmd := m.enterDir(abs); cmd != nil {
+			return m, cmd
+		}
+
+	case "backspace":
+		if len(m.goToPath) > 0 {
+			_, size := utf8.DecodeLastRuneInString(m.goToPath)
+			m.goToPath = m.goToPath[:len(m.goToPath)-size]
+		}
+
+	default:
+		if msg.Text != "" {
+			m.goToPath += msg.Text
+		}
+	}
+
 	return m, nil
 }
 
@@ -224,6 +286,13 @@ func (m pickerModel) View() tea.View {
 			name += "/"
 		}
 		fmt.Fprintf(&b, "%s%s\n", cursor, name)
+	}
+
+	if m.goToInput {
+		fmt.Fprintf(&b, i18n.T(i18n.FilepickerGoToPrompt), m.goToPath)
+		if m.goToErr != "" {
+			fmt.Fprintf(&b, i18n.T(i18n.FilepickerGoToErr), m.goToErr)
+		}
 	}
 
 	b.WriteString(i18n.T(i18n.FilepickerHelp))

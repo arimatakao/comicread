@@ -31,12 +31,16 @@ q    вихід
 
 	FilepickerHeader:      "comicread — оберіть розділ\n%s\n\n",
 	FilepickerNoEntries:   "  (немає підтримуваних елементів)\n",
-	FilepickerHelp:        "\n↑/↓ рух  |  ← батьківська тека  |  → відкрити теку  |  enter відкрити файл  |  s обрати виділену теку  |  q вихід\n",
+	FilepickerHelp:        "\n↑/↓ рух  |  ← батьківська тека  |  → відкрити теку  |  enter відкрити файл  |  s обрати виділену теку  |  o перейти до теки  |  q вихід\n",
 	FilepickerWindowTitle: "comicread — вибір файлу",
+	FilepickerGoToPrompt:  "\nПерейти до теки: %s\n",
+	FilepickerGoToErr:     "  помилка: %s\n",
 
 	FilepickerErrResolveDir: "не вдалося визначити теку %q: %w",
 	FilepickerErrReadDir:    "не вдалося прочитати теку %q: %w",
 	FilepickerErrRunPicker:  "помилка запуску вибору файлу: %w",
+	FilepickerErrEmptyPath:  "шлях порожній",
+	FilepickerErrNotDir:     "%q не є текою",
 
 	LoadingViewOpening:     "відкриваю %s…",
 	LoadingViewWindowTitle: "comicread — відкриття",

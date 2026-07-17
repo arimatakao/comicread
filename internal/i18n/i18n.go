@@ -55,9 +55,13 @@ const (
 	FilepickerNoEntries     = "filepicker.no_entries"
 	FilepickerHelp          = "filepicker.help"
 	FilepickerWindowTitle   = "filepicker.window_title"
+	FilepickerGoToPrompt    = "filepicker.go_to_prompt"
+	FilepickerGoToErr       = "filepicker.go_to_err"
 	FilepickerErrResolveDir = "filepicker.err.resolve_dir"
 	FilepickerErrReadDir    = "filepicker.err.read_dir"
 	FilepickerErrRunPicker  = "filepicker.err.run_picker"
+	FilepickerErrEmptyPath  = "filepicker.err.empty_path"
+	FilepickerErrNotDir     = "filepicker.err.not_dir"
 
 	LoadingViewOpening     = "loading.view.opening"
 	LoadingViewWindowTitle = "loading.view.window_title"

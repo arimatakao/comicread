@@ -31,12 +31,16 @@ q    keluar
 
 	FilepickerHeader:      "comicread — pilih bab\n%s\n\n",
 	FilepickerNoEntries:   "  (tidak ada entri yang didukung)\n",
-	FilepickerHelp:        "\n↑/↓ pindah  |  ← direktori induk  |  → masuk direktori  |  enter buka berkas  |  s pilih direktori yang disorot  |  q keluar\n",
+	FilepickerHelp:        "\n↑/↓ pindah  |  ← direktori induk  |  → masuk direktori  |  enter buka berkas  |  s pilih direktori yang disorot  |  o pergi ke direktori  |  q keluar\n",
 	FilepickerWindowTitle: "comicread — pilih berkas",
+	FilepickerGoToPrompt:  "\nPergi ke direktori: %s\n",
+	FilepickerGoToErr:     "  kesalahan: %s\n",
 
 	FilepickerErrResolveDir: "tidak dapat menentukan direktori %q: %w",
 	FilepickerErrReadDir:    "tidak dapat membaca direktori %q: %w",
 	FilepickerErrRunPicker:  "kesalahan saat menjalankan pemilih berkas: %w",
+	FilepickerErrEmptyPath:  "jalur kosong",
+	FilepickerErrNotDir:     "%q bukan direktori",
 
 	LoadingViewOpening:     "membuka %s…",
 	LoadingViewWindowTitle: "comicread — membuka",
