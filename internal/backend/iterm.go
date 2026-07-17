@@ -25,7 +25,6 @@ func (*Iterm) Render(img image.Image, area Area) (string, error) {
 	}
 
 	var output bytes.Buffer
-	img = scaleForTerminal(img, area)
 	// The protocol inserts an inline image at the cursor. Save and restore it so
 	// Bubble Tea remains the sole owner of the text cursor.
 	fmt.Fprintf(&output, "\x1b7\x1b[%d;%dH", area.Y, area.X)

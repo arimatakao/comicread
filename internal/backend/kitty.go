@@ -38,7 +38,6 @@ func (k *Kitty) Render(img image.Image, area Area) (string, error) {
 		return "", fmt.Errorf("invalid terminal area: %+v", area)
 	}
 	imageID := k.reserveImageID()
-	img = scaleForTerminal(img, area)
 
 	var output bytes.Buffer
 	// rasterm places images at the current cursor position. Save and restore it
