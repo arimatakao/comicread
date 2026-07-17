@@ -1,6 +1,10 @@
 package reader
 
-import "github.com/arimatakao/comicread/internal/backend"
+import (
+	"image"
+
+	"github.com/arimatakao/comicread/internal/backend"
+)
 
 // ViewMode controls how pages are arranged in the reader.
 type ViewMode uint8
@@ -86,11 +90,18 @@ func (m Model) canNextPage() bool {
 }
 
 func (m Model) pageAspect(page int) float64 {
-	img, err := m.chapter.Page(page)
+	img, err := m.cachedPage(page)
 	if err != nil || img.Bounds().Dy() == 0 {
 		return 1
 	}
 	return float64(img.Bounds().Dx()) / float64(img.Bounds().Dy())
+}
+
+func (m Model) cachedPage(page int) (image.Image, error) {
+	if m.cache == nil {
+		return m.chapter.Page(page)
+	}
+	return m.cache.page(m.chapter, page)
 }
 
 func (m *Model) updateLayout() {

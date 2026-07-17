@@ -34,6 +34,7 @@ type Model struct {
 	journal            *journal.Journal
 	status             string
 	renderError        error
+	cache              *readerCache
 }
 
 func New(title string, chapter comicfile.ContainerReader, renderer backend.Renderer) Model {
@@ -49,6 +50,7 @@ func NewWithBookView(title string, chapter comicfile.ContainerReader, renderer b
 		bookView: bookView,
 		zoom:     100,
 		status:   i18n.T(i18n.ReaderStatusWaitingTerminalSize),
+		cache:    newReaderCache(),
 	}
 }
 

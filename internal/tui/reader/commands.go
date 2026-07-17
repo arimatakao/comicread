@@ -38,17 +38,36 @@ func (m *Model) renderPage() tea.Cmd {
 	scroll := m.scroll
 	areas := m.pageAreas
 	area := m.area
+	cache := m.cache
+	key := renderKey{
+		pages: pages, areas: areas, width: m.width, height: m.height,
+		zoom: zoom, scroll: scroll, view: m.bookView, renderer: renderer.Name(),
+	}
 	m.rendering = true
 	m.renderError = nil
 
 	return func() tea.Msg {
+		// Kitty payloads carry image IDs allocated during encoding. Replaying one
+		// would conflict with its placement lifecycle, so only cache source pages.
+		if renderer.Name() != "kitty" && cache != nil {
+			if output, ok := cache.render(key); ok {
+				return pageRenderedMsg{requestID: requestID, page: page, area: area, output: output}
+			}
+		}
+
 		images := make([]image.Image, 0, len(pages))
 		pageAreas := make([]backend.Area, 0, len(pages))
 		for slot, pageIndex := range pages {
 			if pageIndex < 0 {
 				continue
 			}
-			img, err := chapter.Page(pageIndex)
+			var img image.Image
+			var err error
+			if cache == nil {
+				img, err = chapter.Page(pageIndex)
+			} else {
+				img, err = cache.page(chapter, pageIndex)
+			}
 			if err != nil {
 				return pageRenderedMsg{requestID: requestID, page: page, err: err}
 			}
@@ -61,6 +80,9 @@ func (m *Model) renderPage() tea.Cmd {
 			if err != nil {
 				return pageRenderedMsg{requestID: requestID, page: page, err: err}
 			}
+			if renderer.Name() != "kitty" && cache != nil {
+				cache.storeRender(key, output)
+			}
 			return pageRenderedMsg{requestID: requestID, page: page, area: area, output: output}
 		}
 
@@ -72,12 +94,16 @@ func (m *Model) renderPage() tea.Cmd {
 			}
 			output.WriteString(rendered)
 		}
-		return pageRenderedMsg{
+		result := pageRenderedMsg{
 			requestID: requestID,
 			page:      page,
 			area:      area,
 			output:    output.String(),
 		}
+		if renderer.Name() != "kitty" && cache != nil {
+			cache.storeRender(key, result.output)
+		}
+		return result
 	}
 }
 
