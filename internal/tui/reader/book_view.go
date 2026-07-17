@@ -1,6 +1,10 @@
 package reader
 
-import "github.com/arimatakao/comicread/internal/backend"
+import (
+	"image"
+
+	"github.com/arimatakao/comicread/internal/backend"
+)
 
 // ViewMode controls how pages are arranged in the reader.
 type ViewMode uint8
@@ -85,28 +89,38 @@ func (m Model) canNextPage() bool {
 	return m.circleRightPage(total) < total-1
 }
 
-func (m Model) pageAspect(page int) float64 {
-	img, err := m.chapter.Page(page)
-	if err != nil || img.Bounds().Dy() == 0 {
+func imageAspect(img image.Image) float64 {
+	if img == nil || img.Bounds().Dy() == 0 {
 		return 1
 	}
 	return float64(img.Bounds().Dx()) / float64(img.Bounds().Dy())
 }
 
 func (m *Model) updateLayout() {
-	m.pageAreas = [2]backend.Area{}
-	if !m.isBookView() {
-		m.area = imageArea(m.width, m.height, m.currentPageAspect()*float64(m.zoom)/100)
-		m.pageAreas[0] = m.area
-		return
-	}
-
 	slots := m.pageSlots()
+	m.layoutPages = slots
+	m.layoutImages = [2]image.Image{}
+	m.pageAreas = [2]backend.Area{}
 	for slot, page := range slots {
 		if page < 0 {
 			continue
 		}
-		m.pageAreas[slot] = bookImageArea(m.width, m.height, slot, m.pageAspect(page)*float64(m.zoom)/100)
+		img, err := m.chapter.Page(page)
+		if err == nil {
+			m.layoutImages[slot] = img
+		}
+	}
+	if !m.isBookView() {
+		m.area = imageArea(m.width, m.height, imageAspect(m.layoutImages[0])*float64(m.zoom)/100)
+		m.pageAreas[0] = m.area
+		return
+	}
+
+	for slot, page := range slots {
+		if page < 0 {
+			continue
+		}
+		m.pageAreas[slot] = bookImageArea(m.width, m.height, slot, imageAspect(m.layoutImages[slot])*float64(m.zoom)/100)
 	}
 	m.area = unionAreas(m.pageAreas[0], m.pageAreas[1])
 }

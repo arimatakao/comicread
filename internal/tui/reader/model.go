@@ -1,6 +1,8 @@
 package reader
 
 import (
+	"image"
+
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicfile"
 	"github.com/arimatakao/comicread/internal/backend"
@@ -18,6 +20,8 @@ type Model struct {
 	height             int
 	area               backend.Area
 	pageAreas          [2]backend.Area
+	layoutPages        [2]int
+	layoutImages       [2]image.Image
 	displayedArea      backend.Area
 	requestID          uint64
 	layoutID           uint64

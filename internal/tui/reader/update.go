@@ -254,7 +254,15 @@ func (m *Model) scrollUp() bool {
 }
 
 func (m Model) currentPageAspect() float64 {
-	return m.pageAspect(m.pageSlots()[0])
+	slots := m.pageSlots()
+	if slots[0] == m.layoutPages[0] && m.layoutImages[0] != nil {
+		return imageAspect(m.layoutImages[0])
+	}
+	img, err := m.chapter.Page(slots[0])
+	if err != nil {
+		return 1
+	}
+	return imageAspect(img)
 }
 
 func imageArea(width, height int, imageAspect float64) backend.Area {

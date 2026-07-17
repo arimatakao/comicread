@@ -7,8 +7,8 @@ import (
 	"github.com/arimatakao/comicread/internal/backend"
 )
 
-// readerCache holds only the prefetched next render. comicfile already owns all
-// decoded pages, so duplicating them in another map provides no benefit.
+// readerCache holds only the prefetched next render. comicfile decodes pages
+// lazily, while Model keeps at most the images needed for its current layout.
 type readerCache struct {
 	mu            sync.Mutex
 	renderMu      sync.Mutex

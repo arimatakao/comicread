@@ -33,6 +33,7 @@ func (m *Model) renderPage() tea.Cmd {
 	requestID := m.requestID
 	page := m.page
 	pages := m.pageSlots()
+	images := m.layoutImages
 	chapter := m.chapter
 	renderer := m.backend
 	zoom := m.zoom
@@ -72,7 +73,7 @@ func (m *Model) renderPage() tea.Cmd {
 			}
 		}
 
-		output, err := renderOutput(chapter, renderer, pages, areas, zoom, scroll)
+		output, err := renderOutput(chapter, renderer, pages, images, areas, zoom, scroll)
 		if err != nil {
 			return pageRenderedMsg{requestID: requestID, page: page, err: err}
 		}
@@ -110,9 +111,10 @@ func (m Model) preRenderNext() tea.Cmd {
 			return pagePrefetchedMsg{}
 		}
 
-		// comicfile already owns decoded pages, so layout only reads their bounds.
+		// Keep the images decoded for layout and reuse them for this render.
 		next.updateLayout()
 		pages := next.pageSlots()
+		images := next.layoutImages
 
 		key := renderKey{
 			pages: pages, areas: next.pageAreas, width: next.width, height: next.height,
@@ -121,7 +123,7 @@ func (m Model) preRenderNext() tea.Cmd {
 		if _, ok := next.cache.render(key); ok {
 			return pagePrefetchedMsg{}
 		}
-		output, err := renderOutput(next.chapter, next.backend, pages, next.pageAreas, next.zoom, next.scroll)
+		output, err := renderOutput(next.chapter, next.backend, pages, images, next.pageAreas, next.zoom, next.scroll)
 		if err == nil && next.cache.latestRequest.Load() == requestID {
 			next.cache.storeRender(key, output)
 		}
@@ -129,16 +131,20 @@ func (m Model) preRenderNext() tea.Cmd {
 	}
 }
 
-func renderOutput(chapter comicfile.ContainerReader, renderer backend.Renderer, pages [2]int, areas [2]backend.Area, zoom int, scroll float64) (string, error) {
+func renderOutput(chapter comicfile.ContainerReader, renderer backend.Renderer, pages [2]int, decoded [2]image.Image, areas [2]backend.Area, zoom int, scroll float64) (string, error) {
 	images := make([]image.Image, 0, len(pages))
 	pageAreas := make([]backend.Area, 0, len(pages))
 	for slot, pageIndex := range pages {
 		if pageIndex < 0 {
 			continue
 		}
-		img, err := chapter.Page(pageIndex)
-		if err != nil {
-			return "", err
+		img := decoded[slot]
+		if img == nil {
+			var err error
+			img, err = chapter.Page(pageIndex)
+			if err != nil {
+				return "", err
+			}
 		}
 		images = append(images, zoomedImage(img, zoom, scroll))
 		pageAreas = append(pageAreas, areas[slot])
