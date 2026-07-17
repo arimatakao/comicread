@@ -144,7 +144,10 @@ without an image protocol.
 ## Basic usage
 
 ```sh
-# Print command help.
+# Open the file picker and choose a file.
+comicread
+
+# Show the command help.
 comicread --help
 
 # Print the active environment settings, version, or available updates.
@@ -152,17 +155,14 @@ comicread --env
 comicread --version
 comicread --update
 
-# Set the renderer default for this command.
-COMICREAD_GRAPHICS=sixel comicread /path/to/file.cbz
-
-# Set the default page layout for this command.
-COMICREAD_VIEW=right-view comicread /path/to/file.cbz
-
-# Run the interface in Ukrainian for this command.
-COMICREAD_LANG=uk comicread /path/to/file.cbz
-
 # Open the interactive file picker in the current directory.
 comicread
+
+# Open the interactive file picker in a specific directory.
+comicread --open /path/to/manga
+
+# Ignore COMICREAD_DIR and open the file picker in the current directory.
+comicread --open
 
 # Read a CBZ archive.
 comicread /path/to/file.cbz
@@ -183,6 +183,9 @@ comicread --graphics iterm2 /path/to/file.cbz
 comicread --graphics ascii /path/to/file.cbz
 comicread --graphics dots /path/to/file.cbz
 
+# Combine an explicit renderer with a right-to-left page layout.
+comicread --graphics sixel --right-view /path/to/file.cbz
+
 # Show page pairs left to right or right to left.
 comicread --book-view /path/to/file.cbz
 comicread --right-view /path/to/file.cbz
@@ -194,6 +197,27 @@ comicread --right-circle-view /path/to/file.cbz
 # Remove saved reading progress and bookmarks for a file or directory.
 comicread --clear-journal /path/to/file.cbz
 comicread --clear-journal /path/to/image-directory
+
+# Add defaults to a shell configuration file, such as ~/.zshrc or ~/.bashrc.
+export COMICREAD_GRAPHICS=sixel
+export COMICREAD_VIEW=right-view
+export COMICREAD_LANG=en
+export COMICREAD_DIR=/path/to/manga
+
+# Set the renderer default for this command.
+COMICREAD_GRAPHICS=sixel comicread /path/to/file.cbz
+
+# Set the default page layout for this command.
+COMICREAD_VIEW=right-view comicread /path/to/file.cbz
+
+# Run the interface in Ukrainian for this command.
+COMICREAD_LANG=uk comicread /path/to/file.cbz
+
+# Set the renderer, page layout, and interface language for one command.
+COMICREAD_GRAPHICS=sixel COMICREAD_VIEW=right-view COMICREAD_LANG=uk comicread /path/to/file.cbz
+
+# Open the file picker in a manga library.
+COMICREAD_DIR=/path/to/manga comicread
 ```
 
 Environment variables:
