@@ -86,6 +86,8 @@ Si aucun fichier ou dossier n'est indiqué, un sélecteur de fichiers interactif
 
 environnement :
   COMICREAD_GRAPHICS  moteur de rendu par défaut : auto, ascii, dots, kitty, sixel ou iterm2
+  COMICREAD_PRERENDERED_NEXT      pages suivantes à pré-rendre (par défaut 1)
+  COMICREAD_PRERENDERED_PREVIOUS  pages précédentes à pré-rendre (par défaut 1)
   COMICREAD_VIEW      affichage par défaut : book-view, right-view, circle-view ou right-circle-view
   COMICREAD_LANG      langue des messages : en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk ou ka (par défaut : "en")`,
 }

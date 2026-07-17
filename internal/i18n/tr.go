@@ -86,6 +86,8 @@ Dosya veya dizin verilmezse, geçerli dizinde etkileşimli dosya seçici açıl�
 
 ortam:
   COMICREAD_GRAPHICS  varsayılan oluşturucu: auto, ascii, dots, kitty, sixel veya iterm2
+  COMICREAD_PRERENDERED_NEXT      önceden oluşturulacak sonraki sayfalar (varsayılan 1)
+  COMICREAD_PRERENDERED_PREVIOUS  önceden oluşturulacak önceki sayfalar (varsayılan 1)
   COMICREAD_VIEW      varsayılan görünüm: book-view, right-view, circle-view veya right-circle-view
   COMICREAD_LANG      ileti dili: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk veya ka (varsayılan "en")`,
 }

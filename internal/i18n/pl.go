@@ -86,6 +86,8 @@ Jeśli nie podano pliku ani katalogu, w bieżącym katalogu otworzy się interak
 
 zmienne środowiskowe:
   COMICREAD_GRAPHICS  domyślny renderer: auto, ascii, dots, kitty, sixel lub iterm2
+  COMICREAD_PRERENDERED_NEXT      kolejne strony do wstępnego renderowania (domyślnie 1)
+  COMICREAD_PRERENDERED_PREVIOUS  poprzednie strony do wstępnego renderowania (domyślnie 1)
   COMICREAD_VIEW      domyślny widok: book-view, right-view, circle-view lub right-circle-view
   COMICREAD_LANG      język komunikatów: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk lub ka (domyślnie "en")`,
 }

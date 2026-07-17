@@ -90,45 +90,63 @@ func (m *Model) renderPage() tea.Cmd {
 	}
 }
 
-// preRenderNext prepares the next visible page or spread without emitting any
-// terminal output. A later navigation can then use the render cache directly.
-func (m Model) preRenderNext() tea.Cmd {
-	if !m.canNextPage() || m.cache == nil || m.backend.Name() == "kitty" {
+// preRenderAround prepares the configured number of adjacent reader positions
+// without emitting terminal output.
+func (m Model) preRenderAround() tea.Cmd {
+	if m.cache == nil || m.backend.Name() == "kitty" {
 		return nil
 	}
 
-	next := m
-	next.page++
-	next.scroll = 0
+	targets := m.preRenderTargets()
+	if len(targets) == 0 {
+		return nil
+	}
 	requestID := m.requestID
 
 	return func() tea.Msg {
-		if next.cache.latestRequest.Load() != requestID || !next.cache.renderMu.TryLock() {
+		if m.cache.latestRequest.Load() != requestID || !m.cache.renderMu.TryLock() {
 			return pagePrefetchedMsg{}
 		}
-		defer next.cache.renderMu.Unlock()
-		if next.cache.latestRequest.Load() != requestID {
-			return pagePrefetchedMsg{}
-		}
+		defer m.cache.renderMu.Unlock()
 
-		// Keep the images decoded for layout and reuse them for this render.
-		next.updateLayout()
-		pages := next.pageSlots()
-		images := next.layoutImages
-
-		key := renderKey{
-			pages: pages, areas: next.pageAreas, width: next.width, height: next.height,
-			zoom: next.zoom, scroll: next.scroll, view: next.bookView, renderer: next.backend.Name(),
-		}
-		if _, ok := next.cache.render(key); ok {
-			return pagePrefetchedMsg{}
-		}
-		output, err := renderOutput(next.chapter, next.backend, pages, images, next.pageAreas, next.zoom, next.scroll)
-		if err == nil && next.cache.latestRequest.Load() == requestID {
-			next.cache.storeRender(key, output)
+		for _, page := range targets {
+			if m.cache.latestRequest.Load() != requestID {
+				break
+			}
+			next := m
+			next.page = page
+			next.scroll = 0
+			// Keep the images decoded for layout and reuse them for this render.
+			next.updateLayout()
+			pages := next.pageSlots()
+			images := next.layoutImages
+			key := renderKey{
+				pages: pages, areas: next.pageAreas, width: next.width, height: next.height,
+				zoom: next.zoom, scroll: next.scroll, view: next.bookView, renderer: next.backend.Name(),
+			}
+			if _, ok := m.cache.render(key); ok {
+				continue
+			}
+			output, err := renderOutput(next.chapter, next.backend, pages, images, next.pageAreas, next.zoom, next.scroll)
+			if err == nil && m.cache.latestRequest.Load() == requestID {
+				m.cache.storeRender(key, output)
+			}
 		}
 		return pagePrefetchedMsg{}
 	}
+}
+
+func (m Model) preRenderTargets() []int {
+	targets := make([]int, 0, m.preRenderNext+m.preRenderPrevious)
+	next := m
+	for count := 0; count < m.preRenderNext && next.canNextPage(); count++ {
+		next.page++
+		targets = append(targets, next.page)
+	}
+	for count, page := 0, m.page-1; count < m.preRenderPrevious && page >= 0; count, page = count+1, page-1 {
+		targets = append(targets, page)
+	}
+	return targets
 }
 
 func renderOutput(chapter comicfile.ContainerReader, renderer backend.Renderer, pages [2]int, decoded [2]image.Image, areas [2]backend.Area, zoom int, scroll float64) (string, error) {

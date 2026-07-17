@@ -86,6 +86,8 @@ q    шығу
 
 орта айнымалылары:
   COMICREAD_GRAPHICS  әдепкі рендерер: auto, ascii, dots, kitty, sixel немесе iterm2
+  COMICREAD_PRERENDERED_NEXT      алдын ала көрсетуге келесі беттер саны (әдепкі 1)
+  COMICREAD_PRERENDERED_PREVIOUS  алдын ала көрсетуге алдыңғы беттер саны (әдепкі 1)
   COMICREAD_VIEW      әдепкі режим: book-view, right-view, circle-view немесе right-circle-view
   COMICREAD_LANG   хабарлама тілі: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk немесе ka (әдепкі "en")`,
 }

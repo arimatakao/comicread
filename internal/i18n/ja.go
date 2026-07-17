@@ -86,6 +86,8 @@ q    終了
 
 環境変数:
   COMICREAD_GRAPHICS  既定のレンダラー: auto、ascii、dots、kitty、sixel、iterm2
+  COMICREAD_PRERENDERED_NEXT      事前描画する次のページ数（既定値 1）
+  COMICREAD_PRERENDERED_PREVIOUS  事前描画する前のページ数（既定値 1）
   COMICREAD_VIEW      既定の表示: book-view、right-view、circle-view、right-circle-view
   COMICREAD_LANG      メッセージの言語: en、uk、pl、de、fr、es、cs、ro、it、ko、ja、id、hi、el、tr、kk、ka (既定値 "en")`,
 }

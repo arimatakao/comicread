@@ -86,6 +86,8 @@ q    종료
 
 환경 변수:
   COMICREAD_GRAPHICS  기본 렌더러: auto, ascii, dots, kitty, sixel 또는 iterm2
+  COMICREAD_PRERENDERED_NEXT      미리 렌더링할 다음 페이지 수(기본값 1)
+  COMICREAD_PRERENDERED_PREVIOUS  미리 렌더링할 이전 페이지 수(기본값 1)
   COMICREAD_VIEW      기본 보기: book-view, right-view, circle-view 또는 right-circle-view
   COMICREAD_LANG      메시지 언어: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk 또는 ka (기본값 "en")`,
 }

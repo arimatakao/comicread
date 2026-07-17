@@ -171,7 +171,7 @@ func parseOptions(args []string) (options, error) {
 }
 
 func printEnvironment() {
-	for _, name := range []string{"COMICREAD_GRAPHICS", "COMICREAD_VIEW", "COMICREAD_LANG"} {
+	for _, name := range []string{"COMICREAD_GRAPHICS", "COMICREAD_PRERENDERED_NEXT", "COMICREAD_PRERENDERED_PREVIOUS", "COMICREAD_VIEW", "COMICREAD_LANG"} {
 		fmt.Printf("%s=%q\n", name, os.Getenv(name))
 	}
 }

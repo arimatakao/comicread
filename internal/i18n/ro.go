@@ -86,6 +86,8 @@ Dacă nu este dat niciun fișier sau director, se deschide un selector interacti
 
 mediu:
   COMICREAD_GRAPHICS  renderer implicit: auto, ascii, dots, kitty, sixel sau iterm2
+  COMICREAD_PRERENDERED_NEXT      pagini următoare pentru prerenderizare (implicit 1)
+  COMICREAD_PRERENDERED_PREVIOUS  pagini anterioare pentru prerenderizare (implicit 1)
   COMICREAD_VIEW      vizualizare implicită: book-view, right-view, circle-view sau right-circle-view
   COMICREAD_LANG      limba mesajelor: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk sau ka (implicit "en")`,
 }

@@ -2,6 +2,9 @@ package reader
 
 import (
 	"image"
+	"os"
+	"strconv"
+	"strings"
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicfile"
@@ -38,6 +41,8 @@ type Model struct {
 	journal            *journal.Journal
 	status             string
 	renderError        error
+	preRenderNext      int
+	preRenderPrevious  int
 	cache              *readerCache
 }
 
@@ -47,15 +52,34 @@ func New(title string, chapter comicfile.ContainerReader, renderer backend.Rende
 
 // NewWithBookView creates a reader using the requested page layout.
 func NewWithBookView(title string, chapter comicfile.ContainerReader, renderer backend.Renderer, bookView ViewMode) Model {
+	next, previous := preRenderCounts()
 	return Model{
-		title:    title,
-		chapter:  chapter,
-		backend:  renderer,
-		bookView: bookView,
-		zoom:     100,
-		status:   i18n.T(i18n.ReaderStatusWaitingTerminalSize),
-		cache:    newReaderCache(),
+		title:             title,
+		chapter:           chapter,
+		backend:           renderer,
+		bookView:          bookView,
+		zoom:              100,
+		status:            i18n.T(i18n.ReaderStatusWaitingTerminalSize),
+		preRenderNext:     next,
+		preRenderPrevious: previous,
+		cache:             newReaderCache(next + previous),
 	}
+}
+
+func preRenderCounts() (next, previous int) {
+	return preRenderCount("COMICREAD_PRERENDERED_NEXT"), preRenderCount("COMICREAD_PRERENDERED_PREVIOUS")
+}
+
+func preRenderCount(name string) int {
+	value := strings.TrimSpace(os.Getenv(name))
+	if value == "" {
+		return 1
+	}
+	count, err := strconv.Atoi(value)
+	if err != nil || count < 0 {
+		return 1
+	}
+	return count
 }
 
 // NewWithBookViewAndJournal creates a reader that restores and saves local
