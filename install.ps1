@@ -9,6 +9,8 @@ $InstallDir = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Programs\comicread"
 $ReinstallConfirmed = $false
 $LocaleBaseUrl = "https://raw.githubusercontent.com/$Repo/main/installer/locales"
 $Messages = @{}
+$ConfiguredOrder = @("COMICREAD_LANG", "COMICREAD_GRAPHICS", "COMICREAD_VIEW", "COMICREAD_PRERENDERED_NEXT", "COMICREAD_PRERENDERED_PREVIOUS", "COMICREAD_DIR")
+$ConfiguredValues = [ordered]@{}
 
 function ConvertFrom-Properties {
     param([string]$Content)
@@ -39,7 +41,10 @@ function Get-RemoteLocale {
 }
 
 function Initialize-InstallerLocale {
-    $language = $env:LANG
+    $language = $env:COMICREAD_LANG
+    if ([string]::IsNullOrWhiteSpace($language)) {
+        $language = $env:LANG
+    }
     if ([string]::IsNullOrWhiteSpace($language)) {
         $language = [Globalization.CultureInfo]::CurrentUICulture.TwoLetterISOLanguageName
     }
@@ -301,21 +306,43 @@ function Ensure-UserPathContains {
     return $true
 }
 
+function Clear-UserEnvironmentVariable {
+    param([string]$Name)
+
+    $existing = [Environment]::GetEnvironmentVariable($Name, "User")
+    if ([string]::IsNullOrEmpty($existing)) {
+        return $false
+    }
+    [Environment]::SetEnvironmentVariable($Name, $null, "User")
+    return $true
+}
+
+function Show-ValueOptions {
+    param([string[]]$Values)
+
+    Write-Host (T "environment.options")
+    $Values | ForEach-Object { Write-Host "  - $_" }
+}
+
 function Configure-EnvironmentValue {
     param(
         [string]$Name,
         [string]$Question,
-        [string[]]$AllowedValues
+        [string[]]$AllowedValues,
+        [scriptblock]$OptionsPrinter = { param($Values) Show-ValueOptions -Values $Values }
     )
 
+    Write-Host $Question
+    & $OptionsPrinter $AllowedValues
     while ($true) {
-        $prompt = T -Key "prompt.value" -Values @($Question, ($AllowedValues -join ' '))
-        $value = Read-Host $prompt
+        $value = Read-Host (T "prompt.select")
         if ([string]::IsNullOrWhiteSpace($value)) {
-            return $false
+            $script:ConfiguredValues.Remove($Name)
+            return Clear-UserEnvironmentVariable -Name $Name
         }
         if ($AllowedValues -contains $value) {
             [Environment]::SetEnvironmentVariable($Name, $value, "User")
+            $script:ConfiguredValues[$Name] = $value
             return $true
         }
         Write-Host (T "error.invalid_value" ($AllowedValues -join ' '))
@@ -325,16 +352,24 @@ function Configure-EnvironmentValue {
 function Configure-NonNegativeIntegerEnvironmentValue {
     param(
         [string]$Name,
-        [string]$Question
+        [string]$Question,
+        [string]$Hint = ""
     )
 
+    Write-Host $Question
+    Write-Host "  $(T "value.non_negative_integer")"
+    if (-not [string]::IsNullOrWhiteSpace($Hint)) {
+        Write-Host "  $Hint"
+    }
     while ($true) {
-        $value = Read-Host (T -Key "prompt.value" -Values @($Question, (T "value.non_negative_integer")))
+        $value = Read-Host (T "prompt.select")
         if ([string]::IsNullOrWhiteSpace($value)) {
-            return $false
+            $script:ConfiguredValues.Remove($Name)
+            return Clear-UserEnvironmentVariable -Name $Name
         }
         if ($value -match "^\d+$") {
             [Environment]::SetEnvironmentVariable($Name, $value, "User")
+            $script:ConfiguredValues[$Name] = $value
             return $true
         }
         Write-Host (T "error.invalid_value" (T "value.non_negative_integer"))
@@ -344,16 +379,24 @@ function Configure-NonNegativeIntegerEnvironmentValue {
 function Configure-DirectoryEnvironmentValue {
     param(
         [string]$Name,
-        [string]$Question
+        [string]$Question,
+        [string]$Hint = ""
     )
 
+    Write-Host $Question
+    Write-Host "  $(T "value.existing_directory")"
+    if (-not [string]::IsNullOrWhiteSpace($Hint)) {
+        Write-Host "  $Hint"
+    }
     while ($true) {
-        $value = Read-Host (T -Key "prompt.value" -Values @($Question, (T "value.existing_directory")))
+        $value = Read-Host (T "prompt.select")
         if ([string]::IsNullOrWhiteSpace($value)) {
-            return $false
+            $script:ConfiguredValues.Remove($Name)
+            return Clear-UserEnvironmentVariable -Name $Name
         }
         if (Test-Path -Path $value -PathType Container) {
             [Environment]::SetEnvironmentVariable($Name, $value, "User")
+            $script:ConfiguredValues[$Name] = $value
             return $true
         }
         Write-Host (T "error.invalid_value" (T "value.existing_directory"))
@@ -383,6 +426,39 @@ function Show-LanguageOptions {
     ) | ForEach-Object { Write-Host $_ }
 }
 
+function Show-GraphicsOptions {
+    Write-Host (T "environment.options")
+    @(
+        "environment.graphics.auto",
+        "environment.graphics.ascii",
+        "environment.graphics.dots",
+        "environment.graphics.kitty",
+        "environment.graphics.sixel",
+        "environment.graphics.iterm2"
+    ) | ForEach-Object { Write-Host "  - $(T $_)" }
+}
+
+function Show-ViewOptions {
+    Write-Host (T "environment.options")
+    @(
+        "environment.view.book",
+        "environment.view.right",
+        "environment.view.circle",
+        "environment.view.right_circle"
+    ) | ForEach-Object { Write-Host "  - $(T $_)" }
+}
+
+function Show-ConfiguredSummary {
+    if ($script:ConfiguredValues.Count -eq 0) {
+        return
+    }
+    foreach ($name in $script:ConfiguredOrder) {
+        if ($script:ConfiguredValues.Contains($name)) {
+            Write-Host "$name=`"$($script:ConfiguredValues[$name])`""
+        }
+    }
+}
+
 function Configure-Environment {
     if ($script:AutoYes -or -not (Ask-YesNo (T "environment.configure"))) {
         return $false
@@ -390,13 +466,13 @@ function Configure-Environment {
 
     Write-Host (T "environment.saved.user")
     $changed = $false
-    Show-LanguageOptions
-    if (Configure-EnvironmentValue -Name "COMICREAD_LANG" -Question (T "environment.language") -AllowedValues @("en", "uk", "pl", "de", "fr", "es", "cs", "ro", "it", "ko", "ja", "id", "hi", "el", "tr", "kk", "ka")) { $changed = $true }
-    if (Configure-EnvironmentValue -Name "COMICREAD_GRAPHICS" -Question (T "environment.graphics") -AllowedValues @("auto", "ascii", "dots", "kitty", "sixel", "iterm2")) { $changed = $true }
-    if (Configure-EnvironmentValue -Name "COMICREAD_VIEW" -Question (T "environment.view") -AllowedValues @("book-view", "right-view", "circle-view", "right-circle-view")) { $changed = $true }
-    if (Configure-NonNegativeIntegerEnvironmentValue -Name "COMICREAD_PRERENDERED_NEXT" -Question (T "environment.prerendered_next")) { $changed = $true }
-    if (Configure-NonNegativeIntegerEnvironmentValue -Name "COMICREAD_PRERENDERED_PREVIOUS" -Question (T "environment.prerendered_previous")) { $changed = $true }
-    if (Configure-DirectoryEnvironmentValue -Name "COMICREAD_DIR" -Question (T "environment.directory")) { $changed = $true }
+    if (Configure-EnvironmentValue -Name "COMICREAD_LANG" -Question (T "environment.language") -AllowedValues @("en", "uk", "pl", "de", "fr", "es", "cs", "ro", "it", "ko", "ja", "id", "hi", "el", "tr", "kk", "ka") -OptionsPrinter { param($Values) Show-LanguageOptions }) { $changed = $true }
+    if (Configure-EnvironmentValue -Name "COMICREAD_GRAPHICS" -Question (T "environment.graphics") -AllowedValues @("auto", "ascii", "dots", "kitty", "sixel", "iterm2") -OptionsPrinter { param($Values) Show-GraphicsOptions }) { $changed = $true }
+    if (Configure-EnvironmentValue -Name "COMICREAD_VIEW" -Question (T "environment.view") -AllowedValues @("book-view", "right-view", "circle-view", "right-circle-view") -OptionsPrinter { param($Values) Show-ViewOptions }) { $changed = $true }
+    if (Configure-NonNegativeIntegerEnvironmentValue -Name "COMICREAD_PRERENDERED_NEXT" -Question (T "environment.prerendered_next") -Hint (T "environment.prerendered_hint")) { $changed = $true }
+    if (Configure-NonNegativeIntegerEnvironmentValue -Name "COMICREAD_PRERENDERED_PREVIOUS" -Question (T "environment.prerendered_previous") -Hint (T "environment.prerendered_hint")) { $changed = $true }
+    if (Configure-DirectoryEnvironmentValue -Name "COMICREAD_DIR" -Question (T "environment.directory") -Hint (T "environment.directory_hint")) { $changed = $true }
+    Show-ConfiguredSummary
     return $changed
 }
 

@@ -12,10 +12,12 @@ REINSTALL_CONFIRMED="false"
 ENVIRONMENT_CHANGED="false"
 LOCALE_BASE_URL="https://raw.githubusercontent.com/${REPO}/main/installer/locales"
 LOCALE_FILE=""
+CONFIGURED_ORDER=(COMICREAD_LANG COMICREAD_GRAPHICS COMICREAD_VIEW COMICREAD_PRERENDERED_NEXT COMICREAD_PRERENDERED_PREVIOUS COMICREAD_DIR)
+declare -A CONFIGURED_VALUES=()
 
 detect_locale() {
   local locale
-  locale="${LC_ALL:-${LC_MESSAGES:-${LANG:-en}}}"
+  locale="${COMICREAD_LANG:-${LC_ALL:-${LC_MESSAGES:-${LANG:-en}}}}"
   locale="${locale%%[_@.]*}"
   printf '%s\n' "$(printf '%s' "$locale" | tr '[:upper:]' '[:lower:]')"
 }
@@ -268,6 +270,22 @@ append_shell_line() {
   grep -Fqx "$line" "$target_file" || printf '\n%s\n' "$line" >> "$target_file"
 }
 
+remove_export_line() {
+  local target_file="$1" name="$2" tmp_file
+  [ -f "$target_file" ] || return 1
+  grep -qE "^export ${name}=" "$target_file" || return 1
+  tmp_file="$(mktemp "${TMP_DIR}/shell_config.XXXXXX")"
+  grep -vE "^export ${name}=" "$target_file" > "$tmp_file"
+  mv "$tmp_file" "$target_file"
+  return 0
+}
+
+set_shell_export() {
+  local target_file="$1" name="$2" line="$3"
+  remove_export_line "$target_file" "$name" || true
+  append_shell_line "$target_file" "$line"
+}
+
 ensure_path_setup() {
   path_contains_install_dir && return 0
 
@@ -278,18 +296,23 @@ ensure_path_setup() {
 }
 
 configure_environment_value() {
-  local target_file="$1" name="$2" question="$3" values="$4"
+  local target_file="$1" name="$2" question="$3" values="$4" printer="${5:-print_value_options}"
 
+  printf '%s\n' "$question"
+  "$printer" "$values"
   while :; do
-    read_answer "$(t prompt.value "$question" "$values") "
+    read_answer "$(t prompt.select) "
     if [ -z "$ANSWER" ]; then
+      remove_export_line "$target_file" "$name" && ENVIRONMENT_CHANGED="true"
+      unset "CONFIGURED_VALUES[$name]" 2>/dev/null || true
       return
     fi
 
     case "${name}:${ANSWER}" in
       COMICREAD_GRAPHICS:auto|COMICREAD_GRAPHICS:ascii|COMICREAD_GRAPHICS:dots|COMICREAD_GRAPHICS:kitty|COMICREAD_GRAPHICS:sixel|COMICREAD_GRAPHICS:iterm2|COMICREAD_VIEW:book-view|COMICREAD_VIEW:right-view|COMICREAD_VIEW:circle-view|COMICREAD_VIEW:right-circle-view|COMICREAD_LANG:en|COMICREAD_LANG:uk|COMICREAD_LANG:pl|COMICREAD_LANG:de|COMICREAD_LANG:fr|COMICREAD_LANG:es|COMICREAD_LANG:cs|COMICREAD_LANG:ro|COMICREAD_LANG:it|COMICREAD_LANG:ko|COMICREAD_LANG:ja|COMICREAD_LANG:id|COMICREAD_LANG:hi|COMICREAD_LANG:el|COMICREAD_LANG:tr|COMICREAD_LANG:kk|COMICREAD_LANG:ka)
-        append_shell_line "$target_file" "export ${name}=${ANSWER}"
+        set_shell_export "$target_file" "$name" "export ${name}=${ANSWER}"
         ENVIRONMENT_CHANGED="true"
+        CONFIGURED_VALUES["$name"]="$ANSWER"
         return
         ;;
       *) t error.invalid_value "$values" >&2 ;;
@@ -298,18 +321,24 @@ configure_environment_value() {
 }
 
 configure_non_negative_integer() {
-  local target_file="$1" name="$2" question="$3"
+  local target_file="$1" name="$2" question="$3" hint="$4"
 
+  printf '%s\n' "$question"
+  printf '  %s\n' "$(t value.non_negative_integer)"
+  [ -z "$hint" ] || printf '  %s\n' "$hint"
   while :; do
-    read_answer "$(t prompt.value "$question" "$(t value.non_negative_integer)") "
+    read_answer "$(t prompt.select) "
     if [ -z "$ANSWER" ]; then
+      remove_export_line "$target_file" "$name" && ENVIRONMENT_CHANGED="true"
+      unset "CONFIGURED_VALUES[$name]" 2>/dev/null || true
       return
     fi
     case "$ANSWER" in
       *[!0-9]*) t error.invalid_value "$(t value.non_negative_integer)" >&2 ;;
       *)
-        append_shell_line "$target_file" "export ${name}=${ANSWER}"
+        set_shell_export "$target_file" "$name" "export ${name}=${ANSWER}"
         ENVIRONMENT_CHANGED="true"
+        CONFIGURED_VALUES["$name"]="$ANSWER"
         return
         ;;
     esac
@@ -317,16 +346,22 @@ configure_non_negative_integer() {
 }
 
 configure_directory() {
-  local target_file="$1" name="$2" question="$3"
+  local target_file="$1" name="$2" question="$3" hint="$4"
 
+  printf '%s\n' "$question"
+  printf '  %s\n' "$(t value.existing_directory)"
+  [ -z "$hint" ] || printf '  %s\n' "$hint"
   while :; do
-    read_answer "$(t prompt.value "$question" "$(t value.existing_directory)") "
+    read_answer "$(t prompt.select) "
     if [ -z "$ANSWER" ]; then
+      remove_export_line "$target_file" "$name" && ENVIRONMENT_CHANGED="true"
+      unset "CONFIGURED_VALUES[$name]" 2>/dev/null || true
       return
     fi
     if [ -d "$ANSWER" ]; then
-      append_shell_line "$target_file" "export ${name}=\"${ANSWER}\""
+      set_shell_export "$target_file" "$name" "export ${name}=\"${ANSWER}\""
       ENVIRONMENT_CHANGED="true"
+      CONFIGURED_VALUES["$name"]="$ANSWER"
       return
     fi
     t error.invalid_value "$(t value.existing_directory)" >&2
@@ -355,6 +390,44 @@ print_language_options() {
     'ქართული - ka'
 }
 
+print_value_options() {
+  local values="$1" value
+  t environment.options
+  for value in $values; do
+    printf '  - %s\n' "$value"
+  done
+}
+
+print_graphics_options() {
+  t environment.options
+  printf '  - %s\n' \
+    "$(t environment.graphics.auto)" \
+    "$(t environment.graphics.ascii)" \
+    "$(t environment.graphics.dots)" \
+    "$(t environment.graphics.kitty)" \
+    "$(t environment.graphics.sixel)" \
+    "$(t environment.graphics.iterm2)"
+}
+
+print_view_options() {
+  t environment.options
+  printf '  - %s\n' \
+    "$(t environment.view.book)" \
+    "$(t environment.view.right)" \
+    "$(t environment.view.circle)" \
+    "$(t environment.view.right_circle)"
+}
+
+print_configured_summary() {
+  local name
+
+  [ "${#CONFIGURED_VALUES[@]}" -gt 0 ] || return
+  for name in "${CONFIGURED_ORDER[@]}"; do
+    [ -n "${CONFIGURED_VALUES[$name]+x}" ] || continue
+    printf '%s="%s"\n' "$name" "${CONFIGURED_VALUES[$name]}"
+  done
+}
+
 configure_environment() {
   [ "$AUTO_YES" = "true" ] && return
   if ! ask_yes_no "$(t environment.configure)"; then
@@ -364,13 +437,13 @@ configure_environment() {
   local target_file
   target_file="$(shell_config_file)"
   t environment.saved.shell "$target_file"
-  print_language_options
-  configure_environment_value "$target_file" 'COMICREAD_LANG' "$(t environment.language)" 'en uk pl de fr es cs ro it ko ja id hi el tr kk ka'
-  configure_environment_value "$target_file" 'COMICREAD_GRAPHICS' "$(t environment.graphics)" 'auto ascii dots kitty sixel iterm2'
-  configure_environment_value "$target_file" 'COMICREAD_VIEW' "$(t environment.view)" 'book-view right-view circle-view right-circle-view'
-  configure_non_negative_integer "$target_file" 'COMICREAD_PRERENDERED_NEXT' "$(t environment.prerendered_next)"
-  configure_non_negative_integer "$target_file" 'COMICREAD_PRERENDERED_PREVIOUS' "$(t environment.prerendered_previous)"
-  configure_directory "$target_file" 'COMICREAD_DIR' "$(t environment.directory)"
+  configure_environment_value "$target_file" 'COMICREAD_LANG' "$(t environment.language)" 'en uk pl de fr es cs ro it ko ja id hi el tr kk ka' print_language_options
+  configure_environment_value "$target_file" 'COMICREAD_GRAPHICS' "$(t environment.graphics)" 'auto ascii dots kitty sixel iterm2' print_graphics_options
+  configure_environment_value "$target_file" 'COMICREAD_VIEW' "$(t environment.view)" 'book-view right-view circle-view right-circle-view' print_view_options
+  configure_non_negative_integer "$target_file" 'COMICREAD_PRERENDERED_NEXT' "$(t environment.prerendered_next)" "$(t environment.prerendered_hint)"
+  configure_non_negative_integer "$target_file" 'COMICREAD_PRERENDERED_PREVIOUS' "$(t environment.prerendered_previous)" "$(t environment.prerendered_hint)"
+  configure_directory "$target_file" 'COMICREAD_DIR' "$(t environment.directory)" "$(t environment.directory_hint)"
+  print_configured_summary
 }
 
 install_binary() {
