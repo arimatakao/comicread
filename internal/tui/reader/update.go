@@ -262,7 +262,7 @@ func (m *Model) previousPage() bool {
 const (
 	zoomStep   = 25
 	maxZoom    = 400
-	scrollStep = 0.1
+	scrollStep = 0.2
 )
 
 func (m *Model) zoomIn() bool {
