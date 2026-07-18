@@ -38,6 +38,7 @@ DO NOT:
 - Add new external dependencies/packages
 - Update/add tests (*_test.go)
 - Update i18n for languages other than en.
+- Run `comicread` binary or scripts.
 
 Do these only if the user explicitly asks for it.
 
