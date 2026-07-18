@@ -261,6 +261,7 @@ Add these to your shell configuration file (such as `.bashrc`, `.zshrc`, or `.pr
 | `b` | Add or remove a bookmark on the current page |
 | `v` then `left` or `right` | Go to the previous or next bookmark |
 | `c` then `v` | Open the bookmark list |
+| `g` then digits, `Enter` | Go to a page number (`Esc` cancels) |
 | `?` | Open or close help |
 | `q`, `Esc`, `Ctrl+C` | Quit |
 
