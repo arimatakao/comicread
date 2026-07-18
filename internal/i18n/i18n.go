@@ -40,6 +40,7 @@ const (
 	ReaderStatusRenderError         = "reader.status.render_error"
 	ReaderStatusMaximumZoom         = "reader.status.maximum_zoom"
 	ReaderStatusMinimumZoom         = "reader.status.minimum_zoom"
+	ReaderStatusInvalidPage         = "reader.status.invalid_page"
 
 	ReaderViewTerminalTooSmall = "reader.view.terminal_too_small"
 	ReaderViewWindowTitle      = "reader.view.window_title"
@@ -50,6 +51,7 @@ const (
 	ReaderViewBookmarks        = "reader.view.bookmarks"
 	ReaderViewNoBookmarks      = "reader.view.no_bookmarks"
 	ReaderViewBookmarksHelp    = "reader.view.bookmarks_help"
+	ReaderViewGoToPage         = "reader.view.go_to_page"
 
 	FilepickerHeader        = "filepicker.header"
 	FilepickerNoEntries     = "filepicker.no_entries"

@@ -8,6 +8,7 @@ var kaMessages = map[string]string{
 	ReaderStatusRenderError:         "რენდერის შეცდომა: %v",
 	ReaderStatusMaximumZoom:         "მაქსიმალური მასშტაბი",
 	ReaderStatusMinimumZoom:         "მინიმალური მასშტაბი",
+	ReaderStatusInvalidPage:         "გვერდის არასწორი ნომერი",
 
 	ReaderViewTerminalTooSmall: "comicread: ტერმინალის ფანჯარა ძალიან პატარაა",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var kaMessages = map[string]string{
 	ReaderViewBookmarks:        "სანიშნეები",
 	ReaderViewNoBookmarks:      "(სანიშნეები არ არის)",
 	ReaderViewBookmarksHelp:    "↑/↓ გადაადგილება | enter გახსნა | esc დახურვა",
+	ReaderViewGoToPage:         "გვერდზე გადასვლა: %s",
 	ReaderViewHelp: `კლავიშები
 
 ← →  წინა / შემდეგი გვერდი
@@ -25,6 +27,7 @@ var kaMessages = map[string]string{
 b    სანიშნის დამატება / წაშლა
 v ← → წინა / შემდეგი სანიშნე
 c v  სანიშნეები
+g123 enter  გვერდზე გადასვლა
 q    გასვლა
 
 ?    დახმარების დახურვა`,

@@ -8,6 +8,7 @@ var esMessages = map[string]string{
 	ReaderStatusRenderError:         "error de renderizado: %v",
 	ReaderStatusMaximumZoom:         "zoom máximo",
 	ReaderStatusMinimumZoom:         "zoom mínimo",
+	ReaderStatusInvalidPage:         "número de página no válido",
 
 	ReaderViewTerminalTooSmall: "comicread: la ventana del terminal es demasiado pequeña",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var esMessages = map[string]string{
 	ReaderViewBookmarks:        "Marcadores",
 	ReaderViewNoBookmarks:      "(sin marcadores)",
 	ReaderViewBookmarksHelp:    "arriba/abajo mover | enter abrir | esc cerrar",
+	ReaderViewGoToPage:         "Ir a la página: %s",
 	ReaderViewHelp: `Teclas
 
 ← →  página anterior / siguiente
@@ -25,6 +27,7 @@ var esMessages = map[string]string{
 b    añadir / quitar marcador
 v ← → marcador anterior / siguiente
 c v  marcadores
+g123 enter  ir a la página
 q    salir
 
 ?    cerrar ayuda`,

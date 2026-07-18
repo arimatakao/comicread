@@ -8,6 +8,7 @@ var jaMessages = map[string]string{
 	ReaderStatusRenderError:         "描画エラー: %v",
 	ReaderStatusMaximumZoom:         "最大ズーム",
 	ReaderStatusMinimumZoom:         "最小ズーム",
+	ReaderStatusInvalidPage:         "無効なページ番号です",
 
 	ReaderViewTerminalTooSmall: "comicread: 端末ウィンドウが小さすぎます",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var jaMessages = map[string]string{
 	ReaderViewBookmarks:        "ブックマーク",
 	ReaderViewNoBookmarks:      "(ブックマークなし)",
 	ReaderViewBookmarksHelp:    "↑/↓ 移動 | enter 開く | esc 閉じる",
+	ReaderViewGoToPage:         "ページへ移動: %s",
 	ReaderViewHelp: `キー
 
 ← →  前 / 次のページ
@@ -25,6 +27,7 @@ var jaMessages = map[string]string{
 b    ブックマークを追加 / 削除
 v ← → 前 / 次のブックマーク
 c v  ブックマーク
+g123 enter  ページへ移動
 q    終了
 
 ?    ヘルプを閉じる`,

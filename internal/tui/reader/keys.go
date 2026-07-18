@@ -18,6 +18,7 @@ const (
 	actionScrollUp
 	actionZoomIn
 	actionZoomOut
+	actionGoToPagePrefix
 )
 
 // keyAction maps a key press to the reader action it is bound to.
@@ -33,6 +34,8 @@ func keyAction(msg tea.KeyPressMsg) action {
 		return actionBookmarkPrefix
 	case "c":
 		return actionBookmarkListPrefix
+	case "g":
+		return actionGoToPagePrefix
 	case "right", "l", "space", "pgdown", "j":
 		return actionNext
 	case "left", "h", "backspace", "pgup", "k":

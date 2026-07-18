@@ -8,6 +8,7 @@ var itMessages = map[string]string{
 	ReaderStatusRenderError:         "errore di rendering: %v",
 	ReaderStatusMaximumZoom:         "zoom massimo",
 	ReaderStatusMinimumZoom:         "zoom minimo",
+	ReaderStatusInvalidPage:         "numero di pagina non valido",
 
 	ReaderViewTerminalTooSmall: "comicread: la finestra del terminale è troppo piccola",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var itMessages = map[string]string{
 	ReaderViewBookmarks:        "Segnalibri",
 	ReaderViewNoBookmarks:      "(nessun segnalibro)",
 	ReaderViewBookmarksHelp:    "su/giù sposta | enter apri | esc chiudi",
+	ReaderViewGoToPage:         "Vai alla pagina: %s",
 	ReaderViewHelp: `Tasti
 
 ← →  pagina precedente / successiva
@@ -25,6 +27,7 @@ var itMessages = map[string]string{
 b    aggiungi / rimuovi segnalibro
 v ← → segnalibro precedente / successivo
 c v  segnalibri
+g123 enter  vai alla pagina
 q    esci
 
 ?    chiudi l'aiuto`,

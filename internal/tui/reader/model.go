@@ -38,6 +38,8 @@ type Model struct {
 	bookmarkListPrefix bool
 	bookmarkIndex      int
 	bookmarks          []int
+	gotoPagePrefix     bool
+	gotoPageInput      string
 	journal            *journal.Journal
 	status             string
 	renderError        error

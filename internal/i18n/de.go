@@ -8,6 +8,7 @@ var deMessages = map[string]string{
 	ReaderStatusRenderError:         "Darstellungsfehler: %v",
 	ReaderStatusMaximumZoom:         "maximale Vergrößerung",
 	ReaderStatusMinimumZoom:         "minimale Vergrößerung",
+	ReaderStatusInvalidPage:         "ungültige Seitenzahl",
 
 	ReaderViewTerminalTooSmall: "comicread: Terminalfenster ist zu klein",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var deMessages = map[string]string{
 	ReaderViewBookmarks:        "Lesezeichen",
 	ReaderViewNoBookmarks:      "(keine Lesezeichen)",
 	ReaderViewBookmarksHelp:    "hoch/runter bewegen | enter öffnen | esc schließen",
+	ReaderViewGoToPage:         "Zu Seite springen: %s",
 	ReaderViewHelp: `Tasten
 
 ← →  vorherige / nächste Seite
@@ -25,6 +27,7 @@ var deMessages = map[string]string{
 b    Lesezeichen hinzufügen / entfernen
 v ← → vorheriges / nächstes Lesezeichen
 c v  Lesezeichen
+g123 enter  zu Seite springen
 q    beenden
 
 ?    Hilfe schließen`,

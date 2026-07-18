@@ -8,6 +8,7 @@ var frMessages = map[string]string{
 	ReaderStatusRenderError:         "erreur de rendu : %v",
 	ReaderStatusMaximumZoom:         "zoom maximal",
 	ReaderStatusMinimumZoom:         "zoom minimal",
+	ReaderStatusInvalidPage:         "numéro de page invalide",
 
 	ReaderViewTerminalTooSmall: "comicread : la fenêtre du terminal est trop petite",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var frMessages = map[string]string{
 	ReaderViewBookmarks:        "Signets",
 	ReaderViewNoBookmarks:      "(aucun signet)",
 	ReaderViewBookmarksHelp:    "haut/bas déplacer | enter ouvrir | esc fermer",
+	ReaderViewGoToPage:         "Aller à la page : %s",
 	ReaderViewHelp: `Touches
 
 ← →  page précédente / suivante
@@ -25,6 +27,7 @@ var frMessages = map[string]string{
 b    ajouter / supprimer un signet
 v ← → signet précédent / suivant
 c v  signets
+g123 enter  aller à la page
 q    quitter
 
 ?    fermer l'aide`,

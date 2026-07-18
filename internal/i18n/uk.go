@@ -8,6 +8,7 @@ var ukMessages = map[string]string{
 	ReaderStatusRenderError:         "помилка рендерингу: %v",
 	ReaderStatusMaximumZoom:         "максимальне збільшення",
 	ReaderStatusMinimumZoom:         "мінімальне збільшення",
+	ReaderStatusInvalidPage:         "неправильний номер сторінки",
 
 	ReaderViewTerminalTooSmall: "comicread: вікно термінала замале",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var ukMessages = map[string]string{
 	ReaderViewBookmarks:        "Закладки",
 	ReaderViewNoBookmarks:      "(немає закладок)",
 	ReaderViewBookmarksHelp:    "вгору/вниз рух | enter відкрити | esc закрити",
+	ReaderViewGoToPage:         "Перейти до сторінки: %s",
 	ReaderViewHelp: `Клавіші
 
 ← →  попередня / наступна сторінка
@@ -25,6 +27,7 @@ var ukMessages = map[string]string{
 b    додати / видалити закладку
 v ← → попередня / наступна закладка
 c v  закладки
+g123 enter  перейти до сторінки
 q    вихід
 
 ?    закрити довідку`,

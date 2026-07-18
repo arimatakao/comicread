@@ -8,6 +8,7 @@ var plMessages = map[string]string{
 	ReaderStatusRenderError:         "błąd renderowania: %v",
 	ReaderStatusMaximumZoom:         "maksymalne powiększenie",
 	ReaderStatusMinimumZoom:         "minimalne powiększenie",
+	ReaderStatusInvalidPage:         "nieprawidłowy numer strony",
 
 	ReaderViewTerminalTooSmall: "comicread: okno terminala jest za małe",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var plMessages = map[string]string{
 	ReaderViewBookmarks:        "Zakładki",
 	ReaderViewNoBookmarks:      "(brak zakładek)",
 	ReaderViewBookmarksHelp:    "góra/dół ruch | enter otwórz | esc zamknij",
+	ReaderViewGoToPage:         "Przejdź do strony: %s",
 	ReaderViewHelp: `Klawisze
 
 ← →  poprzednia / następna strona
@@ -25,6 +27,7 @@ var plMessages = map[string]string{
 b    dodaj / usuń zakładkę
 v ← → poprzednia / następna zakładka
 c v  zakładki
+g123 enter  przejdź do strony
 q    wyjście
 
 ?    zamknij pomoc`,

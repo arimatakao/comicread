@@ -8,6 +8,7 @@ var elMessages = map[string]string{
 	ReaderStatusRenderError:         "σφάλμα απόδοσης: %v",
 	ReaderStatusMaximumZoom:         "μέγιστη μεγέθυνση",
 	ReaderStatusMinimumZoom:         "ελάχιστη μεγέθυνση",
+	ReaderStatusInvalidPage:         "μη έγκυρος αριθμός σελίδας",
 
 	ReaderViewTerminalTooSmall: "comicread: το παράθυρο του τερματικού είναι πολύ μικρό",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var elMessages = map[string]string{
 	ReaderViewBookmarks:        "Σελιδοδείκτες",
 	ReaderViewNoBookmarks:      "(δεν υπάρχουν σελιδοδείκτες)",
 	ReaderViewBookmarksHelp:    "πάνω/κάτω μετακίνηση | enter άνοιγμα | esc κλείσιμο",
+	ReaderViewGoToPage:         "Μετάβαση στη σελίδα: %s",
 	ReaderViewHelp: `Πλήκτρα
 
 ← →  προηγούμενη / επόμενη σελίδα
@@ -25,6 +27,7 @@ var elMessages = map[string]string{
 b    προσθήκη / αφαίρεση σελιδοδείκτη
 v ← → προηγούμενος / επόμενος σελιδοδείκτης
 c v  σελιδοδείκτες
+g123 enter  μετάβαση σε σελίδα
 q    έξοδος
 
 ?    κλείσιμο βοήθειας`,

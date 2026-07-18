@@ -1,6 +1,8 @@
 package reader
 
 import (
+	"strconv"
+
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicread/internal/backend"
 	"github.com/arimatakao/comicread/internal/i18n"
@@ -65,6 +67,9 @@ func (m Model) handleKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	if m.showingBookmarks {
 		return m.handleBookmarksKey(msg.String())
 	}
+	if m.gotoPagePrefix {
+		return m.handleGoToPageKey(msg)
+	}
 
 	act := keyAction(msg)
 	switch {
@@ -115,6 +120,10 @@ func (m Model) handleReaderAction(act action) (tea.Model, tea.Cmd) {
 	case actionBookmark:
 		m.toggleBookmark()
 
+	case actionGoToPagePrefix:
+		m.gotoPagePrefix = true
+		m.gotoPageInput = ""
+
 	case actionZoomIn:
 		if m.zoomIn() {
 			return m, m.rerender()
@@ -150,6 +159,38 @@ func (m Model) handleReaderAction(act action) (tea.Model, tea.Cmd) {
 		m.status = i18n.T(i18n.ReaderStatusFirstPage)
 	}
 
+	return m, nil
+}
+
+// handleGoToPageKey handles key presses while the user is typing a page
+// number to jump to (triggered by "g", confirmed with enter).
+func (m Model) handleGoToPageKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
+	switch msg.String() {
+	case "esc":
+		m.gotoPagePrefix = false
+		m.gotoPageInput = ""
+
+	case "enter":
+		m.gotoPagePrefix = false
+		page, err := strconv.Atoi(m.gotoPageInput)
+		m.gotoPageInput = ""
+		if err != nil || !m.setPageNumber(page) {
+			m.status = i18n.T(i18n.ReaderStatusInvalidPage)
+			return m, nil
+		}
+		m.saveCurrentPage()
+		return m, m.rerender()
+
+	case "backspace":
+		if len(m.gotoPageInput) > 0 {
+			m.gotoPageInput = m.gotoPageInput[:len(m.gotoPageInput)-1]
+		}
+
+	default:
+		if len(msg.Text) == 1 && msg.Text[0] >= '0' && msg.Text[0] <= '9' && len(m.gotoPageInput) < 7 {
+			m.gotoPageInput += msg.Text
+		}
+	}
 	return m, nil
 }
 

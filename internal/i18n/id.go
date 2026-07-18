@@ -8,6 +8,7 @@ var idMessages = map[string]string{
 	ReaderStatusRenderError:         "kesalahan perenderan: %v",
 	ReaderStatusMaximumZoom:         "zoom maksimum",
 	ReaderStatusMinimumZoom:         "zoom minimum",
+	ReaderStatusInvalidPage:         "nomor halaman tidak valid",
 
 	ReaderViewTerminalTooSmall: "comicread: jendela terminal terlalu kecil",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var idMessages = map[string]string{
 	ReaderViewBookmarks:        "Bookmark",
 	ReaderViewNoBookmarks:      "(tidak ada bookmark)",
 	ReaderViewBookmarksHelp:    "atas/bawah pindah | enter buka | esc tutup",
+	ReaderViewGoToPage:         "Pergi ke halaman: %s",
 	ReaderViewHelp: `Tombol
 
 ← →  halaman sebelumnya / berikutnya
@@ -25,6 +27,7 @@ var idMessages = map[string]string{
 b    tambah / hapus bookmark
 v ← → bookmark sebelumnya / berikutnya
 c v  bookmark
+g123 enter  pergi ke halaman
 q    keluar
 
 ?    tutup bantuan`,

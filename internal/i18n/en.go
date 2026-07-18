@@ -8,6 +8,7 @@ var enMessages = map[string]string{
 	ReaderStatusRenderError:         "render error: %v",
 	ReaderStatusMaximumZoom:         "maximum zoom",
 	ReaderStatusMinimumZoom:         "minimum zoom",
+	ReaderStatusInvalidPage:         "invalid page number",
 
 	ReaderViewTerminalTooSmall: "comicread: terminal window is too small",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var enMessages = map[string]string{
 	ReaderViewBookmarks:        "Bookmarks",
 	ReaderViewNoBookmarks:      "(no bookmarks)",
 	ReaderViewBookmarksHelp:    "up/down move | enter open | esc close",
+	ReaderViewGoToPage:         "Go to page: %s",
 	ReaderViewHelp: `Keys
 
 ← →  previous / next page
@@ -25,6 +27,7 @@ var enMessages = map[string]string{
 b    add / remove bookmark
 v ← → previous / next bookmark
 c v  bookmarks
+g123 enter  go to page
 q    quit
 
 ?    close help`,

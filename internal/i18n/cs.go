@@ -8,6 +8,7 @@ var csMessages = map[string]string{
 	ReaderStatusRenderError:         "chyba vykreslení: %v",
 	ReaderStatusMaximumZoom:         "maximální přiblížení",
 	ReaderStatusMinimumZoom:         "minimální přiblížení",
+	ReaderStatusInvalidPage:         "neplatné číslo stránky",
 
 	ReaderViewTerminalTooSmall: "comicread: okno terminálu je příliš malé",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var csMessages = map[string]string{
 	ReaderViewBookmarks:        "Záložky",
 	ReaderViewNoBookmarks:      "(žádné záložky)",
 	ReaderViewBookmarksHelp:    "↑/↓ pohyb | enter otevřít | esc zavřít",
+	ReaderViewGoToPage:         "Přejít na stránku: %s",
 	ReaderViewHelp: `Klávesy
 
 ← →  předchozí / další strana
@@ -25,6 +27,7 @@ var csMessages = map[string]string{
 b    přidat / odstranit záložku
 v ← → předchozí / další záložka
 c v  záložky
+g123 enter  přejít na stránku
 q    ukončit
 
 ?    zavřít nápovědu`,

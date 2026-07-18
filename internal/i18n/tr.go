@@ -8,6 +8,7 @@ var trMessages = map[string]string{
 	ReaderStatusRenderError:         "oluşturma hatası: %v",
 	ReaderStatusMaximumZoom:         "en yüksek yakınlaştırma",
 	ReaderStatusMinimumZoom:         "en düşük yakınlaştırma",
+	ReaderStatusInvalidPage:         "geçersiz sayfa numarası",
 
 	ReaderViewTerminalTooSmall: "comicread: terminal penceresi çok küçük",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var trMessages = map[string]string{
 	ReaderViewBookmarks:        "Yer imleri",
 	ReaderViewNoBookmarks:      "(yer imi yok)",
 	ReaderViewBookmarksHelp:    "yukarı/aşağı hareket | enter aç | esc kapat",
+	ReaderViewGoToPage:         "Sayfaya git: %s",
 	ReaderViewHelp: `Tuşlar
 
 ← →  önceki / sonraki sayfa
@@ -25,6 +27,7 @@ var trMessages = map[string]string{
 b    yer imi ekle / kaldır
 v ← → önceki / sonraki yer imi
 c v  yer imleri
+g123 enter  sayfaya git
 q    çıkış
 
 ?    yardımı kapat`,

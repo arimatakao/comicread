@@ -8,6 +8,7 @@ var roMessages = map[string]string{
 	ReaderStatusRenderError:         "eroare de randare: %v",
 	ReaderStatusMaximumZoom:         "zoom maxim",
 	ReaderStatusMinimumZoom:         "zoom minim",
+	ReaderStatusInvalidPage:         "număr de pagină nevalid",
 
 	ReaderViewTerminalTooSmall: "comicread: fereastra terminalului este prea mică",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var roMessages = map[string]string{
 	ReaderViewBookmarks:        "Semne de carte",
 	ReaderViewNoBookmarks:      "(fără semne de carte)",
 	ReaderViewBookmarksHelp:    "sus/jos mută | enter deschide | esc închide",
+	ReaderViewGoToPage:         "Mergi la pagina: %s",
 	ReaderViewHelp: `Taste
 
 ← →  pagina anterioară / următoare
@@ -25,6 +27,7 @@ var roMessages = map[string]string{
 b    adaugă / elimină semn de carte
 v ← → semnul de carte anterior / următor
 c v  semne de carte
+g123 enter  mergi la pagina
 q    ieșire
 
 ?    închide ajutorul`,

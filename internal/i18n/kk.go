@@ -8,6 +8,7 @@ var kkMessages = map[string]string{
 	ReaderStatusRenderError:         "рендеринг қатесі: %v",
 	ReaderStatusMaximumZoom:         "ең үлкен масштаб",
 	ReaderStatusMinimumZoom:         "ең кіші масштаб",
+	ReaderStatusInvalidPage:         "бет нөмірі жарамсыз",
 
 	ReaderViewTerminalTooSmall: "comicread: терминал терезесі тым кіші",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var kkMessages = map[string]string{
 	ReaderViewBookmarks:        "Бетбелгілер",
 	ReaderViewNoBookmarks:      "(бетбелгілер жоқ)",
 	ReaderViewBookmarksHelp:    "↑/↓ жылжу | enter ашу | esc жабу",
+	ReaderViewGoToPage:         "Бетке өту: %s",
 	ReaderViewHelp: `Пернелер
 
 ← →  алдыңғы / келесі бет
@@ -25,6 +27,7 @@ var kkMessages = map[string]string{
 b    бетбелгі қосу / жою
 v ← → алдыңғы / келесі бетбелгі
 c v  бетбелгілер
+g123 enter  бетке өту
 q    шығу
 
 ?    анықтаманы жабу`,

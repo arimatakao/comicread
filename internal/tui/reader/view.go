@@ -29,6 +29,10 @@ func (m Model) content() string {
 }
 
 func (m Model) header() string {
+	if m.gotoPagePrefix {
+		return fitLine(i18n.T(i18n.ReaderViewGoToPage, m.gotoPageInput), m.width)
+	}
+
 	page := m.pageLabel()
 	pageWidth := len([]rune(page))
 	if pageWidth > m.width {

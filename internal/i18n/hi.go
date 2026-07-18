@@ -8,6 +8,7 @@ var hiMessages = map[string]string{
 	ReaderStatusRenderError:         "रेंडरिंग त्रुटि: %v",
 	ReaderStatusMaximumZoom:         "अधिकतम ज़ूम",
 	ReaderStatusMinimumZoom:         "न्यूनतम ज़ूम",
+	ReaderStatusInvalidPage:         "अमान्य पृष्ठ संख्या",
 
 	ReaderViewTerminalTooSmall: "comicread: टर्मिनल विंडो बहुत छोटी है",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var hiMessages = map[string]string{
 	ReaderViewBookmarks:        "बुकमार्क",
 	ReaderViewNoBookmarks:      "(कोई बुकमार्क नहीं)",
 	ReaderViewBookmarksHelp:    "ऊपर/नीचे चलें | enter खोलें | esc बंद करें",
+	ReaderViewGoToPage:         "पृष्ठ पर जाएँ: %s",
 	ReaderViewHelp: `कुंजियाँ
 
 ← →  पिछला / अगला पृष्ठ
@@ -25,6 +27,7 @@ var hiMessages = map[string]string{
 b    बुकमार्क जोड़ें / हटाएँ
 v ← → पिछला / अगला बुकमार्क
 c v  बुकमार्क
+g123 enter  पृष्ठ पर जाएँ
 q    बाहर निकलें
 
 ?    सहायता बंद करें`,

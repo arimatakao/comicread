@@ -8,6 +8,7 @@ var koMessages = map[string]string{
 	ReaderStatusRenderError:         "렌더링 오류: %v",
 	ReaderStatusMaximumZoom:         "최대 확대",
 	ReaderStatusMinimumZoom:         "최소 확대",
+	ReaderStatusInvalidPage:         "잘못된 페이지 번호",
 
 	ReaderViewTerminalTooSmall: "comicread: 터미널 창이 너무 작습니다",
 	ReaderViewWindowTitle:      "comicread — %s",
@@ -17,6 +18,7 @@ var koMessages = map[string]string{
 	ReaderViewBookmarks:        "북마크",
 	ReaderViewNoBookmarks:      "(북마크 없음)",
 	ReaderViewBookmarksHelp:    "위/아래 이동 | enter 열기 | esc 닫기",
+	ReaderViewGoToPage:         "페이지로 이동: %s",
 	ReaderViewHelp: `키
 
 ← →  이전 / 다음 페이지
@@ -25,6 +27,7 @@ var koMessages = map[string]string{
 b    북마크 추가 / 제거
 v ← → 이전 / 다음 북마크
 c v  북마크
+g123 enter  페이지로 이동
 q    종료
 
 ?    도움말 닫기`,
