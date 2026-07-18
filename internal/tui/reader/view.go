@@ -33,14 +33,14 @@ func (m Model) header() string {
 		return fitLine(i18n.T(i18n.ReaderViewGoToPage, m.gotoPageInput), m.width)
 	}
 
-	page := m.pageLabel()
+	page := m.progressBar()
 	pageWidth := len([]rune(page))
 	if pageWidth > m.width {
-		return m.withBookmarkMarker(fitLine(page, m.width))
+		return fitLine(page, m.width)
 	}
 
 	if !m.rendering {
-		return m.withBookmarkMarker(strings.Repeat(" ", (m.width-pageWidth)/2) + page)
+		return strings.Repeat(" ", (m.width-pageWidth)/2) + page
 	}
 
 	status := i18n.T(i18n.ReaderViewRendering)
@@ -48,22 +48,10 @@ func (m Model) header() string {
 	pageStart := (m.width - pageWidth) / 2
 	statusStart := m.width - statusWidth
 	if pageStart+pageWidth >= statusStart {
-		return m.withBookmarkMarker(strings.Repeat(" ", pageStart) + page)
+		return strings.Repeat(" ", pageStart) + page
 	}
 
-	return m.withBookmarkMarker(strings.Repeat(" ", pageStart) + page + strings.Repeat(" ", statusStart-pageStart-pageWidth) + status)
-}
-
-func (m Model) withBookmarkMarker(line string) string {
-	if !m.isCurrentPageBookmarked() || m.width < 1 {
-		return line
-	}
-	runes := []rune(line)
-	if len(runes) == 0 {
-		return "*"
-	}
-	runes[0] = '*'
-	return string(runes)
+	return strings.Repeat(" ", pageStart) + page + strings.Repeat(" ", statusStart-pageStart-pageWidth) + status
 }
 
 func (m Model) bookmarkList() string {
@@ -89,24 +77,42 @@ func (m Model) bookmarkList() string {
 	return content.String()
 }
 
-func (m Model) pageLabel() string {
-	slots := m.pageSlots()
-	first, last := -1, -1
-	for _, page := range slots {
-		if page < 0 {
-			continue
-		}
-		if first < 0 || page < first {
-			first = page
-		}
-		if last < 0 || page > last {
-			last = page
+func (m Model) progressBar() string {
+	total := m.chapter.TotalPages()
+	current := m.currentPageNumber()
+	if total < 1 || current < 1 {
+		return ""
+	}
+
+	const maxBarWidth = 14
+	left, right := strconv.Itoa(current), strconv.Itoa(total)
+	barWidth := min(maxBarWidth, max(1, m.width-len([]rune(left))-len([]rune(right))-5))
+	var bar strings.Builder
+	bar.Grow(barWidth + 2)
+	bar.WriteRune('╟')
+	for cell := range barWidth {
+		firstPage := cell*total/barWidth + 1
+		lastPage := min(total, (cell+1)*total/barWidth)
+		switch {
+		case m.hasBookmarkInRange(firstPage, lastPage):
+			bar.WriteRune('^')
+		case firstPage <= current:
+			bar.WriteRune('─')
+		default:
+			bar.WriteRune('·')
 		}
 	}
-	if first == last {
-		return i18n.T(i18n.ReaderViewPages, first+1, m.chapter.TotalPages())
+	bar.WriteRune('╢')
+	return left + " " + bar.String() + " " + right
+}
+
+func (m Model) hasBookmarkInRange(first, last int) bool {
+	for _, bookmark := range m.bookmarks {
+		if bookmark >= first && bookmark <= last {
+			return true
+		}
 	}
-	return i18n.T(i18n.ReaderViewPageRange, first+1, last+1, m.chapter.TotalPages())
+	return false
 }
 
 func fitLine(value string, width int) string {
