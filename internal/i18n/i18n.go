@@ -102,7 +102,7 @@ const (
 	CLIUsageFull                    = "cli.usage_full"
 )
 
-var current = detect()
+var currentMessages = messagesFor(detect())
 
 // detect picks a language from the COMICREAD_LANG environment variable,
 // falling back to English.
@@ -118,16 +118,16 @@ func detect() Lang {
 
 // SetLang overrides the active language (used mainly for testing/tools).
 func SetLang(lang Lang) {
-	current = lang
+	currentMessages = messagesFor(lang)
 }
 
 // T returns the message for key in the active language, formatting it with
 // args via fmt.Sprintf when args are given. It falls back to English, then
 // to the key itself, if a translation is missing.
 func T(key string, args ...any) string {
-	msg, ok := messages[current][key]
+	msg, ok := currentMessages[key]
 	if !ok {
-		msg, ok = messages[English][key]
+		msg, ok = enMessages[key]
 	}
 	if !ok {
 		msg = key
@@ -138,27 +138,53 @@ func T(key string, args ...any) string {
 	return fmt.Sprintf(msg, args...)
 }
 
-var messages = map[Lang]map[string]string{
-	English:    enMessages,
-	Ukrainian:  ukMessages,
-	Polish:     plMessages,
-	German:     deMessages,
-	French:     frMessages,
-	Spanish:    esMessages,
-	Czech:      csMessages,
-	Romanian:   roMessages,
-	Italian:    itMessages,
-	Korean:     koMessages,
-	Japanese:   jaMessages,
-	Indonesian: idMessages,
-	Hindi:      hiMessages,
-	Greek:      elMessages,
-	Turkish:    trMessages,
-	Kazakh:     kkMessages,
-	Georgian:   kaMessages,
-	Hungarian:  huMessages,
-	Swedish:    svMessages,
-	Norwegian:  noMessages,
-	Danish:     daMessages,
-	Finnish:    fiMessages,
+// messagesFor returns the translation catalog for lang. A switch keeps the
+// catalogs explicit without an additional language-to-catalog map.
+func messagesFor(lang Lang) map[string]string {
+	switch lang {
+	case Ukrainian:
+		return ukMessages
+	case Polish:
+		return plMessages
+	case German:
+		return deMessages
+	case French:
+		return frMessages
+	case Spanish:
+		return esMessages
+	case Czech:
+		return csMessages
+	case Romanian:
+		return roMessages
+	case Italian:
+		return itMessages
+	case Korean:
+		return koMessages
+	case Japanese:
+		return jaMessages
+	case Indonesian:
+		return idMessages
+	case Hindi:
+		return hiMessages
+	case Greek:
+		return elMessages
+	case Turkish:
+		return trMessages
+	case Kazakh:
+		return kkMessages
+	case Georgian:
+		return kaMessages
+	case Hungarian:
+		return huMessages
+	case Swedish:
+		return svMessages
+	case Norwegian:
+		return noMessages
+	case Danish:
+		return daMessages
+	case Finnish:
+		return fiMessages
+	default:
+		return enMessages
+	}
 }
