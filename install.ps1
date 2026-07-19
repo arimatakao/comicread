@@ -422,7 +422,12 @@ function Show-LanguageOptions {
         "Ελληνικά - el",
         "Türkçe - tr",
         "Қазақша - kk",
-        "ქართული - ka"
+        "ქართული - ka",
+        "Magyar - hu",
+        "Svenska - sv",
+        "Norsk - no",
+        "Dansk - da",
+        "Suomi - fi"
     ) | ForEach-Object { Write-Host $_ }
 }
 
@@ -466,7 +471,7 @@ function Configure-Environment {
 
     Write-Host (T "environment.saved.user")
     $changed = $false
-    if (Configure-EnvironmentValue -Name "COMICREAD_LANG" -Question (T "environment.language") -AllowedValues @("en", "uk", "pl", "de", "fr", "es", "cs", "ro", "it", "ko", "ja", "id", "hi", "el", "tr", "kk", "ka") -OptionsPrinter { param($Values) Show-LanguageOptions }) { $changed = $true }
+    if (Configure-EnvironmentValue -Name "COMICREAD_LANG" -Question (T "environment.language") -AllowedValues @("en", "uk", "pl", "de", "fr", "es", "cs", "ro", "it", "ko", "ja", "id", "hi", "el", "tr", "kk", "ka", "hu", "sv", "no", "da", "fi") -OptionsPrinter { param($Values) Show-LanguageOptions }) { $changed = $true }
     if (Configure-EnvironmentValue -Name "COMICREAD_GRAPHICS" -Question (T "environment.graphics") -AllowedValues @("auto", "ascii", "dots", "kitty", "sixel", "iterm2") -OptionsPrinter { param($Values) Show-GraphicsOptions }) { $changed = $true }
     if (Configure-EnvironmentValue -Name "COMICREAD_VIEW" -Question (T "environment.view") -AllowedValues @("book-view", "right-view", "circle-view", "right-circle-view") -OptionsPrinter { param($Values) Show-ViewOptions }) { $changed = $true }
     if (Configure-NonNegativeIntegerEnvironmentValue -Name "COMICREAD_PRERENDERED_NEXT" -Question (T "environment.prerendered_next") -Hint (T "environment.prerendered_hint")) { $changed = $true }

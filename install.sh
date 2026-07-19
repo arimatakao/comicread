@@ -309,7 +309,7 @@ configure_environment_value() {
     fi
 
     case "${name}:${ANSWER}" in
-      COMICREAD_GRAPHICS:auto|COMICREAD_GRAPHICS:ascii|COMICREAD_GRAPHICS:dots|COMICREAD_GRAPHICS:kitty|COMICREAD_GRAPHICS:sixel|COMICREAD_GRAPHICS:iterm2|COMICREAD_VIEW:book-view|COMICREAD_VIEW:right-view|COMICREAD_VIEW:circle-view|COMICREAD_VIEW:right-circle-view|COMICREAD_LANG:en|COMICREAD_LANG:uk|COMICREAD_LANG:pl|COMICREAD_LANG:de|COMICREAD_LANG:fr|COMICREAD_LANG:es|COMICREAD_LANG:cs|COMICREAD_LANG:ro|COMICREAD_LANG:it|COMICREAD_LANG:ko|COMICREAD_LANG:ja|COMICREAD_LANG:id|COMICREAD_LANG:hi|COMICREAD_LANG:el|COMICREAD_LANG:tr|COMICREAD_LANG:kk|COMICREAD_LANG:ka)
+      COMICREAD_GRAPHICS:auto|COMICREAD_GRAPHICS:ascii|COMICREAD_GRAPHICS:dots|COMICREAD_GRAPHICS:kitty|COMICREAD_GRAPHICS:sixel|COMICREAD_GRAPHICS:iterm2|COMICREAD_VIEW:book-view|COMICREAD_VIEW:right-view|COMICREAD_VIEW:circle-view|COMICREAD_VIEW:right-circle-view|COMICREAD_LANG:en|COMICREAD_LANG:uk|COMICREAD_LANG:pl|COMICREAD_LANG:de|COMICREAD_LANG:fr|COMICREAD_LANG:es|COMICREAD_LANG:cs|COMICREAD_LANG:ro|COMICREAD_LANG:it|COMICREAD_LANG:ko|COMICREAD_LANG:ja|COMICREAD_LANG:id|COMICREAD_LANG:hi|COMICREAD_LANG:el|COMICREAD_LANG:tr|COMICREAD_LANG:kk|COMICREAD_LANG:ka|COMICREAD_LANG:hu|COMICREAD_LANG:sv|COMICREAD_LANG:no|COMICREAD_LANG:da|COMICREAD_LANG:fi)
         set_shell_export "$target_file" "$name" "export ${name}=${ANSWER}"
         ENVIRONMENT_CHANGED="true"
         CONFIGURED_VALUES["$name"]="$ANSWER"
@@ -387,7 +387,12 @@ print_language_options() {
     'Ελληνικά - el' \
     'Türkçe - tr' \
     'Қазақша - kk' \
-    'ქართული - ka'
+    'ქართული - ka' \
+    'Magyar - hu' \
+    'Svenska - sv' \
+    'Norsk - no' \
+    'Dansk - da' \
+    'Suomi - fi'
 }
 
 print_value_options() {
@@ -437,7 +442,7 @@ configure_environment() {
   local target_file
   target_file="$(shell_config_file)"
   t environment.saved.shell "$target_file"
-  configure_environment_value "$target_file" 'COMICREAD_LANG' "$(t environment.language)" 'en uk pl de fr es cs ro it ko ja id hi el tr kk ka' print_language_options
+  configure_environment_value "$target_file" 'COMICREAD_LANG' "$(t environment.language)" 'en uk pl de fr es cs ro it ko ja id hi el tr kk ka hu sv no da fi' print_language_options
   configure_environment_value "$target_file" 'COMICREAD_GRAPHICS' "$(t environment.graphics)" 'auto ascii dots kitty sixel iterm2' print_graphics_options
   configure_environment_value "$target_file" 'COMICREAD_VIEW' "$(t environment.view)" 'book-view right-view circle-view right-circle-view' print_view_options
   configure_non_negative_integer "$target_file" 'COMICREAD_PRERENDERED_NEXT' "$(t environment.prerendered_next)" "$(t environment.prerendered_hint)"
