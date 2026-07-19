@@ -1,6 +1,7 @@
 package i18n
 
 var ukMessages = map[string]string{
+	CLIFlagConfigUsage: "файл конфігурації для використання", CLIFlagResetConfigUsage: "скинути config.toml до значень за замовчуванням і завершити роботу", CLIFlagSetConfigUsage: "оновити config.toml: ключ=значення",
 	ReaderStatusWaitingTerminalSize: "очікування розміру термінала",
 	ReaderStatusTerminalTooSmall:    "вікно термінала замале",
 	ReaderStatusLastPage:            "остання сторінка",

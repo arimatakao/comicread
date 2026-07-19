@@ -1,6 +1,7 @@
 package i18n
 
 var hiMessages = map[string]string{
+	CLIFlagConfigUsage: "उपयोग की जाने वाली कॉन्फ़िगरेशन फ़ाइल", CLIFlagResetConfigUsage: "config.toml को डिफ़ॉल्ट पर रीसेट करें और बाहर निकलें", CLIFlagSetConfigUsage: "config.toml अपडेट करें: कुंजी=मान",
 	ReaderStatusWaitingTerminalSize: "टर्मिनल आकार की प्रतीक्षा हो रही है",
 	ReaderStatusTerminalTooSmall:    "टर्मिनल विंडो बहुत छोटी है",
 	ReaderStatusLastPage:            "अंतिम पृष्ठ",

@@ -1,6 +1,7 @@
 package i18n
 
 var trMessages = map[string]string{
+	CLIFlagConfigUsage: "kullanılacak yapılandırma dosyası", CLIFlagResetConfigUsage: "config.toml'u varsayılanlara sıfırla ve çık", CLIFlagSetConfigUsage: "config.toml'u güncelle: anahtar=değer",
 	ReaderStatusWaitingTerminalSize: "terminal boyutu bekleniyor",
 	ReaderStatusTerminalTooSmall:    "terminal penceresi çok küçük",
 	ReaderStatusLastPage:            "son sayfa",

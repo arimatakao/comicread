@@ -1,6 +1,7 @@
 package i18n
 
 var itMessages = map[string]string{
+	CLIFlagConfigUsage: "file di configurazione da usare", CLIFlagResetConfigUsage: "reimposta config.toml e termina", CLIFlagSetConfigUsage: "aggiorna config.toml: chiave=valore",
 	ReaderStatusWaitingTerminalSize: "in attesa delle dimensioni del terminale",
 	ReaderStatusTerminalTooSmall:    "la finestra del terminale è troppo piccola",
 	ReaderStatusLastPage:            "ultima pagina",

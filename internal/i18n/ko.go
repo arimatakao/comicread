@@ -1,6 +1,7 @@
 package i18n
 
 var koMessages = map[string]string{
+	CLIFlagConfigUsage: "사용할 설정 파일", CLIFlagResetConfigUsage: "config.toml을 기본값으로 재설정하고 종료", CLIFlagSetConfigUsage: "config.toml 업데이트: 키=값",
 	ReaderStatusWaitingTerminalSize: "터미널 크기를 기다리는 중",
 	ReaderStatusTerminalTooSmall:    "터미널 창이 너무 작습니다",
 	ReaderStatusLastPage:            "마지막 페이지",

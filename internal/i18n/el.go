@@ -1,6 +1,7 @@
 package i18n
 
 var elMessages = map[string]string{
+	CLIFlagConfigUsage: "αρχείο ρυθμίσεων προς χρήση", CLIFlagResetConfigUsage: "επαναφορά του config.toml και έξοδος", CLIFlagSetConfigUsage: "ενημέρωση config.toml: κλειδί=τιμή",
 	ReaderStatusWaitingTerminalSize: "αναμονή για το μέγεθος του τερματικού",
 	ReaderStatusTerminalTooSmall:    "το παράθυρο του τερματικού είναι πολύ μικρό",
 	ReaderStatusLastPage:            "τελευταία σελίδα",

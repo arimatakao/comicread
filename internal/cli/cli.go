@@ -255,9 +255,9 @@ func parseOptionsWithConfig(args []string, settings config.Config) (options, err
 	graphicsFlag := flags.String("graphics", settings.Graphics, i18n.T(i18n.CLIFlagGraphicsUsage))
 	versionFlag := flags.Bool("version", false, i18n.T(i18n.CLIFlagVersionUsage))
 	updateFlag := flags.Bool("update", false, i18n.T(i18n.CLIFlagUpdateUsage))
-	resetConfigFlag := flags.Bool("reset-config", false, "reset config.toml to its defaults and exit")
-	setConfigFlag := flags.String("set-config", "", "update config.toml: key=value")
-	configPathFlag := flags.String("config", "", "configuration file to use")
+	resetConfigFlag := flags.Bool("reset-config", false, i18n.T(i18n.CLIFlagResetConfigUsage))
+	setConfigFlag := flags.String("set-config", "", i18n.T(i18n.CLIFlagSetConfigUsage))
+	configPathFlag := flags.String("config", "", i18n.T(i18n.CLIFlagConfigUsage))
 	clearJournalFlag := flags.Bool("clear-journal", false, i18n.T(i18n.CLIFlagClearJournalUsage))
 	bookViewFlag := flags.Bool("book-view", false, i18n.T(i18n.CLIFlagBookViewUsage))
 	rightBookViewFlag := flags.Bool("right-view", false, i18n.T(i18n.CLIFlagRightBookViewUsage))
@@ -268,7 +268,10 @@ func parseOptionsWithConfig(args []string, settings config.Config) (options, err
 	flags.StringVar(openFlag, "o", "", i18n.T(i18n.CLIFlagOpenUsage))
 	if err := flags.Parse(args); err != nil {
 		if errors.Is(err, flag.ErrHelp) {
-			fmt.Println(i18n.T(i18n.CLIUsageFull))
+			fmt.Println(i18n.T(i18n.CLIUsage))
+			fmt.Println()
+			flags.SetOutput(os.Stdout)
+			flags.PrintDefaults()
 			return options{}, flag.ErrHelp
 		}
 		return options{}, &usageError{fmt.Errorf(i18n.T(i18n.CLIErrParseArgs), err)}

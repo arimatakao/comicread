@@ -1,6 +1,7 @@
 package i18n
 
 var kkMessages = map[string]string{
+	CLIFlagConfigUsage: "пайдаланылатын конфигурация файлы", CLIFlagResetConfigUsage: "config.toml әдепкі мәндерін қалпына келтіріп, шығу", CLIFlagSetConfigUsage: "config.toml жаңарту: кілт=мән",
 	ReaderStatusWaitingTerminalSize: "терминал өлшемі күтілуде",
 	ReaderStatusTerminalTooSmall:    "терминал терезесі тым кіші",
 	ReaderStatusLastPage:            "соңғы бет",

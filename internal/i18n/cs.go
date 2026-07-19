@@ -1,6 +1,7 @@
 package i18n
 
 var csMessages = map[string]string{
+	CLIFlagConfigUsage: "konfigurační soubor k použití", CLIFlagResetConfigUsage: "obnovit výchozí config.toml a ukončit", CLIFlagSetConfigUsage: "aktualizovat config.toml: klíč=hodnota",
 	ReaderStatusWaitingTerminalSize: "čekání na velikost terminálu",
 	ReaderStatusTerminalTooSmall:    "okno terminálu je příliš malé",
 	ReaderStatusLastPage:            "poslední stránka",

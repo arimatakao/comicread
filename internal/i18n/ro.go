@@ -1,6 +1,7 @@
 package i18n
 
 var roMessages = map[string]string{
+	CLIFlagConfigUsage: "fișier de configurare de utilizat", CLIFlagResetConfigUsage: "resetează config.toml la valorile implicite și ieși", CLIFlagSetConfigUsage: "actualizează config.toml: cheie=valoare",
 	ReaderStatusWaitingTerminalSize: "se așteaptă dimensiunea terminalului",
 	ReaderStatusTerminalTooSmall:    "fereastra terminalului este prea mică",
 	ReaderStatusLastPage:            "ultima pagină",

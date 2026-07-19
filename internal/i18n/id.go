@@ -1,6 +1,7 @@
 package i18n
 
 var idMessages = map[string]string{
+	CLIFlagConfigUsage: "berkas konfigurasi yang digunakan", CLIFlagResetConfigUsage: "atur ulang config.toml ke bawaan lalu keluar", CLIFlagSetConfigUsage: "perbarui config.toml: kunci=nilai",
 	ReaderStatusWaitingTerminalSize: "menunggu ukuran terminal",
 	ReaderStatusTerminalTooSmall:    "jendela terminal terlalu kecil",
 	ReaderStatusLastPage:            "halaman terakhir",

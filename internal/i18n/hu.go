@@ -1,6 +1,7 @@
 package i18n
 
 var huMessages = map[string]string{
+	CLIFlagConfigUsage: "használandó konfigurációs fájl", CLIFlagResetConfigUsage: "a config.toml alaphelyzetbe állítása és kilépés", CLIFlagSetConfigUsage: "config.toml frissítése: kulcs=érték",
 	ReaderStatusWaitingTerminalSize: "várakozás a terminál méretére",
 	ReaderStatusTerminalTooSmall:    "a terminálablak túl kicsi",
 	ReaderStatusLastPage:            "utolsó oldal",

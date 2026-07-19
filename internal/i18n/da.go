@@ -1,6 +1,7 @@
 package i18n
 
 var daMessages = map[string]string{
+	CLIFlagConfigUsage: "konfigurationsfil der skal bruges", CLIFlagResetConfigUsage: "nulstil config.toml og afslut", CLIFlagSetConfigUsage: "opdater config.toml: nøgle=værdi",
 	ReaderStatusWaitingTerminalSize: "venter på terminalstørrelse", ReaderStatusTerminalTooSmall: "terminalvinduet er for lille", ReaderStatusLastPage: "sidste side", ReaderStatusFirstPage: "første side", ReaderStatusRenderError: "renderingsfejl: %v", ReaderStatusMaximumZoom: "maksimal zoom", ReaderStatusMinimumZoom: "minimal zoom", ReaderStatusInvalidPage: "ugyldigt sidetal",
 	ReaderViewTerminalTooSmall: "comicread: terminalvinduet er for lille", ReaderViewWindowTitle: "comicread — %s", ReaderViewPages: "sider %d/%d", ReaderViewPageRange: "sider %d–%d/%d", ReaderViewRendering: "renderer", ReaderViewBookmarks: "Bogmærker", ReaderViewNoBookmarks: "(ingen bogmærker)", ReaderViewBookmarksHelp: "op/ned flyt | enter åbn | esc luk", ReaderViewGoToPage: "Gå til side: %s",
 	ReaderViewHelp: `Taster

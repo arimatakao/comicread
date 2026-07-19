@@ -83,6 +83,9 @@ const (
 	CLIErrInspectInput              = "cli.err.inspect_input"
 	CLIErrUnsupportedFile           = "cli.err.unsupported_file"
 	CLIFlagGraphicsUsage            = "cli.flag.graphics_usage"
+	CLIFlagConfigUsage              = "cli.flag.config_usage"
+	CLIFlagResetConfigUsage         = "cli.flag.reset_config_usage"
+	CLIFlagSetConfigUsage           = "cli.flag.set_config_usage"
 	CLIFlagVersionUsage             = "cli.flag.version_usage"
 	CLIFlagUpdateUsage              = "cli.flag.update_usage"
 	CLIFlagEnvUsage                 = "cli.flag.env_usage"
@@ -127,50 +130,52 @@ func T(key string, args ...any) string {
 // messagesFor returns the translation catalog for lang. A switch keeps the
 // catalogs explicit without an additional language-to-catalog map.
 func messagesFor(lang Lang) map[string]string {
+	var messages map[string]string
 	switch lang {
 	case Ukrainian:
-		return ukMessages
+		messages = ukMessages
 	case Polish:
-		return plMessages
+		messages = plMessages
 	case German:
-		return deMessages
+		messages = deMessages
 	case French:
-		return frMessages
+		messages = frMessages
 	case Spanish:
-		return esMessages
+		messages = esMessages
 	case Czech:
-		return csMessages
+		messages = csMessages
 	case Romanian:
-		return roMessages
+		messages = roMessages
 	case Italian:
-		return itMessages
+		messages = itMessages
 	case Korean:
-		return koMessages
+		messages = koMessages
 	case Japanese:
-		return jaMessages
+		messages = jaMessages
 	case Indonesian:
-		return idMessages
+		messages = idMessages
 	case Hindi:
-		return hiMessages
+		messages = hiMessages
 	case Greek:
-		return elMessages
+		messages = elMessages
 	case Turkish:
-		return trMessages
+		messages = trMessages
 	case Kazakh:
-		return kkMessages
+		messages = kkMessages
 	case Georgian:
-		return kaMessages
+		messages = kaMessages
 	case Hungarian:
-		return huMessages
+		messages = huMessages
 	case Swedish:
-		return svMessages
+		messages = svMessages
 	case Norwegian:
-		return noMessages
+		messages = noMessages
 	case Danish:
-		return daMessages
+		messages = daMessages
 	case Finnish:
-		return fiMessages
+		messages = fiMessages
 	default:
-		return enMessages
+		messages = enMessages
 	}
+	return messages
 }

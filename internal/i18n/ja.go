@@ -1,6 +1,7 @@
 package i18n
 
 var jaMessages = map[string]string{
+	CLIFlagConfigUsage: "使用する設定ファイル", CLIFlagResetConfigUsage: "config.toml を既定値に戻して終了", CLIFlagSetConfigUsage: "config.toml を更新: キー=値",
 	ReaderStatusWaitingTerminalSize: "端末サイズを待機中",
 	ReaderStatusTerminalTooSmall:    "端末ウィンドウが小さすぎます",
 	ReaderStatusLastPage:            "最後のページ",

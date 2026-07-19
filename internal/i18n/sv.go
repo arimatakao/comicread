@@ -1,6 +1,7 @@
 package i18n
 
 var svMessages = map[string]string{
+	CLIFlagConfigUsage: "konfigurationsfil att använda", CLIFlagResetConfigUsage: "återställ config.toml och avsluta", CLIFlagSetConfigUsage: "uppdatera config.toml: nyckel=värde",
 	ReaderStatusWaitingTerminalSize: "väntar på terminalstorlek",
 	ReaderStatusTerminalTooSmall:    "terminalfönstret är för litet",
 	ReaderStatusLastPage:            "sista sidan",

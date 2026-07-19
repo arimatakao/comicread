@@ -1,6 +1,7 @@
 package i18n
 
 var kaMessages = map[string]string{
+	CLIFlagConfigUsage: "გამოსაყენებელი კონფიგურაციის ფაილი", CLIFlagResetConfigUsage: "config.toml ნაგულისხმევზე დააბრუნე და დაასრულე", CLIFlagSetConfigUsage: "config.toml განაახლე: გასაღები=მნიშვნელობა",
 	ReaderStatusWaitingTerminalSize: "ტერმინალის ზომის მოლოდინში",
 	ReaderStatusTerminalTooSmall:    "ტერმინალის ფანჯარა ძალიან პატარაა",
 	ReaderStatusLastPage:            "ბოლო გვერდი",

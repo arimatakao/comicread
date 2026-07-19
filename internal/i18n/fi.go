@@ -1,6 +1,7 @@
 package i18n
 
 var fiMessages = map[string]string{
+	CLIFlagConfigUsage: "käytettävä asetustiedosto", CLIFlagResetConfigUsage: "palauta config.toml oletuksiin ja lopeta", CLIFlagSetConfigUsage: "päivitä config.toml: avain=arvo",
 	ReaderStatusWaitingTerminalSize: "odotetaan päätteen kokoa", ReaderStatusTerminalTooSmall: "pääteikkuna on liian pieni", ReaderStatusLastPage: "viimeinen sivu", ReaderStatusFirstPage: "ensimmäinen sivu", ReaderStatusRenderError: "renderöintivirhe: %v", ReaderStatusMaximumZoom: "suurin zoomaus", ReaderStatusMinimumZoom: "pienin zoomaus", ReaderStatusInvalidPage: "virheellinen sivunumero",
 	ReaderViewTerminalTooSmall: "comicread: pääteikkuna on liian pieni", ReaderViewWindowTitle: "comicread — %s", ReaderViewPages: "sivut %d/%d", ReaderViewPageRange: "sivut %d–%d/%d", ReaderViewRendering: "renderöidään", ReaderViewBookmarks: "Kirjanmerkit", ReaderViewNoBookmarks: "(ei kirjanmerkkejä)", ReaderViewBookmarksHelp: "ylös/alas siirry | enter avaa | esc sulje", ReaderViewGoToPage: "Siirry sivulle: %s",
 	ReaderViewHelp: `Näppäimet
