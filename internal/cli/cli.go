@@ -39,9 +39,29 @@ func (e *usageError) Unwrap() error        { return e.err }
 func (e *usageError) Is(target error) bool { return target == ErrUsage }
 
 func Run(args []string) error {
-	settings, err := config.Load()
+	initial, err := parseOptionsWithConfig(args, config.Default())
 	if err != nil {
 		return err
+	}
+	if initial.resetConfig {
+		if initial.configPathSet {
+			return config.ResetFile(initial.configPath)
+		}
+		return config.Reset()
+	}
+
+	settings, err := loadConfig(initial.configPath, initial.configPathSet)
+	if err != nil {
+		return err
+	}
+	if initial.setConfigSet {
+		if err := config.SetOption(&settings, initial.setConfig); err != nil {
+			return err
+		}
+		if initial.configPathSet {
+			return config.SaveFile(initial.configPath, settings)
+		}
+		return config.Save(settings)
 	}
 	i18n.SetLang(i18n.Lang(settings.Language))
 
@@ -173,14 +193,19 @@ func parseArgs(args []string) (graphics, path string, version bool, err error) {
 }
 
 type options struct {
-	graphics     string
-	path         string
-	open         string
-	openSet      bool
-	version      bool
-	update       bool
-	clearJournal bool
-	bookView     reader.ViewMode
+	graphics      string
+	path          string
+	open          string
+	openSet       bool
+	version       bool
+	update        bool
+	resetConfig   bool
+	setConfig     string
+	setConfigSet  bool
+	configPath    string
+	configPathSet bool
+	clearJournal  bool
+	bookView      reader.ViewMode
 }
 
 // normalizeOpenFlag rewrites a bare, value-less -o/--open into an explicit
@@ -204,11 +229,22 @@ func normalizeOpenFlag(args []string) []string {
 }
 
 func parseOptions(args []string) (options, error) {
-	settings, err := config.Load()
+	initial, err := parseOptionsWithConfig(args, config.Default())
+	if err != nil {
+		return options{}, err
+	}
+	settings, err := loadConfig(initial.configPath, initial.configPathSet)
 	if err != nil {
 		return options{}, err
 	}
 	return parseOptionsWithConfig(args, settings)
+}
+
+func loadConfig(path string, custom bool) (config.Config, error) {
+	if custom {
+		return config.LoadFile(path)
+	}
+	return config.Load()
 }
 
 func parseOptionsWithConfig(args []string, settings config.Config) (options, error) {
@@ -219,6 +255,9 @@ func parseOptionsWithConfig(args []string, settings config.Config) (options, err
 	graphicsFlag := flags.String("graphics", settings.Graphics, i18n.T(i18n.CLIFlagGraphicsUsage))
 	versionFlag := flags.Bool("version", false, i18n.T(i18n.CLIFlagVersionUsage))
 	updateFlag := flags.Bool("update", false, i18n.T(i18n.CLIFlagUpdateUsage))
+	resetConfigFlag := flags.Bool("reset-config", false, "reset config.toml to its defaults and exit")
+	setConfigFlag := flags.String("set-config", "", "update config.toml: key=value")
+	configPathFlag := flags.String("config", "", "configuration file to use")
 	clearJournalFlag := flags.Bool("clear-journal", false, i18n.T(i18n.CLIFlagClearJournalUsage))
 	bookViewFlag := flags.Bool("book-view", false, i18n.T(i18n.CLIFlagBookViewUsage))
 	rightBookViewFlag := flags.Bool("right-view", false, i18n.T(i18n.CLIFlagRightBookViewUsage))
@@ -240,24 +279,49 @@ func parseOptionsWithConfig(args []string, settings config.Config) (options, err
 			openSet = true
 		}
 	})
+	setConfigSet := false
+	configPathSet := false
+	flags.Visit(func(f *flag.Flag) {
+		if f.Name == "set-config" {
+			setConfigSet = true
+		}
+		if f.Name == "config" {
+			configPathSet = true
+		}
+	})
+	if configPathSet && strings.TrimSpace(*configPathFlag) == "" {
+		return options{}, &usageError{errors.New("--config requires a path")}
+	}
+	if *resetConfigFlag && setConfigSet {
+		return options{}, &usageError{errors.New("--reset-config and --set-config cannot be used together")}
+	}
+	if (*resetConfigFlag || setConfigSet) && flags.NArg() != 0 {
+		return options{}, &usageError{errors.New("config commands do not accept a file or directory")}
+	}
+	if *resetConfigFlag {
+		return options{resetConfig: true, configPath: *configPathFlag, configPathSet: configPathSet}, nil
+	}
+	if setConfigSet {
+		return options{setConfig: *setConfigFlag, setConfigSet: true, configPath: *configPathFlag, configPathSet: configPathSet}, nil
+	}
 	if *updateFlag {
-		return options{update: true}, nil
+		return options{update: true, configPath: *configPathFlag, configPathSet: configPathSet}, nil
 	}
 	bookView, err := selectedBookView(settings.View, *bookViewFlag, *rightBookViewFlag, *circleBookViewFlag, *rightCircleBookViewFlag)
 	if err != nil {
 		return options{}, &usageError{err}
 	}
 	if *versionFlag {
-		return options{version: true}, nil
+		return options{version: true, configPath: *configPathFlag, configPathSet: configPathSet}, nil
 	}
 	if *clearJournalFlag && flags.NArg() != 1 {
 		return options{}, &usageError{errors.New(i18n.T(i18n.CLIErrClearJournalRequiresInput))}
 	}
 	switch flags.NArg() {
 	case 0:
-		return options{graphics: *graphicsFlag, open: *openFlag, openSet: openSet, bookView: bookView}, nil
+		return options{graphics: *graphicsFlag, open: *openFlag, openSet: openSet, bookView: bookView, configPath: *configPathFlag, configPathSet: configPathSet}, nil
 	case 1:
-		return options{graphics: *graphicsFlag, path: flags.Arg(0), clearJournal: *clearJournalFlag, bookView: bookView}, nil
+		return options{graphics: *graphicsFlag, path: flags.Arg(0), clearJournal: *clearJournalFlag, bookView: bookView, configPath: *configPathFlag, configPathSet: configPathSet}, nil
 	default:
 		return options{}, &usageError{errors.New(i18n.T(i18n.CLIUsage))}
 	}

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
@@ -83,4 +84,119 @@ func LoadFile(path string) (Config, error) {
 		return Config{}, fmt.Errorf("parse config %q: prerender counts must not be negative", path)
 	}
 	return settings, nil
+}
+
+// Reset replaces the user config file with the default configuration.
+func Reset() error {
+	path, err := Path()
+	if err != nil {
+		return err
+	}
+	return ResetFile(path)
+}
+
+// ResetFile replaces path with the default configuration.
+func ResetFile(path string) error {
+	return SaveFile(path, Default())
+}
+
+// Save writes settings to the default config file.
+func Save(settings Config) error {
+	path, err := Path()
+	if err != nil {
+		return err
+	}
+	return SaveFile(path, settings)
+}
+
+// SaveFile writes settings to path.
+func SaveFile(path string, settings Config) error {
+	contents, err := toml.Marshal(settings)
+	if err != nil {
+		return fmt.Errorf("encode config: %w", err)
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return fmt.Errorf("create config directory: %w", err)
+	}
+	temporary, err := os.CreateTemp(filepath.Dir(path), ".config-*.tmp")
+	if err != nil {
+		return fmt.Errorf("create temporary config: %w", err)
+	}
+	temporaryName := temporary.Name()
+	defer os.Remove(temporaryName)
+	if _, err := temporary.Write(contents); err != nil {
+		temporary.Close()
+		return fmt.Errorf("write temporary config: %w", err)
+	}
+	if err := temporary.Chmod(0o600); err != nil {
+		temporary.Close()
+		return fmt.Errorf("set config permissions: %w", err)
+	}
+	if err := temporary.Close(); err != nil {
+		return fmt.Errorf("close temporary config: %w", err)
+	}
+	if err := os.Rename(temporaryName, path); err != nil {
+		return fmt.Errorf("replace config: %w", err)
+	}
+	return nil
+}
+
+// SetOption updates one supported option from a key=value assignment.
+func SetOption(settings *Config, assignment string) error {
+	key, value, ok := strings.Cut(assignment, "=")
+	if !ok {
+		return errors.New("config option must use key=value")
+	}
+	key = strings.ToLower(strings.TrimSpace(key))
+	value = strings.TrimSpace(value)
+	switch key {
+	case "graphics":
+		if !isGraphics(value) {
+			return fmt.Errorf("unsupported graphics %q", value)
+		}
+		settings.Graphics = value
+	case "view":
+		if !isView(value) {
+			return fmt.Errorf("unsupported view %q", value)
+		}
+		settings.View = value
+	case "language":
+		if value == "" {
+			return errors.New("language must not be empty")
+		}
+		settings.Language = value
+	case "directory":
+		settings.Directory = value
+	case "prerender.next", "prerender.previous":
+		count, err := strconv.Atoi(value)
+		if err != nil || count < 0 {
+			return fmt.Errorf("%s must be a non-negative integer", key)
+		}
+		if key == "prerender.next" {
+			settings.Prerender.Next = count
+		} else {
+			settings.Prerender.Previous = count
+		}
+	default:
+		return fmt.Errorf("unsupported config option %q", key)
+	}
+	return nil
+}
+
+func isGraphics(value string) bool {
+	for _, allowed := range []string{"auto", "ascii", "ansi", "dots", "kitty", "sixel", "iterm", "iterm2"} {
+		if value == allowed {
+			return true
+		}
+	}
+	return false
+}
+
+func isView(value string) bool {
+	for _, allowed := range []string{"single-page", "book-view", "right-view", "circle-view", "right-circle-view"} {
+		if value == allowed {
+			return true
+		}
+	}
+	return false
 }

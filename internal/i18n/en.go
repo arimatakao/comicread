@@ -78,6 +78,7 @@ q    quit
 usage: comicread [options] [file]
 
 options:
+  --config string     configuration file to use
   --graphics string   renderer: auto, ascii, dots, kitty, sixel, or iterm2 (default "auto")
   --book-view         show pages left to right in pairs
   --right-view        show pages right to left in pairs
@@ -85,19 +86,13 @@ options:
   --right-circle-view
                       show overlapping page pairs right to left
   --clear-journal    remove the local journal for a file or directory and exit
+  --reset-config     reset config.toml to its defaults and exit
+  --set-config value update config.toml: key=value
   -o, --open string   directory to open in the file picker (default: configured directory or the current directory)
   --update            check for updates and exit
   -v, --version       print version and exit
   -h, --help          show this help message
 
 If no file or directory is given, an interactive file picker opens in the configured
-directory (if valid) or the current directory otherwise.
-
-configuration:
-  config.toml in the platform's user config directory
-  graphics     renderer default: auto, ascii, dots, kitty, sixel, or iterm2
-  view         default view: single-page, book-view, right-view, circle-view, or right-circle-view
-  language     message language (for example "en" or "uk")
-  directory    default directory for the file picker
-  [prerender]  next and previous page counts (default 1 each)`,
+directory (if valid) or the current directory otherwise.`,
 }
