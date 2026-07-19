@@ -8,6 +8,7 @@ require (
 	github.com/arimatakao/comicfile v1.2.0
 	github.com/fandasy/ASCIIimage/v2 v2.2.8
 	github.com/imjasonh/dots v0.0.0-20260521180724-9419fd6aaca0
+	github.com/pelletier/go-toml/v2 v2.4.3
 	golang.org/x/image v0.41.0
 	golang.org/x/sys v0.46.0
 )

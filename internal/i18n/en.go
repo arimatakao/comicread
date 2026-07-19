@@ -62,15 +62,14 @@ q    quit
 	CLIFlagGraphicsUsage:            "renderer: auto, ascii, dots, kitty, sixel, or iterm2",
 	CLIFlagVersionUsage:             "print version and exit",
 	CLIFlagUpdateUsage:              "check for updates and exit",
-	CLIFlagEnvUsage:                 "print comicread environment and exit",
 	CLIFlagClearJournalUsage:        "remove the local journal for a file or directory and exit",
 	CLIFlagBookViewUsage:            "show pages left to right in pairs",
 	CLIFlagRightBookViewUsage:       "show pages right to left in pairs",
 	CLIFlagCircleBookViewUsage:      "show overlapping page pairs left to right",
 	CLIFlagRightCircleBookViewUsage: "show overlapping page pairs right to left",
 	CLIErrMultipleBookViews:         "only one book view option may be used",
-	CLIErrInvalidView:               "unsupported COMICREAD_VIEW %q (want book-view, right-view, circle-view, or right-circle-view)",
-	CLIFlagOpenUsage:                "directory to open in the file picker (default: COMICREAD_DIR or the current directory)",
+	CLIErrInvalidView:               "unsupported view %q (want single-page, book-view, right-view, circle-view, or right-circle-view)",
+	CLIFlagOpenUsage:                "directory to open in the file picker (default: configured directory or current directory)",
 	CLIErrOpenNotDir:                "open directory %q: not a directory",
 	CLIHelpHint:                     "run 'comicread --help' for usage",
 	CLIUsage:                        "usage: comicread [options] [file]",
@@ -86,20 +85,19 @@ options:
   --right-circle-view
                       show overlapping page pairs right to left
   --clear-journal    remove the local journal for a file or directory and exit
-  -o, --open string   directory to open in the file picker (default: COMICREAD_DIR or the current directory)
-  --env               print comicread environment and exit
+  -o, --open string   directory to open in the file picker (default: configured directory or the current directory)
   --update            check for updates and exit
   -v, --version       print version and exit
   -h, --help          show this help message
 
-If no file or directory is given, an interactive file picker opens in COMICREAD_DIR
-(if set to a valid directory) or the current directory otherwise.
+If no file or directory is given, an interactive file picker opens in the configured
+directory (if valid) or the current directory otherwise.
 
-environment:
-  COMICREAD_GRAPHICS  renderer default: auto, ascii, dots, kitty, sixel, or iterm2
-  COMICREAD_PRERENDERED_NEXT      next pages to pre-render (default 1)
-  COMICREAD_PRERENDERED_PREVIOUS  previous pages to pre-render (default 1)
-  COMICREAD_VIEW      default view: book-view, right-view, circle-view, or right-circle-view
-  COMICREAD_LANG   message language: https://github.com/arimatakao/comicread#environment-variables (default "en")
-  COMICREAD_DIR    default directory for the file picker when no path is given`,
+configuration:
+  config.toml in the platform's user config directory
+  graphics     renderer default: auto, ascii, dots, kitty, sixel, or iterm2
+  view         default view: single-page, book-view, right-view, circle-view, or right-circle-view
+  language     message language (for example "en" or "uk")
+  directory    default directory for the file picker
+  [prerender]  next and previous page counts (default 1 each)`,
 }

@@ -15,6 +15,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicfile"
 	"github.com/arimatakao/comicread/internal/backend"
+	"github.com/arimatakao/comicread/internal/config"
 	"github.com/arimatakao/comicread/internal/i18n"
 	"github.com/arimatakao/comicread/internal/journal"
 	"github.com/arimatakao/comicread/internal/tui/filepicker"
@@ -38,7 +39,13 @@ func (e *usageError) Unwrap() error        { return e.err }
 func (e *usageError) Is(target error) bool { return target == ErrUsage }
 
 func Run(args []string) error {
-	options, err := parseOptions(args)
+	settings, err := config.Load()
+	if err != nil {
+		return err
+	}
+	i18n.SetLang(i18n.Lang(settings.Language))
+
+	options, err := parseOptionsWithConfig(args, settings)
 	if err != nil {
 		return err
 	}
@@ -48,11 +55,7 @@ func Run(args []string) error {
 		return nil
 	}
 	if options.update {
-		return checkForUpdate()
-	}
-	if options.env {
-		printEnvironment()
-		return nil
+		return checkForUpdate(settings.Language)
 	}
 
 	// ctx is cancelled on SIGINT/SIGTERM so every stage below can shut down
@@ -62,7 +65,7 @@ func Run(args []string) error {
 
 	path := options.path
 	if path == "" {
-		dir, err := pickerDir(options.open, options.openSet)
+		dir, err := pickerDir(options.open, options.openSet, settings.Directory)
 		if err != nil {
 			return err
 		}
@@ -113,7 +116,7 @@ func Run(args []string) error {
 	if err != nil {
 		return fmt.Errorf(i18n.T(i18n.CLIErrOpenJournal), err)
 	}
-	model := reader.NewWithBookViewAndJournal(filepath.Base(path), chapter, renderer, options.bookView, progress)
+	model := reader.NewWithBookViewAndJournalAndPreRender(filepath.Base(path), chapter, renderer, options.bookView, progress, settings.Prerender.Next, settings.Prerender.Previous)
 	// Bubble Tea's own SIGINT/SIGTERM handler stops the event loop without
 	// consulting the model, skipping progress saving and image cleanup. It is
 	// disabled here and signals are routed through ctx instead, so an external
@@ -136,10 +139,10 @@ func Run(args []string) error {
 // pickerDir returns the directory the file picker should open initially.
 // If -o/--open was given with a value, it is used and must be a valid,
 // existing directory. If -o/--open was given with no value, the current
-// working directory is used, bypassing COMICREAD_DIR. Otherwise
-// COMICREAD_DIR is used when set to a valid, existing directory; failing
-// that, the current working directory is used.
-func pickerDir(open string, openSet bool) (string, error) {
+// working directory is used, bypassing the configured directory. Otherwise
+// configuredDir is used when set to a valid, existing directory; failing that,
+// the current working directory is used.
+func pickerDir(open string, openSet bool, configuredDir string) (string, error) {
 	if open != "" {
 		info, err := os.Stat(open)
 		if err != nil {
@@ -151,7 +154,7 @@ func pickerDir(open string, openSet bool) (string, error) {
 		return open, nil
 	}
 	if !openSet {
-		if dir := os.Getenv("COMICREAD_DIR"); dir != "" {
+		if dir := configuredDir; dir != "" {
 			if info, err := os.Stat(dir); err == nil && info.IsDir() {
 				return dir, nil
 			}
@@ -176,7 +179,6 @@ type options struct {
 	openSet      bool
 	version      bool
 	update       bool
-	env          bool
 	clearJournal bool
 	bookView     reader.ViewMode
 }
@@ -202,19 +204,21 @@ func normalizeOpenFlag(args []string) []string {
 }
 
 func parseOptions(args []string) (options, error) {
-	args = normalizeOpenFlag(args)
-	graphics := os.Getenv("COMICREAD_GRAPHICS")
-	if graphics == "" {
-		graphics = "auto"
+	settings, err := config.Load()
+	if err != nil {
+		return options{}, err
 	}
-	view := os.Getenv("COMICREAD_VIEW")
+	return parseOptionsWithConfig(args, settings)
+}
+
+func parseOptionsWithConfig(args []string, settings config.Config) (options, error) {
+	args = normalizeOpenFlag(args)
 
 	flags := flag.NewFlagSet("comicread", flag.ContinueOnError)
 	flags.SetOutput(io.Discard)
-	graphicsFlag := flags.String("graphics", graphics, i18n.T(i18n.CLIFlagGraphicsUsage))
+	graphicsFlag := flags.String("graphics", settings.Graphics, i18n.T(i18n.CLIFlagGraphicsUsage))
 	versionFlag := flags.Bool("version", false, i18n.T(i18n.CLIFlagVersionUsage))
 	updateFlag := flags.Bool("update", false, i18n.T(i18n.CLIFlagUpdateUsage))
-	envFlag := flags.Bool("env", false, i18n.T(i18n.CLIFlagEnvUsage))
 	clearJournalFlag := flags.Bool("clear-journal", false, i18n.T(i18n.CLIFlagClearJournalUsage))
 	bookViewFlag := flags.Bool("book-view", false, i18n.T(i18n.CLIFlagBookViewUsage))
 	rightBookViewFlag := flags.Bool("right-view", false, i18n.T(i18n.CLIFlagRightBookViewUsage))
@@ -236,13 +240,10 @@ func parseOptions(args []string) (options, error) {
 			openSet = true
 		}
 	})
-	if *envFlag {
-		return options{env: true}, nil
-	}
 	if *updateFlag {
 		return options{update: true}, nil
 	}
-	bookView, err := selectedBookView(view, *bookViewFlag, *rightBookViewFlag, *circleBookViewFlag, *rightCircleBookViewFlag)
+	bookView, err := selectedBookView(settings.View, *bookViewFlag, *rightBookViewFlag, *circleBookViewFlag, *rightCircleBookViewFlag)
 	if err != nil {
 		return options{}, &usageError{err}
 	}
@@ -259,12 +260,6 @@ func parseOptions(args []string) (options, error) {
 		return options{graphics: *graphicsFlag, path: flags.Arg(0), clearJournal: *clearJournalFlag, bookView: bookView}, nil
 	default:
 		return options{}, &usageError{errors.New(i18n.T(i18n.CLIUsage))}
-	}
-}
-
-func printEnvironment() {
-	for _, name := range []string{"COMICREAD_GRAPHICS", "COMICREAD_PRERENDERED_NEXT", "COMICREAD_PRERENDERED_PREVIOUS", "COMICREAD_VIEW", "COMICREAD_LANG", "COMICREAD_DIR"} {
-		fmt.Printf("%s=%q\n", name, os.Getenv(name))
 	}
 }
 
@@ -290,7 +285,7 @@ func selectedBookView(view string, book, rightBook, circle, rightCircle bool) (r
 	}
 
 	switch strings.ToLower(strings.TrimSpace(view)) {
-	case "":
+	case "", "single-page":
 		return reader.SinglePageView, nil
 	case "book-view":
 		return reader.BookView, nil

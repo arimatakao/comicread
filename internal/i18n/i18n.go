@@ -4,8 +4,6 @@ package i18n
 
 import (
 	"fmt"
-	"os"
-	"strings"
 )
 
 // Lang identifies a supported message language.
@@ -102,21 +100,9 @@ const (
 	CLIUsageFull                    = "cli.usage_full"
 )
 
-var currentMessages = messagesFor(detect())
+var currentMessages = messagesFor(English)
 
-// detect picks a language from the COMICREAD_LANG environment variable,
-// falling back to English.
-func detect() Lang {
-	lang := strings.ToLower(os.Getenv("COMICREAD_LANG"))
-	for _, supported := range []Lang{Ukrainian, Polish, German, French, Spanish, Czech, Romanian, Italian, Korean, Japanese, Indonesian, Hindi, Greek, Turkish, Kazakh, Georgian, Hungarian, Swedish, Norwegian, Danish, Finnish} {
-		if strings.HasPrefix(lang, string(supported)) {
-			return supported
-		}
-	}
-	return English
-}
-
-// SetLang overrides the active language (used mainly for testing/tools).
+// SetLang overrides the active language selected from config.toml.
 func SetLang(lang Lang) {
 	currentMessages = messagesFor(lang)
 }

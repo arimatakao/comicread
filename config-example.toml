@@ -1,0 +1,23 @@
+# Copy this file to the platform configuration directory as config.toml.
+# Linux:   ~/.config/comicread/config.toml
+# macOS:   ~/Library/Application Support/comicread/config.toml
+# Windows: %AppData%\comicread\config.toml
+
+# Renderer: auto, ascii, dots, kitty, sixel, or iterm2.
+graphics = "auto"
+
+# Page layout: single-page, book-view, right-view, circle-view, or
+# right-circle-view.
+view = "single-page"
+
+# Interface language, for example en.
+language = "en"
+
+# Initial directory shown by the file picker. Leave empty to use the current
+# working directory.
+directory = ""
+
+# Pages rendered in advance on either side of the current page.
+[prerender]
+next = 1
+previous = 1

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"runtime"
 	"strconv"
 	"strings"
@@ -19,7 +18,7 @@ type release struct {
 	TagName string `json:"tag_name"`
 }
 
-func checkForUpdate() error {
+func checkForUpdate(language string) error {
 	req, err := http.NewRequest(http.MethodGet, latestReleaseURL, nil)
 	if err != nil {
 		return fmt.Errorf("create update request: %w", err)
@@ -48,12 +47,12 @@ func checkForUpdate() error {
 	fmt.Printf("Current version: %s\nLatest version: %s\n", Version, latest.TagName)
 	if Version == "dev" {
 		fmt.Println("This is a development build; install the latest release to update.")
-		printUpdateCommand()
+		printUpdateCommand(language)
 		return nil
 	}
 	if newerVersion(latest.TagName, Version) {
 		fmt.Println("An update is available.")
-		printUpdateCommand()
+		printUpdateCommand(language)
 		return nil
 	}
 
@@ -61,8 +60,8 @@ func checkForUpdate() error {
 	return nil
 }
 
-func printUpdateCommand() {
-	command := updateCommand()
+func printUpdateCommand(language string) {
+	command := updateCommand(language)
 	if command == "" {
 		return
 	}
@@ -70,8 +69,7 @@ func printUpdateCommand() {
 	fmt.Println(command)
 }
 
-func updateCommand() string {
-	language := installerLanguage()
+func updateCommand(language string) string {
 	switch runtime.GOOS {
 	case "windows":
 		return fmt.Sprintf(`powershell -ExecutionPolicy Bypass -Command "$env:LANG = '%s'; iwr -useb https://raw.githubusercontent.com/arimatakao/comicread/main/install.ps1 | iex"`, language)
@@ -80,10 +78,6 @@ func updateCommand() string {
 	default:
 		return ""
 	}
-}
-
-func installerLanguage() string {
-	return os.Getenv("COMICREAD_LANG")
 }
 
 func newerVersion(latest, current string) bool {

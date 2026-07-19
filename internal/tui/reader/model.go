@@ -2,9 +2,6 @@ package reader
 
 import (
 	"image"
-	"os"
-	"strconv"
-	"strings"
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/arimatakao/comicfile"
@@ -54,7 +51,12 @@ func New(title string, chapter comicfile.ContainerReader, renderer backend.Rende
 
 // NewWithBookView creates a reader using the requested page layout.
 func NewWithBookView(title string, chapter comicfile.ContainerReader, renderer backend.Renderer, bookView ViewMode) Model {
-	next, previous := preRenderCounts()
+	return NewWithBookViewAndPreRender(title, chapter, renderer, bookView, 1, 1)
+}
+
+// NewWithBookViewAndPreRender creates a reader with explicit pre-rendering
+// counts from the application configuration.
+func NewWithBookViewAndPreRender(title string, chapter comicfile.ContainerReader, renderer backend.Renderer, bookView ViewMode, next, previous int) Model {
 	return Model{
 		title:             title,
 		chapter:           chapter,
@@ -68,26 +70,23 @@ func NewWithBookView(title string, chapter comicfile.ContainerReader, renderer b
 	}
 }
 
-func preRenderCounts() (next, previous int) {
-	return preRenderCount("COMICREAD_PRERENDERED_NEXT"), preRenderCount("COMICREAD_PRERENDERED_PREVIOUS")
-}
-
-func preRenderCount(name string) int {
-	value := strings.TrimSpace(os.Getenv(name))
-	if value == "" {
-		return 1
-	}
-	count, err := strconv.Atoi(value)
-	if err != nil || count < 0 {
-		return 1
-	}
-	return count
-}
-
 // NewWithBookViewAndJournal creates a reader that restores and saves local
 // reading progress and bookmarks.
 func NewWithBookViewAndJournal(title string, chapter comicfile.ContainerReader, renderer backend.Renderer, bookView ViewMode, progress *journal.Journal) Model {
 	m := NewWithBookView(title, chapter, renderer, bookView)
+	m.journal = progress
+	if progress == nil {
+		return m
+	}
+	m.bookmarks = progress.Bookmarks()
+	m.setPageNumber(progress.LastOpenedPage())
+	return m
+}
+
+// NewWithBookViewAndJournalAndPreRender creates a reader with saved progress
+// and explicit pre-rendering counts.
+func NewWithBookViewAndJournalAndPreRender(title string, chapter comicfile.ContainerReader, renderer backend.Renderer, bookView ViewMode, progress *journal.Journal, next, previous int) Model {
+	m := NewWithBookViewAndPreRender(title, chapter, renderer, bookView, next, previous)
 	m.journal = progress
 	if progress == nil {
 		return m
