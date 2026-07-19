@@ -161,7 +161,7 @@ comicread
 # Open the interactive file picker in a specific directory.
 comicread --open /path/to/manga
 
-# Ignore COMICREAD_DIR and open the file picker in the current directory.
+# Ignore the configured directory and open the file picker in the current directory.
 comicread --open
 
 # Read a CBZ archive.
@@ -198,60 +198,62 @@ comicread --right-circle-view /path/to/file.cbz
 comicread --clear-journal /path/to/file.cbz
 comicread --clear-journal /path/to/image-directory
 
-# Add defaults to a shell configuration file, such as ~/.zshrc or ~/.bashrc.
-export COMICREAD_GRAPHICS=sixel
-export COMICREAD_VIEW=right-view
-export COMICREAD_LANG=en
-export COMICREAD_DIR=/path/to/manga
+# Use a config file at a specific path instead of the default location.
+comicread --config /path/to/config.toml /path/to/file.cbz
 
-# Set the renderer default for this command.
-COMICREAD_GRAPHICS=sixel comicread /path/to/file.cbz
+# Set one config option (key=value) in the default config file and exit.
+comicread --set-config graphics=sixel
+comicread --set-config prerender.next=2
 
-# Set the default page layout for this command.
-COMICREAD_VIEW=right-view comicread /path/to/file.cbz
+# Set a config option in a specific config file and exit.
+comicread --config /path/to/config.toml --set-config view=right-view
 
-# Run the interface in Ukrainian for this command.
-COMICREAD_LANG=uk comicread /path/to/file.cbz
+# Reset the default config file to its defaults.
+comicread --reset-config
 
-# Set the renderer, page layout, and interface language for one command.
-COMICREAD_GRAPHICS=sixel COMICREAD_VIEW=right-view COMICREAD_LANG=uk comicread /path/to/file.cbz
-
-# Open the file picker in a manga library.
-COMICREAD_DIR=/path/to/manga comicread
+# Reset a specific config file to its defaults.
+comicread --config /path/to/config.toml --reset-config
 ```
 
-Environment variables:
+### Configuration file
 
-Add these to your shell configuration file (such as `.bashrc`, `.zshrc`, or `.profile`) to use the same defaults every time.
+`comicread` reads defaults from a `config.toml` file. See
+[config-example.toml](./config-example.toml) for the full list of options and
+their defaults, and copy it to the platform configuration directory to use it:
 
-- `COMICREAD_GRAPHICS`: `auto`, `ascii`, `dots`, `kitty`, `sixel`, or `iterm2`.
-- `COMICREAD_VIEW`: `book-view`, `right-view`, `circle-view`, or `right-circle-view`; leave unset for single-page view.
-- `COMICREAD_LANG`: supported language codes are listed below.
+- Linux: `~/.config/comicread/config.toml`
+- macOS: `~/Library/Application Support/comicread/config.toml`
+- Windows: `%AppData%\comicread\config.toml`
 
-  | Code | Language |
-  | --- | --- |
-  | `en` | English |
-  | `uk` | Ukrainian |
-  | `pl` | Polish |
-  | `de` | German |
-  | `fr` | French |
-  | `es` | Spanish |
-  | `cs` | Czech |
-  | `ro` | Romanian |
-  | `it` | Italian |
-  | `ko` | Korean |
-  | `ja` | Japanese |
-  | `id` | Indonesian |
-  | `hi` | Hindi |
-  | `el` | Greek |
-  | `tr` | Turkish |
-  | `kk` | Kazakh |
-  | `ka` | Georgian |
-  | `hu` | Hungarian |
-  | `sv` | Swedish |
-  | `no` | Norwegian |
-  | `da` | Danish |
-  | `fi` | Finnish |
+Use `--config` to point at a different file, `--set-config key=value` to
+update a single option in place, and `--reset-config` to restore defaults.
+
+Supported `language` codes:
+
+| Code | Language |
+| --- | --- |
+| `en` | English |
+| `uk` | Ukrainian |
+| `pl` | Polish |
+| `de` | German |
+| `fr` | French |
+| `es` | Spanish |
+| `cs` | Czech |
+| `ro` | Romanian |
+| `it` | Italian |
+| `ko` | Korean |
+| `ja` | Japanese |
+| `id` | Indonesian |
+| `hi` | Hindi |
+| `el` | Greek |
+| `tr` | Turkish |
+| `kk` | Kazakh |
+| `ka` | Georgian |
+| `hu` | Hungarian |
+| `sv` | Swedish |
+| `no` | Norwegian |
+| `da` | Danish |
+| `fi` | Finnish |
 
 ### Controls
 
@@ -299,6 +301,7 @@ The main direct dependencies are distributed under permissive licenses:
 - [comicfile](https://github.com/arimatakao/comicfile) — MIT
 - [ASCIIimage v2](https://github.com/fandasy/ASCIIimage) — MIT
 - [dots](https://github.com/imjasonh/dots) — Apache License 2.0
+- [go-toml v2](https://github.com/pelletier/go-toml) — MIT
 - [golang.org/x/image](https://pkg.go.dev/golang.org/x/image) — BSD-style (Go Authors)
 
 See the `LICENSE` file bundled with each dependency version in the Go module
