@@ -100,6 +100,6 @@ q    종료
   COMICREAD_PRERENDERED_NEXT      미리 렌더링할 다음 페이지 수(기본값 1)
   COMICREAD_PRERENDERED_PREVIOUS  미리 렌더링할 이전 페이지 수(기본값 1)
   COMICREAD_VIEW      기본 보기: book-view, right-view, circle-view 또는 right-circle-view
-  COMICREAD_LANG      메시지 언어: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk 또는 ka (기본값 "en")
+  COMICREAD_LANG      메시지 언어: https://github.com/arimatakao/comicread#environment-variables (기본값 "en")
   COMICREAD_DIR       경로를 지정하지 않았을 때 파일 선택기에 사용할 기본 디렉터리`,
 }

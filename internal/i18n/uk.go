@@ -100,6 +100,6 @@ q    вихід
   COMICREAD_PRERENDERED_NEXT      кількість наступних сторінок для пререндеру (за замовчуванням 1)
   COMICREAD_PRERENDERED_PREVIOUS  кількість попередніх сторінок для пререндеру (за замовчуванням 1)
   COMICREAD_VIEW      режим за замовчуванням: book-view, right-view, circle-view або right-circle-view
-  COMICREAD_LANG   мова повідомлень: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk або ka (за замовчуванням "en")
+  COMICREAD_LANG   мова повідомлень: https://github.com/arimatakao/comicread#environment-variables (за замовчуванням "en")
   COMICREAD_DIR    тека за замовчуванням для вибору файлів, коли шлях не вказано`,
 }

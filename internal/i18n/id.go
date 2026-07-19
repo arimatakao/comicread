@@ -100,6 +100,6 @@ lingkungan:
   COMICREAD_PRERENDERED_NEXT      halaman berikutnya untuk prarender (bawaan 1)
   COMICREAD_PRERENDERED_PREVIOUS  halaman sebelumnya untuk prarender (bawaan 1)
   COMICREAD_VIEW      tampilan bawaan: book-view, right-view, circle-view, atau right-circle-view
-  COMICREAD_LANG      bahasa pesan: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk, atau ka (bawaan "en")
+  COMICREAD_LANG      bahasa pesan: https://github.com/arimatakao/comicread#environment-variables (bawaan "en")
   COMICREAD_DIR       direktori bawaan untuk pemilih berkas saat tidak ada jalur yang diberikan`,
 }

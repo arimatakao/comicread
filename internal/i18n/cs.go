@@ -100,6 +100,6 @@ prostředí:
   COMICREAD_PRERENDERED_NEXT      počet dalších stránek k předvykreslení (výchozí 1)
   COMICREAD_PRERENDERED_PREVIOUS  počet předchozích stránek k předvykreslení (výchozí 1)
   COMICREAD_VIEW      výchozí zobrazení: book-view, right-view, circle-view nebo right-circle-view
-  COMICREAD_LANG      jazyk zpráv: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk nebo ka (výchozí "en")
+  COMICREAD_LANG      jazyk zpráv: https://github.com/arimatakao/comicread#environment-variables (výchozí "en")
   COMICREAD_DIR       výchozí adresář pro výběr souborů, když není zadána cesta`,
 }

@@ -100,6 +100,6 @@ mediu:
   COMICREAD_PRERENDERED_NEXT      pagini următoare pentru prerenderizare (implicit 1)
   COMICREAD_PRERENDERED_PREVIOUS  pagini anterioare pentru prerenderizare (implicit 1)
   COMICREAD_VIEW      vizualizare implicită: book-view, right-view, circle-view sau right-circle-view
-  COMICREAD_LANG      limba mesajelor: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk sau ka (implicit "en")
+  COMICREAD_LANG      limba mesajelor: https://github.com/arimatakao/comicread#environment-variables (implicit "en")
   COMICREAD_DIR       director implicit pentru selectorul de fișiere când nu este dată o cale`,
 }

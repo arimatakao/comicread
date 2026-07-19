@@ -100,6 +100,6 @@ q    बाहर निकलें
   COMICREAD_PRERENDERED_NEXT      प्रीरेंडर करने के लिए अगली पृष्ठ संख्या (डिफ़ॉल्ट 1)
   COMICREAD_PRERENDERED_PREVIOUS  प्रीरेंडर करने के लिए पिछले पृष्ठ संख्या (डिफ़ॉल्ट 1)
   COMICREAD_VIEW      डिफ़ॉल्ट दृश्य: book-view, right-view, circle-view या right-circle-view
-  COMICREAD_LANG      संदेश की भाषा: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk या ka (डिफ़ॉल्ट "en")
+  COMICREAD_LANG      संदेश की भाषा: https://github.com/arimatakao/comicread#environment-variables (डिफ़ॉल्ट "en")
   COMICREAD_DIR       पथ न दिए जाने पर फ़ाइल चयनक की डिफ़ॉल्ट निर्देशिका`,
 }

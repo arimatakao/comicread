@@ -100,6 +100,6 @@ Umgebung:
   COMICREAD_PRERENDERED_NEXT      nächste Seiten vorab rendern (Standard 1)
   COMICREAD_PRERENDERED_PREVIOUS  vorherige Seiten vorab rendern (Standard 1)
   COMICREAD_VIEW      Standardansicht: book-view, right-view, circle-view oder right-circle-view
-  COMICREAD_LANG      Sprache der Meldungen: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk oder ka (Standard: "en")
+  COMICREAD_LANG      Sprache der Meldungen: https://github.com/arimatakao/comicread#environment-variables (Standard: "en")
   COMICREAD_DIR       Standardordner für die Dateiauswahl, wenn kein Pfad angegeben ist`,
 }

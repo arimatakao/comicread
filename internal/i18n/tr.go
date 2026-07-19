@@ -100,6 +100,6 @@ ortam:
   COMICREAD_PRERENDERED_NEXT      önceden oluşturulacak sonraki sayfalar (varsayılan 1)
   COMICREAD_PRERENDERED_PREVIOUS  önceden oluşturulacak önceki sayfalar (varsayılan 1)
   COMICREAD_VIEW      varsayılan görünüm: book-view, right-view, circle-view veya right-circle-view
-  COMICREAD_LANG      ileti dili: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk veya ka (varsayılan "en")
+  COMICREAD_LANG      ileti dili: https://github.com/arimatakao/comicread#environment-variables (varsayılan "en")
   COMICREAD_DIR       yol verilmediğinde dosya seçici için varsayılan dizin`,
 }

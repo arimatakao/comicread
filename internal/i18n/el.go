@@ -100,6 +100,6 @@ q    έξοδος
   COMICREAD_PRERENDERED_NEXT      επόμενες σελίδες για προαπόδοση (προεπιλογή 1)
   COMICREAD_PRERENDERED_PREVIOUS  προηγούμενες σελίδες για προαπόδοση (προεπιλογή 1)
   COMICREAD_VIEW      προεπιλεγμένη προβολή: book-view, right-view, circle-view ή right-circle-view
-  COMICREAD_LANG      γλώσσα μηνυμάτων: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk ή ka (προεπιλογή "en")
+  COMICREAD_LANG      γλώσσα μηνυμάτων: https://github.com/arimatakao/comicread#environment-variables (προεπιλογή "en")
   COMICREAD_DIR       προεπιλεγμένος κατάλογος για τον επιλογέα αρχείων όταν δεν δίνεται διαδρομή`,
 }

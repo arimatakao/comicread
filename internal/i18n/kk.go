@@ -100,6 +100,6 @@ q    шығу
   COMICREAD_PRERENDERED_NEXT      алдын ала көрсетуге келесі беттер саны (әдепкі 1)
   COMICREAD_PRERENDERED_PREVIOUS  алдын ала көрсетуге алдыңғы беттер саны (әдепкі 1)
   COMICREAD_VIEW      әдепкі режим: book-view, right-view, circle-view немесе right-circle-view
-  COMICREAD_LANG   хабарлама тілі: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk немесе ka (әдепкі "en")
+  COMICREAD_LANG   хабарлама тілі: https://github.com/arimatakao/comicread#environment-variables (әдепкі "en")
   COMICREAD_DIR    жол көрсетілмегенде файл таңдағышқа арналған әдепкі қалта`,
 }

@@ -100,6 +100,6 @@ q    გასვლა
   COMICREAD_PRERENDERED_NEXT      შემდეგი გვერდები წინასწარი რენდერისთვის (ნაგულისხმევი 1)
   COMICREAD_PRERENDERED_PREVIOUS  წინა გვერდები წინასწარი რენდერისთვის (ნაგულისხმევი 1)
   COMICREAD_VIEW      ნაგულისხმევი რეჟიმი: book-view, right-view, circle-view ან right-circle-view
-  COMICREAD_LANG   შეტყობინებების ენა: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk ან ka (ნაგულისხმევი "en")
+  COMICREAD_LANG   შეტყობინებების ენა: https://github.com/arimatakao/comicread#environment-variables (ნაგულისხმევი "en")
   COMICREAD_DIR    ფაილის ამრჩევის ნაგულისხმევი საქაღალდე, როცა გზა მითითებული არაა`,
 }

@@ -100,6 +100,6 @@ environment:
   COMICREAD_PRERENDERED_NEXT      next pages to pre-render (default 1)
   COMICREAD_PRERENDERED_PREVIOUS  previous pages to pre-render (default 1)
   COMICREAD_VIEW      default view: book-view, right-view, circle-view, or right-circle-view
-  COMICREAD_LANG   message language: en, uk, pl, de, fr, es, cs, ro, it, ko, ja, id, hi, el, tr, kk, or ka (default "en")
+  COMICREAD_LANG   message language: https://github.com/arimatakao/comicread#environment-variables (default "en")
   COMICREAD_DIR    default directory for the file picker when no path is given`,
 }
