@@ -35,14 +35,14 @@ q    quit
 
 	FilepickerHeader:         "comicread — select a chapter\n%s\n\n",
 	FilepickerNoEntries:      "  (no supported entries)\n",
-	FilepickerHelp:           "\n↑/↓  move\n←    parent dir\n→    enter dir\nenter  open file\ns      select highlighted directory\nf      add current directory to favorites\nF      add favorite directory\nb      favorite directories\no      go to directory\nq      quit\n",
+	FilepickerHelp:           "\n↑/↓  move\n←    parent dir\n→    enter dir\nenter  open file\ns      select highlighted directory\nf      add / remove current directory as favorite\nF      add favorite directory\nb      favorite directories\no      go to directory\nq      quit\n",
 	FilepickerWindowTitle:    "comicread — pick a file",
 	FilepickerGoToPrompt:     "\nGo to directory: %s\n",
 	FilepickerFavoritePrompt: "\nFavorite directory: %s\n",
 	FilepickerGoToErr:        "  error: %s\n",
 	FilepickerFavorites:      "Favorite directories\n\n",
 	FilepickerNoFavorites:    "  (no configured favorite directories)\n",
-	FilepickerFavoritesHelp:  "\n↑/↓  move\nenter  go to directory\nesc    return\n",
+	FilepickerFavoritesHelp:  "\n↑/↓  move\nenter  go to directory\nd      remove favorite\nesc    return\n",
 	FilepickerFavoriteErr:    "  error: save favorites: %s\n",
 
 	FilepickerErrResolveDir: "resolve directory %q: %w",

@@ -58,6 +58,11 @@ type entry struct {
 	isDir bool
 }
 
+const (
+	yellow = "\x1b[33m"
+	reset  = "\x1b[0m"
+)
+
 type pickerModel struct {
 	dir      string
 	entries  []entry
@@ -205,9 +210,7 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "f":
-			if err := m.addFavorite(m.dir); err != nil {
-				m.favoriteErr = err.Error()
-			}
+			m.toggleFavorite()
 			return m, nil
 
 		case "F":
@@ -376,9 +379,6 @@ func (m *pickerModel) toggleFavorite() {
 	if m.saveFavorites == nil {
 		return
 	}
-	if err := m.addFavorite(m.dir); err == nil {
-		return
-	}
 	path := filepath.Clean(m.dir)
 	index := -1
 	for i, favorite := range m.favorites {
@@ -387,8 +387,7 @@ func (m *pickerModel) toggleFavorite() {
 			break
 		}
 	}
-	previous := m.favorites
-	updated := append([]string(nil), previous...)
+	updated := append([]string(nil), m.favorites...)
 	if index >= 0 {
 		updated = append(updated[:index], updated[index+1:]...)
 	} else {
@@ -421,6 +420,16 @@ func (m *pickerModel) addFavorite(path string) error {
 	return nil
 }
 
+func (m pickerModel) isFavorite(path string) bool {
+	path = filepath.Clean(path)
+	for _, favorite := range m.favorites {
+		if favorite == path {
+			return true
+		}
+	}
+	return false
+}
+
 func (m pickerModel) updateFavorites(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	switch msg.String() {
 	case "q", "ctrl+c":
@@ -435,6 +444,19 @@ func (m pickerModel) updateFavorites(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 		if m.favoriteIndex < len(m.favorites)-1 {
 			m.favoriteIndex++
 		}
+	case "d":
+		if len(m.favorites) == 0 || m.saveFavorites == nil {
+			return m, nil
+		}
+		updated := append([]string(nil), m.favorites...)
+		updated = append(updated[:m.favoriteIndex], updated[m.favoriteIndex+1:]...)
+		if err := m.saveFavorites(updated); err != nil {
+			m.favoriteErr = err.Error()
+			return m, nil
+		}
+		m.favorites = updated
+		m.favoriteIndex = min(m.favoriteIndex, len(m.favorites)-1)
+		m.favoriteErr = ""
 	case "enter", "right", "l":
 		if len(m.favorites) == 0 {
 			return m, nil
@@ -544,6 +566,9 @@ func (m pickerModel) View() tea.View {
 	var b strings.Builder
 	if m.favoriteList {
 		b.WriteString(i18n.T(i18n.FilepickerFavorites))
+		if m.favoriteErr != "" {
+			fmt.Fprintf(&b, i18n.T(i18n.FilepickerFavoriteErr), m.favoriteErr)
+		}
 		if len(m.favorites) == 0 {
 			b.WriteString(i18n.T(i18n.FilepickerNoFavorites))
 		}
@@ -578,6 +603,9 @@ func (m pickerModel) View() tea.View {
 		name := e.name
 		if e.isDir {
 			name += "/"
+			if m.isFavorite(m.entryPath(e)) {
+				name = yellow + name + reset
+			}
 		}
 		fmt.Fprintf(&b, "%s%s\n", cursor, name)
 	}
