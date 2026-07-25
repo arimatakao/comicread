@@ -51,6 +51,7 @@ const (
 	ReaderViewPageRange        = "reader.view.page_range"
 	ReaderViewRendering        = "reader.view.rendering"
 	ReaderViewHelp             = "reader.view.help"
+	ReaderViewMetadata         = "reader.view.metadata"
 	ReaderViewBookmarks        = "reader.view.bookmarks"
 	ReaderViewNoBookmarks      = "reader.view.no_bookmarks"
 	ReaderViewBookmarksHelp    = "reader.view.bookmarks_help"

@@ -32,6 +32,7 @@ g123 enter  go to page
 q    quit
 
 ?    close help`,
+	ReaderViewMetadata: "Metadata",
 
 	FilepickerHeader:         "comicread — select a chapter\n%s\n\n",
 	FilepickerNoEntries:      "  (no supported entries)\n",

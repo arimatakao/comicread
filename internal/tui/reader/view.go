@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
+	"github.com/arimatakao/comicfile/metadata"
 	"github.com/arimatakao/comicread/internal/i18n"
 )
 
@@ -20,12 +21,72 @@ func (m Model) content() string {
 		return i18n.T(i18n.ReaderViewTerminalTooSmall)
 	}
 	if m.showingHelp {
-		return "\n" + i18n.T(i18n.ReaderViewHelp)
+		return m.help()
 	}
 	if m.showingBookmarks {
 		return m.bookmarkList()
 	}
 	return m.header() + strings.Repeat("\n", m.height-1)
+}
+
+func (m Model) help() string {
+	var content strings.Builder
+	content.WriteString("\n")
+	content.WriteString(i18n.T(i18n.ReaderViewHelp))
+	if metadata := m.chapter.Metadata(); metadata != nil {
+		if details := metadataDetails(metadata); details != "" {
+			content.WriteString("\n\n")
+			content.WriteString(i18n.T(i18n.ReaderViewMetadata))
+			content.WriteString("\n\n")
+			content.WriteString(details)
+		}
+	}
+	return content.String()
+}
+
+func metadataDetails(m *metadata.Metadata) string {
+	if m == nil {
+		return ""
+	}
+
+	ci, cbi, plain := m.CI, m.CBI.ComicBookInfoData, m.P
+	fields := []struct {
+		label string
+		value string
+	}{
+		{"Title", firstNonEmpty(ci.Title, cbi.Title)},
+		{"Series", cbi.Series},
+		{"Number", firstNonEmpty(ci.Number, cbi.Issue)},
+		{"Volume", firstNonEmpty(ci.Volume, cbi.Volume)},
+		{"Authors", firstNonEmpty(plain.Authors, ci.Writer)},
+		{"Artists", firstNonEmpty(plain.Artists, ci.Penciller)},
+		{"Publisher", firstNonEmpty(ci.Publisher, cbi.Publisher)},
+		{"Year", strconv.Itoa(ci.Year)},
+		{"Language", firstNonEmpty(ci.LanguageISO, cbi.Language)},
+		{"Tags", firstNonEmpty(plain.Tags, strings.Join(cbi.Tags, ", "))},
+		{"Summary", ci.Summary},
+	}
+
+	var content strings.Builder
+	for _, field := range fields {
+		if field.value == "" || (field.label == "Year" && ci.Year == 0) {
+			continue
+		}
+		content.WriteString(field.label)
+		content.WriteString(": ")
+		content.WriteString(field.value)
+		content.WriteByte('\n')
+	}
+	return strings.TrimSuffix(content.String(), "\n")
+}
+
+func firstNonEmpty(values ...string) string {
+	for _, value := range values {
+		if value != "" {
+			return value
+		}
+	}
+	return ""
 }
 
 func (m Model) header() string {
