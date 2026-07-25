@@ -150,8 +150,7 @@ comicread
 # Show the command help.
 comicread --help
 
-# Print the active environment settings, version, or available updates.
-comicread --env
+# Print the version or check for available updates.
 comicread --version
 comicread --update
 
