@@ -20,6 +20,7 @@ type Config struct {
 	View      string    `toml:"view"`
 	Language  string    `toml:"language"`
 	Directory string    `toml:"directory"`
+	Favorites []string  `toml:"favorites"`
 	Prerender Prerender `toml:"prerender"`
 }
 
@@ -77,6 +78,9 @@ func LoadFile(path string) (Config, error) {
 	settings.View = strings.TrimSpace(settings.View)
 	settings.Language = strings.TrimSpace(settings.Language)
 	settings.Directory = strings.TrimSpace(settings.Directory)
+	for i := range settings.Favorites {
+		settings.Favorites[i] = strings.TrimSpace(settings.Favorites[i])
+	}
 	if settings.Graphics == "" {
 		settings.Graphics = Default().Graphics
 	}

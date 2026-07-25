@@ -3,6 +3,7 @@
 package filepicker
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -16,12 +17,28 @@ import (
 // Pick runs an interactive file picker rooted at root and returns the chosen
 // chapter path. It returns an empty path if the user cancels.
 func Pick(root string) (string, error) {
+	return PickWithFavorites(root, nil)
+}
+
+// PickWithFavorites runs an interactive file picker rooted at root. Favorites
+// are directory paths shown when the user presses "f".
+func PickWithFavorites(root string, favorites []string) (string, error) {
+	return pick(root, favorites, nil)
+}
+
+// PickWithFavoriteSaver runs an interactive file picker that persists
+// favorites through saveFavorites whenever the user presses "b".
+func PickWithFavoriteSaver(root string, favorites []string, saveFavorites func([]string) error) (string, error) {
+	return pick(root, favorites, saveFavorites)
+}
+
+func pick(root string, favorites []string, saveFavorites func([]string) error) (string, error) {
 	abs, err := filepath.Abs(root)
 	if err != nil {
 		return "", fmt.Errorf(i18n.T(i18n.FilepickerErrResolveDir), root, err)
 	}
 
-	model, err := newModel(abs)
+	model, err := newModelWithFavoriteSaver(abs, favorites, saveFavorites)
 	if err != nil {
 		return "", err
 	}
@@ -51,17 +68,62 @@ type pickerModel struct {
 	width    int
 	height   int
 
-	goToInput bool
-	goToPath  string
-	goToErr   string
+	goToInput        bool
+	goToPath         string
+	goToErr          string
+	favoriteInput    bool
+	favoritePath     string
+	favoriteInputErr string
+	commandInput     bool
+	command          string
+	commandErr       string
+
+	favorites     []string
+	favoriteIndex int
+	favoriteList  bool
+	favoriteErr   string
+	saveFavorites func([]string) error
 }
 
 func newModel(dir string) (pickerModel, error) {
-	m := pickerModel{dir: dir}
+	return newModelWithFavorites(dir, nil)
+}
+
+func newModelWithFavorites(dir string, favorites []string) (pickerModel, error) {
+	return newModelWithFavoriteSaver(dir, favorites, nil)
+}
+
+func newModelWithFavoriteSaver(dir string, favorites []string, saveFavorites func([]string) error) (pickerModel, error) {
+	m := pickerModel{dir: dir, favorites: validFavorites(favorites), saveFavorites: saveFavorites}
 	if err := m.readDir(); err != nil {
 		return pickerModel{}, err
 	}
 	return m, nil
+}
+
+func validFavorites(favorites []string) []string {
+	seen := make(map[string]struct{}, len(favorites))
+	valid := make([]string, 0, len(favorites))
+	for _, favorite := range favorites {
+		if favorite == "" {
+			continue
+		}
+		path, err := filepath.Abs(favorite)
+		if err != nil {
+			continue
+		}
+		info, err := os.Stat(path)
+		if err != nil || !info.IsDir() {
+			continue
+		}
+		path = filepath.Clean(path)
+		if _, ok := seen[path]; ok {
+			continue
+		}
+		seen[path] = struct{}{}
+		valid = append(valid, path)
+	}
+	return valid
 }
 
 func (m *pickerModel) readDir() error {
@@ -113,8 +175,17 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.keepCursorVisible()
 
 	case tea.KeyPressMsg:
+		if m.commandInput {
+			return m.updateCommandInput(msg)
+		}
 		if m.goToInput {
 			return m.updateGoToInput(msg)
+		}
+		if m.favoriteInput {
+			return m.updateFavoriteInput(msg)
+		}
+		if m.favoriteList {
+			return m.updateFavorites(msg)
 		}
 
 		switch msg.String() {
@@ -125,6 +196,29 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.goToInput = true
 			m.goToPath = ""
 			m.goToErr = ""
+			return m, nil
+
+		case ":":
+			m.commandInput = true
+			m.command = ""
+			m.commandErr = ""
+			return m, nil
+
+		case "f":
+			if err := m.addFavorite(m.dir); err != nil {
+				m.favoriteErr = err.Error()
+			}
+			return m, nil
+
+		case "F":
+			m.favoriteInput = true
+			m.favoritePath = ""
+			m.favoriteInputErr = ""
+			return m, nil
+
+		case "b":
+			m.favoriteList = true
+			m.favoriteIndex = 0
 			return m, nil
 
 		case "up", "k":
@@ -171,6 +265,185 @@ func (m pickerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	m.keepCursorVisible()
+	return m, nil
+}
+
+func (m pickerModel) updateFavoriteInput(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
+	switch msg.String() {
+	case "esc":
+		m.favoriteInput = false
+		m.favoritePath = ""
+		m.favoriteInputErr = ""
+	case "enter":
+		path := strings.TrimSpace(m.favoritePath)
+		if path == "" {
+			m.favoriteInputErr = i18n.T(i18n.FilepickerErrEmptyPath)
+			return m, nil
+		}
+		abs, err := directoryPath(path)
+		if err != nil {
+			m.favoriteInputErr = err.Error()
+			return m, nil
+		}
+		if err := m.addFavorite(abs); err != nil {
+			m.favoriteInputErr = err.Error()
+			return m, nil
+		}
+		m.favoriteInput = false
+		m.favoritePath = ""
+		m.favoriteInputErr = ""
+	case "backspace":
+		if len(m.favoritePath) > 0 {
+			_, size := utf8.DecodeLastRuneInString(m.favoritePath)
+			m.favoritePath = m.favoritePath[:len(m.favoritePath)-size]
+		}
+	default:
+		if msg.Text != "" {
+			m.favoritePath += msg.Text
+		}
+	}
+	return m, nil
+}
+
+func (m pickerModel) updateCommandInput(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
+	switch msg.String() {
+	case "esc":
+		m.commandInput = false
+		m.command = ""
+		m.commandErr = ""
+	case "enter":
+		command, path, ok := strings.Cut(strings.TrimSpace(m.command), " ")
+		path = strings.TrimSpace(path)
+		if !ok || path == "" {
+			m.commandErr = "command requires a directory path"
+			return m, nil
+		}
+		switch command {
+		case "g":
+			abs, err := directoryPath(path)
+			if err != nil {
+				m.commandErr = err.Error()
+				return m, nil
+			}
+			m.commandInput = false
+			m.command = ""
+			m.commandErr = ""
+			if cmd := m.enterDir(abs); cmd != nil {
+				return m, cmd
+			}
+		case "f":
+			abs, err := directoryPath(path)
+			if err != nil {
+				m.commandErr = err.Error()
+				return m, nil
+			}
+			if err := m.addFavorite(abs); err != nil {
+				m.commandErr = err.Error()
+				return m, nil
+			}
+			m.commandInput = false
+			m.command = ""
+			m.commandErr = ""
+		default:
+			m.commandErr = fmt.Sprintf("unknown command %q", command)
+		}
+	case "backspace":
+		if len(m.command) > 0 {
+			_, size := utf8.DecodeLastRuneInString(m.command)
+			m.command = m.command[:len(m.command)-size]
+		}
+	default:
+		if msg.Text != "" {
+			m.command += msg.Text
+		}
+	}
+	return m, nil
+}
+
+func directoryPath(path string) (string, error) {
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return "", fmt.Errorf(i18n.T(i18n.FilepickerErrResolveDir), path, err)
+	}
+	info, err := os.Stat(abs)
+	if err != nil || !info.IsDir() {
+		return "", errors.New(i18n.T(i18n.FilepickerErrNotDir, abs))
+	}
+	return filepath.Clean(abs), nil
+}
+
+func (m *pickerModel) toggleFavorite() {
+	if m.saveFavorites == nil {
+		return
+	}
+	if err := m.addFavorite(m.dir); err == nil {
+		return
+	}
+	path := filepath.Clean(m.dir)
+	index := -1
+	for i, favorite := range m.favorites {
+		if favorite == path {
+			index = i
+			break
+		}
+	}
+	previous := m.favorites
+	updated := append([]string(nil), previous...)
+	if index >= 0 {
+		updated = append(updated[:index], updated[index+1:]...)
+	} else {
+		updated = append(updated, path)
+	}
+	if err := m.saveFavorites(updated); err != nil {
+		m.favoriteErr = err.Error()
+		return
+	}
+	m.favorites = updated
+	m.favoriteErr = ""
+}
+
+func (m *pickerModel) addFavorite(path string) error {
+	if m.saveFavorites == nil {
+		return errors.New("favorites cannot be saved")
+	}
+	path = filepath.Clean(path)
+	for _, favorite := range m.favorites {
+		if favorite == path {
+			return nil
+		}
+	}
+	updated := append(append([]string(nil), m.favorites...), path)
+	if err := m.saveFavorites(updated); err != nil {
+		return fmt.Errorf("save favorites: %w", err)
+	}
+	m.favorites = updated
+	m.favoriteErr = ""
+	return nil
+}
+
+func (m pickerModel) updateFavorites(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
+	switch msg.String() {
+	case "q", "ctrl+c":
+		return m, tea.Quit
+	case "esc", "f":
+		m.favoriteList = false
+	case "up", "k":
+		if m.favoriteIndex > 0 {
+			m.favoriteIndex--
+		}
+	case "down", "j":
+		if m.favoriteIndex < len(m.favorites)-1 {
+			m.favoriteIndex++
+		}
+	case "enter", "right", "l":
+		if len(m.favorites) == 0 {
+			return m, nil
+		}
+		m.favoriteList = false
+		if cmd := m.enterDir(m.favorites[m.favoriteIndex]); cmd != nil {
+			return m, cmd
+		}
+	}
 	return m, nil
 }
 
@@ -269,7 +542,28 @@ func (m pickerModel) entryRows() int {
 
 func (m pickerModel) View() tea.View {
 	var b strings.Builder
+	if m.favoriteList {
+		b.WriteString(i18n.T(i18n.FilepickerFavorites))
+		if len(m.favorites) == 0 {
+			b.WriteString(i18n.T(i18n.FilepickerNoFavorites))
+		}
+		for i, favorite := range m.favorites {
+			cursor := "  "
+			if i == m.favoriteIndex {
+				cursor = "> "
+			}
+			fmt.Fprintf(&b, "%s%s/\n", cursor, favorite)
+		}
+		b.WriteString(i18n.T(i18n.FilepickerFavoritesHelp))
+		view := tea.NewView(b.String())
+		view.AltScreen = true
+		view.WindowTitle = i18n.T(i18n.FilepickerWindowTitle)
+		return view
+	}
 	fmt.Fprintf(&b, i18n.T(i18n.FilepickerHeader), m.dir)
+	if m.favoriteErr != "" {
+		fmt.Fprintf(&b, i18n.T(i18n.FilepickerFavoriteErr), m.favoriteErr)
+	}
 
 	if len(m.entries) == 0 {
 		b.WriteString(i18n.T(i18n.FilepickerNoEntries))
@@ -292,6 +586,12 @@ func (m pickerModel) View() tea.View {
 		fmt.Fprintf(&b, i18n.T(i18n.FilepickerGoToPrompt), m.goToPath)
 		if m.goToErr != "" {
 			fmt.Fprintf(&b, i18n.T(i18n.FilepickerGoToErr), m.goToErr)
+		}
+	}
+	if m.favoriteInput {
+		fmt.Fprintf(&b, i18n.T(i18n.FilepickerFavoritePrompt), m.favoritePath)
+		if m.favoriteInputErr != "" {
+			fmt.Fprintf(&b, i18n.T(i18n.FilepickerGoToErr), m.favoriteInputErr)
 		}
 	}
 

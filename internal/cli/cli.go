@@ -89,7 +89,14 @@ func Run(args []string) error {
 		if err != nil {
 			return err
 		}
-		path, err = filepicker.Pick(dir)
+		saveFavorites := func(favorites []string) error {
+			settings.Favorites = favorites
+			if options.configPathSet {
+				return config.SaveFile(options.configPath, settings)
+			}
+			return config.Save(settings)
+		}
+		path, err = filepicker.PickWithFavoriteSaver(dir, settings.Favorites, saveFavorites)
 		if err != nil {
 			if errors.Is(err, tea.ErrInterrupted) {
 				return nil
