@@ -1,9 +1,16 @@
+# Graphics renderer: auto, ascii, dots, kitty, sixel, or iterm2.
 graphics = 'auto'
+# Page layout: single-page, book-view, right-view, circle-view, or right-circle-view.
 view = 'single-page'
+# Interface language code (for example, en or uk).
 language = 'en'
+# Initial directory for the file picker; leave empty to use the current directory.
 directory = ''
+# Directories shown in the file picker's favorites list.
 favorites = []
 
 [prerender]
+# Number of following pages to render in advance (0 disables it).
 next = 1
+# Number of preceding pages to render in advance (0 disables it).
 previous = 1
