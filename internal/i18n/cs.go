@@ -108,4 +108,5 @@ prostředí:
   COMICREAD_VIEW      výchozí zobrazení: book-view, right-view, circle-view nebo right-circle-view
   COMICREAD_LANG      jazyk zpráv: https://github.com/arimatakao/comicread#environment-variables (výchozí "en")
   COMICREAD_DIR       výchozí adresář pro výběr souborů, když není zadána cesta`,
+	ReaderViewMetadata: "Metadata",
 }

@@ -48,4 +48,5 @@ ympäristö:
   COMICREAD_VIEW      oletusnäkymä: book-view, right-view, circle-view tai right-circle-view
   COMICREAD_LANG      viestien kieli: https://github.com/arimatakao/comicread#environment-variables (oletus "en")
   COMICREAD_DIR       tiedostovalitsimen oletushakemisto, kun polkua ei anneta`,
+	ReaderViewMetadata: "Metatiedot",
 }

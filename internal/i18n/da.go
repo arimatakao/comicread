@@ -48,4 +48,5 @@ miljø:
   COMICREAD_VIEW      standardvisning: book-view, right-view, circle-view eller right-circle-view
   COMICREAD_LANG      meddelelsessprog: https://github.com/arimatakao/comicread#environment-variables (standard "en")
   COMICREAD_DIR       standardmappe for filvælgeren, når ingen sti er angivet`,
+	ReaderViewMetadata: "Metadata",
 }

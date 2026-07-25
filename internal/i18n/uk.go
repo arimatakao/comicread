@@ -108,4 +108,5 @@ q    вихід
   COMICREAD_VIEW      режим за замовчуванням: book-view, right-view, circle-view або right-circle-view
   COMICREAD_LANG   мова повідомлень: https://github.com/arimatakao/comicread#environment-variables (за замовчуванням "en")
   COMICREAD_DIR    тека за замовчуванням для вибору файлів, коли шлях не вказано`,
+	ReaderViewMetadata: "Метадані",
 }

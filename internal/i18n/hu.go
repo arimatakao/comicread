@@ -108,4 +108,5 @@ környezet:
   COMICREAD_VIEW      alapértelmezett nézet: book-view, right-view, circle-view vagy right-circle-view
   COMICREAD_LANG      üzenetek nyelve: https://github.com/arimatakao/comicread#environment-variables (alapértelmezés: "en")
   COMICREAD_DIR       alapértelmezett fájlválasztó-könyvtár, ha nincs útvonal megadva`,
+	ReaderViewMetadata: "Metaadatok",
 }

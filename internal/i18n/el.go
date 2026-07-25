@@ -108,4 +108,5 @@ q    έξοδος
   COMICREAD_VIEW      προεπιλεγμένη προβολή: book-view, right-view, circle-view ή right-circle-view
   COMICREAD_LANG      γλώσσα μηνυμάτων: https://github.com/arimatakao/comicread#environment-variables (προεπιλογή "en")
   COMICREAD_DIR       προεπιλεγμένος κατάλογος για τον επιλογέα αρχείων όταν δεν δίνεται διαδρομή`,
+	ReaderViewMetadata: "Μεταδεδομένα",
 }

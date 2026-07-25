@@ -108,4 +108,5 @@ q    გასვლა
   COMICREAD_VIEW      ნაგულისხმევი რეჟიმი: book-view, right-view, circle-view ან right-circle-view
   COMICREAD_LANG   შეტყობინებების ენა: https://github.com/arimatakao/comicread#environment-variables (ნაგულისხმევი "en")
   COMICREAD_DIR    ფაილის ამრჩევის ნაგულისხმევი საქაღალდე, როცა გზა მითითებული არაა`,
+	ReaderViewMetadata: "მეტამონაცემები",
 }

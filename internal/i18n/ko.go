@@ -108,4 +108,5 @@ q    종료
   COMICREAD_VIEW      기본 보기: book-view, right-view, circle-view 또는 right-circle-view
   COMICREAD_LANG      메시지 언어: https://github.com/arimatakao/comicread#environment-variables (기본값 "en")
   COMICREAD_DIR       경로를 지정하지 않았을 때 파일 선택기에 사용할 기본 디렉터리`,
+	ReaderViewMetadata: "메타데이터",
 }

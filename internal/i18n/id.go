@@ -108,4 +108,5 @@ lingkungan:
   COMICREAD_VIEW      tampilan bawaan: book-view, right-view, circle-view, atau right-circle-view
   COMICREAD_LANG      bahasa pesan: https://github.com/arimatakao/comicread#environment-variables (bawaan "en")
   COMICREAD_DIR       direktori bawaan untuk pemilih berkas saat tidak ada jalur yang diberikan`,
+	ReaderViewMetadata: "Metadata",
 }

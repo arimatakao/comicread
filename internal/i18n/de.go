@@ -108,4 +108,5 @@ Umgebung:
   COMICREAD_VIEW      Standardansicht: book-view, right-view, circle-view oder right-circle-view
   COMICREAD_LANG      Sprache der Meldungen: https://github.com/arimatakao/comicread#environment-variables (Standard: "en")
   COMICREAD_DIR       Standardordner für die Dateiauswahl, wenn kein Pfad angegeben ist`,
+	ReaderViewMetadata: "Metadaten",
 }

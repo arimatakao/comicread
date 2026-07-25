@@ -108,4 +108,5 @@ mediu:
   COMICREAD_VIEW      vizualizare implicită: book-view, right-view, circle-view sau right-circle-view
   COMICREAD_LANG      limba mesajelor: https://github.com/arimatakao/comicread#environment-variables (implicit "en")
   COMICREAD_DIR       director implicit pentru selectorul de fișiere când nu este dată o cale`,
+	ReaderViewMetadata: "Metadate",
 }

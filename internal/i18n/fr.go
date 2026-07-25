@@ -108,4 +108,5 @@ environnement :
   COMICREAD_VIEW      affichage par défaut : book-view, right-view, circle-view ou right-circle-view
   COMICREAD_LANG      langue des messages : https://github.com/arimatakao/comicread#environment-variables (par défaut : "en")
   COMICREAD_DIR       dossier par défaut du sélecteur de fichiers lorsqu'aucun chemin n'est indiqué`,
+	ReaderViewMetadata: "Métadonnées",
 }

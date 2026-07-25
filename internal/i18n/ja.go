@@ -108,4 +108,5 @@ q    終了
   COMICREAD_VIEW      既定の表示: book-view、right-view、circle-view、right-circle-view
   COMICREAD_LANG      メッセージの言語: https://github.com/arimatakao/comicread#environment-variables (既定値 "en")
   COMICREAD_DIR       パス未指定時にファイル選択で使う既定のディレクトリ`,
+	ReaderViewMetadata: "メタデータ",
 }

@@ -108,4 +108,5 @@ zmienne środowiskowe:
   COMICREAD_VIEW      domyślny widok: book-view, right-view, circle-view lub right-circle-view
   COMICREAD_LANG      język komunikatów: https://github.com/arimatakao/comicread#environment-variables (domyślnie "en")
   COMICREAD_DIR       domyślny katalog dla wyboru plików, gdy nie podano ścieżki`,
+	ReaderViewMetadata: "Metadane",
 }

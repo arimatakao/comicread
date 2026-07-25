@@ -108,4 +108,5 @@ q    шығу
   COMICREAD_VIEW      әдепкі режим: book-view, right-view, circle-view немесе right-circle-view
   COMICREAD_LANG   хабарлама тілі: https://github.com/arimatakao/comicread#environment-variables (әдепкі "en")
   COMICREAD_DIR    жол көрсетілмегенде файл таңдағышқа арналған әдепкі қалта`,
+	ReaderViewMetadata: "Метадеректер",
 }

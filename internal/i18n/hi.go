@@ -108,4 +108,5 @@ q    बाहर निकलें
   COMICREAD_VIEW      डिफ़ॉल्ट दृश्य: book-view, right-view, circle-view या right-circle-view
   COMICREAD_LANG      संदेश की भाषा: https://github.com/arimatakao/comicread#environment-variables (डिफ़ॉल्ट "en")
   COMICREAD_DIR       पथ न दिए जाने पर फ़ाइल चयनक की डिफ़ॉल्ट निर्देशिका`,
+	ReaderViewMetadata: "मेटाडेटा",
 }

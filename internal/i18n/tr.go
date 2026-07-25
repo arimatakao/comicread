@@ -108,4 +108,5 @@ ortam:
   COMICREAD_VIEW      varsayılan görünüm: book-view, right-view, circle-view veya right-circle-view
   COMICREAD_LANG      ileti dili: https://github.com/arimatakao/comicread#environment-variables (varsayılan "en")
   COMICREAD_DIR       yol verilmediğinde dosya seçici için varsayılan dizin`,
+	ReaderViewMetadata: "Meta veriler",
 }
