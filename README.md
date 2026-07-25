@@ -290,7 +290,21 @@ Supported `language` codes:
 | `Enter` | Open the selected file |
 | `s` | Open the selected directory |
 | `o` | Enter a directory path |
+| `:` then `g` and a path, `Enter` | Go to a directory path |
+| `f` | Add or remove the current directory from favorites |
+| `F` | Add a directory path to favorites |
+| `b` | Open the favorites list |
 | `q`, `Esc`, `Ctrl+C` | Quit |
+
+#### Favorites list
+
+| Keys | Action |
+| --- | --- |
+| `up`, `k`, `down`, `j` | Move selection |
+| `Enter`, `right`, `l` | Open the selected directory |
+| `d` | Remove the selected directory from favorites |
+| `f`, `Esc` | Close the list |
+| `q`, `Ctrl+C` | Quit |
 
 ## Dependency licenses
 
