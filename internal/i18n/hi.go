@@ -33,12 +33,17 @@ q    बाहर निकलें
 
 ?    सहायता बंद करें`,
 
-	FilepickerHeader:      "comicread — अध्याय चुनें\n%s\n\n",
-	FilepickerNoEntries:   "  (कोई समर्थित प्रविष्टि नहीं)\n",
-	FilepickerHelp:        "\n↑/↓ चलें\n← मूल निर्देशिका\n→ निर्देशिका में जाएँ\nenter फ़ाइल खोलें\ns चुनी हुई निर्देशिका चुनें\no निर्देशिका पर जाएँ\nq बाहर निकलें\n",
-	FilepickerWindowTitle: "comicread — फ़ाइल चुनें",
-	FilepickerGoToPrompt:  "\nनिर्देशिका पर जाएँ: %s\n",
-	FilepickerGoToErr:     "  त्रुटि: %s\n",
+	FilepickerHeader:         "comicread — अध्याय चुनें\n%s\n\n",
+	FilepickerNoEntries:      "  (कोई समर्थित प्रविष्टि नहीं)\n",
+	FilepickerHelp:           "\n↑/↓ चलें\n← मूल निर्देशिका\n→ निर्देशिका में जाएँ\nenter फ़ाइल खोलें\ns चुनी हुई निर्देशिका चुनें\nf वर्तमान निर्देशिका को पसंदीदा में जोड़ें / हटाएँ\nF पसंदीदा निर्देशिका जोड़ें\nb पसंदीदा निर्देशिकाएँ\no निर्देशिका पर जाएँ\nq बाहर निकलें\n",
+	FilepickerWindowTitle:    "comicread — फ़ाइल चुनें",
+	FilepickerGoToPrompt:     "\nनिर्देशिका पर जाएँ: %s\n",
+	FilepickerFavoritePrompt: "\nपसंदीदा निर्देशिका: %s\n",
+	FilepickerFavorites:      "पसंदीदा निर्देशिकाएँ\n\n",
+	FilepickerNoFavorites:    "  (कोई पसंदीदा निर्देशिका कॉन्फ़िगर नहीं है)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ चलें\nenter निर्देशिका पर जाएँ\nd पसंदीदा हटाएँ\nesc वापस जाएँ\n",
+	FilepickerFavoriteErr:    "  पसंदीदा सहेजने में त्रुटि: %s\n",
+	FilepickerGoToErr:        "  त्रुटि: %s\n",
 
 	FilepickerErrResolveDir: "निर्देशिका %q निर्धारित नहीं की जा सकती: %w",
 	FilepickerErrReadDir:    "निर्देशिका %q पढ़ी नहीं जा सकती: %w",

@@ -33,12 +33,17 @@ q    終了
 
 ?    ヘルプを閉じる`,
 
-	FilepickerHeader:      "comicread — チャプターを選択\n%s\n\n",
-	FilepickerNoEntries:   "  (対応する項目はありません)\n",
-	FilepickerHelp:        "\n↑/↓ 移動\n← 親ディレクトリ\n→ ディレクトリに入る\nenter ファイルを開く\ns 選択中のディレクトリを選ぶ\no ディレクトリへ移動\nq 終了\n",
-	FilepickerWindowTitle: "comicread — ファイルを選択",
-	FilepickerGoToPrompt:  "\nディレクトリへ移動: %s\n",
-	FilepickerGoToErr:     "  エラー: %s\n",
+	FilepickerHeader:         "comicread — チャプターを選択\n%s\n\n",
+	FilepickerNoEntries:      "  (対応する項目はありません)\n",
+	FilepickerHelp:           "\n↑/↓ 移動\n← 親ディレクトリ\n→ ディレクトリに入る\nenter ファイルを開く\ns 選択中のディレクトリを選ぶ\nf 現在のディレクトリをお気に入りに追加 / 削除\nF お気に入りのディレクトリを追加\nb お気に入りのディレクトリ\no ディレクトリへ移動\nq 終了\n",
+	FilepickerWindowTitle:    "comicread — ファイルを選択",
+	FilepickerGoToPrompt:     "\nディレクトリへ移動: %s\n",
+	FilepickerFavoritePrompt: "\nお気に入りのディレクトリ: %s\n",
+	FilepickerFavorites:      "お気に入りのディレクトリ\n\n",
+	FilepickerNoFavorites:    "  (設定されたお気に入りのディレクトリはありません)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ 移動\nenter ディレクトリへ移動\nd お気に入りを削除\nesc 戻る\n",
+	FilepickerFavoriteErr:    "  お気に入りの保存エラー: %s\n",
+	FilepickerGoToErr:        "  エラー: %s\n",
 
 	FilepickerErrResolveDir: "ディレクトリ %q を特定できません: %w",
 	FilepickerErrReadDir:    "ディレクトリ %q を読み取れません: %w",

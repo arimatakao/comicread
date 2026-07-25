@@ -33,12 +33,17 @@ q    გასვლა
 
 ?    დახმარების დახურვა`,
 
-	FilepickerHeader:      "comicread — აირჩიეთ თავი\n%s\n\n",
-	FilepickerNoEntries:   "  (მხარდაჭერილი ელემენტები არ არის)\n",
-	FilepickerHelp:        "\n↑/↓ გადაადგილება\n← მშობელი საქაღალდე\n→ საქაღალდის გახსნა\nenter ფაილის გახსნა\ns მონიშნული საქაღალდის არჩევა\no საქაღალდეზე გადასვლა\nq გასვლა\n",
-	FilepickerWindowTitle: "comicread — ფაილის არჩევა",
-	FilepickerGoToPrompt:  "\nგადასვლა საქაღალდეზე: %s\n",
-	FilepickerGoToErr:     "  შეცდომა: %s\n",
+	FilepickerHeader:         "comicread — აირჩიეთ თავი\n%s\n\n",
+	FilepickerNoEntries:      "  (მხარდაჭერილი ელემენტები არ არის)\n",
+	FilepickerHelp:           "\n↑/↓ გადაადგილება\n← მშობელი საქაღალდე\n→ საქაღალდის გახსნა\nenter ფაილის გახსნა\ns მონიშნული საქაღალდის არჩევა\nf მიმდინარე საქაღალდის რჩეულებში დამატება / ამოღება\nF რჩეული საქაღალდის დამატება\nb რჩეული საქაღალდეები\no საქაღალდეზე გადასვლა\nq გასვლა\n",
+	FilepickerWindowTitle:    "comicread — ფაილის არჩევა",
+	FilepickerGoToPrompt:     "\nგადასვლა საქაღალდეზე: %s\n",
+	FilepickerFavoritePrompt: "\nრჩეული საქაღალდე: %s\n",
+	FilepickerFavorites:      "რჩეული საქაღალდეები\n\n",
+	FilepickerNoFavorites:    "  (რჩეული საქაღალდეები არ არის კონფიგურირებული)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ გადაადგილება\nenter საქაღალდეზე გადასვლა\nd რჩეულის ამოღება\nesc დაბრუნება\n",
+	FilepickerFavoriteErr:    "  რჩეულების შენახვის შეცდომა: %s\n",
+	FilepickerGoToErr:        "  შეცდომა: %s\n",
 
 	FilepickerErrResolveDir: "საქაღალდის %q დადგენა ვერ მოხერხდა: %w",
 	FilepickerErrReadDir:    "საქაღალდის %q წაკითხვა ვერ მოხერხდა: %w",

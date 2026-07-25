@@ -33,12 +33,17 @@ q    beenden
 
 ?    Hilfe schließen`,
 
-	FilepickerHeader:      "comicread — Kapitel auswählen\n%s\n\n",
-	FilepickerNoEntries:   "  (keine unterstützten Einträge)\n",
-	FilepickerHelp:        "\n↑/↓ bewegen\n← übergeordneter Ordner\n→ Ordner öffnen\nenter Datei öffnen\ns markierten Ordner auswählen\no zu Ordner wechseln\nq beenden\n",
-	FilepickerWindowTitle: "comicread — Datei auswählen",
-	FilepickerGoToPrompt:  "\nZu Ordner wechseln: %s\n",
-	FilepickerGoToErr:     "  Fehler: %s\n",
+	FilepickerHeader:         "comicread — Kapitel auswählen\n%s\n\n",
+	FilepickerNoEntries:      "  (keine unterstützten Einträge)\n",
+	FilepickerHelp:           "\n↑/↓ bewegen\n← übergeordneter Ordner\n→ Ordner öffnen\nenter Datei öffnen\ns markierten Ordner auswählen\nf aktuellen Ordner zu Favoriten hinzufügen / daraus entfernen\nF Favoritenordner hinzufügen\nb Favoritenordner\no zu Ordner wechseln\nq beenden\n",
+	FilepickerWindowTitle:    "comicread — Datei auswählen",
+	FilepickerGoToPrompt:     "\nZu Ordner wechseln: %s\n",
+	FilepickerFavoritePrompt: "\nFavoritenordner: %s\n",
+	FilepickerFavorites:      "Favoritenordner\n\n",
+	FilepickerNoFavorites:    "  (keine Favoritenordner konfiguriert)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ bewegen\nenter zu Ordner wechseln\nd Favorit entfernen\nesc zurück\n",
+	FilepickerFavoriteErr:    "  Fehler beim Speichern der Favoriten: %s\n",
+	FilepickerGoToErr:        "  Fehler: %s\n",
 
 	FilepickerErrResolveDir: "Ordner %q kann nicht bestimmt werden: %w",
 	FilepickerErrReadDir:    "Ordner %q kann nicht gelesen werden: %w",

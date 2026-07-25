@@ -33,12 +33,17 @@ q    wyjście
 
 ?    zamknij pomoc`,
 
-	FilepickerHeader:      "comicread — wybierz rozdział\n%s\n\n",
-	FilepickerNoEntries:   "  (brak obsługiwanych elementów)\n",
-	FilepickerHelp:        "\n↑/↓ ruch\n← katalog nadrzędny\n→ wejdź do katalogu\nenter otwórz plik\ns wybierz zaznaczony katalog\no przejdź do katalogu\nq wyjście\n",
-	FilepickerWindowTitle: "comicread — wybór pliku",
-	FilepickerGoToPrompt:  "\nPrzejdź do katalogu: %s\n",
-	FilepickerGoToErr:     "  błąd: %s\n",
+	FilepickerHeader:         "comicread — wybierz rozdział\n%s\n\n",
+	FilepickerNoEntries:      "  (brak obsługiwanych elementów)\n",
+	FilepickerHelp:           "\n↑/↓ ruch\n← katalog nadrzędny\n→ wejdź do katalogu\nenter otwórz plik\ns wybierz zaznaczony katalog\nf dodaj / usuń bieżący katalog z ulubionych\nF dodaj ulubiony katalog\nb ulubione katalogi\no przejdź do katalogu\nq wyjście\n",
+	FilepickerWindowTitle:    "comicread — wybór pliku",
+	FilepickerGoToPrompt:     "\nPrzejdź do katalogu: %s\n",
+	FilepickerFavoritePrompt: "\nUlubiony katalog: %s\n",
+	FilepickerFavorites:      "Ulubione katalogi\n\n",
+	FilepickerNoFavorites:    "  (brak skonfigurowanych ulubionych katalogów)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ ruch\nenter przejdź do katalogu\nd usuń z ulubionych\nesc powrót\n",
+	FilepickerFavoriteErr:    "  błąd zapisu ulubionych: %s\n",
+	FilepickerGoToErr:        "  błąd: %s\n",
 
 	FilepickerErrResolveDir: "nie można ustalić katalogu %q: %w",
 	FilepickerErrReadDir:    "nie można odczytać katalogu %q: %w",

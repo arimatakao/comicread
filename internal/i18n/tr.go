@@ -33,12 +33,17 @@ q    çıkış
 
 ?    yardımı kapat`,
 
-	FilepickerHeader:      "comicread — bölüm seçin\n%s\n\n",
-	FilepickerNoEntries:   "  (desteklenen girdi yok)\n",
-	FilepickerHelp:        "\n↑/↓ hareket\n← üst dizin\n→ dizine gir\nenter dosyayı aç\ns vurgulanan dizini seç\no dizine git\nq çıkış\n",
-	FilepickerWindowTitle: "comicread — dosya seçin",
-	FilepickerGoToPrompt:  "\nDizine git: %s\n",
-	FilepickerGoToErr:     "  hata: %s\n",
+	FilepickerHeader:         "comicread — bölüm seçin\n%s\n\n",
+	FilepickerNoEntries:      "  (desteklenen girdi yok)\n",
+	FilepickerHelp:           "\n↑/↓ hareket\n← üst dizin\n→ dizine gir\nenter dosyayı aç\ns vurgulanan dizini seç\nf geçerli dizini favorilere ekle / kaldır\nF favori dizin ekle\nb favori dizinler\no dizine git\nq çıkış\n",
+	FilepickerWindowTitle:    "comicread — dosya seçin",
+	FilepickerGoToPrompt:     "\nDizine git: %s\n",
+	FilepickerFavoritePrompt: "\nFavori dizin: %s\n",
+	FilepickerFavorites:      "Favori dizinler\n\n",
+	FilepickerNoFavorites:    "  (yapılandırılmış favori dizin yok)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ hareket\nenter dizine git\nd favoriyi kaldır\nesc geri dön\n",
+	FilepickerFavoriteErr:    "  favoriler kaydedilirken hata: %s\n",
+	FilepickerGoToErr:        "  hata: %s\n",
 
 	FilepickerErrResolveDir: "%q dizini çözümlenemedi: %w",
 	FilepickerErrReadDir:    "%q dizini okunamadı: %w",

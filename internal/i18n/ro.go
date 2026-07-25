@@ -33,12 +33,17 @@ q    ieșire
 
 ?    închide ajutorul`,
 
-	FilepickerHeader:      "comicread — selectați un capitol\n%s\n\n",
-	FilepickerNoEntries:   "  (nicio intrare acceptată)\n",
-	FilepickerHelp:        "\n↑/↓ deplasare\n← director părinte\n→ intră în director\nenter deschide fișierul\ns selectează directorul evidențiat\no mergi la un director\nq ieșire\n",
-	FilepickerWindowTitle: "comicread — alegeți un fișier",
-	FilepickerGoToPrompt:  "\nMergi la director: %s\n",
-	FilepickerGoToErr:     "  eroare: %s\n",
+	FilepickerHeader:         "comicread — selectați un capitol\n%s\n\n",
+	FilepickerNoEntries:      "  (nicio intrare acceptată)\n",
+	FilepickerHelp:           "\n↑/↓ deplasare\n← director părinte\n→ intră în director\nenter deschide fișierul\ns selectează directorul evidențiat\nf adaugă / elimină directorul curent din favorite\nF adaugă director favorit\nb directoare favorite\no mergi la un director\nq ieșire\n",
+	FilepickerWindowTitle:    "comicread — alegeți un fișier",
+	FilepickerGoToPrompt:     "\nMergi la director: %s\n",
+	FilepickerFavoritePrompt: "\nDirector favorit: %s\n",
+	FilepickerFavorites:      "Directoare favorite\n\n",
+	FilepickerNoFavorites:    "  (nu sunt configurate directoare favorite)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ deplasare\nenter mergi la director\nd elimină favoritul\nesc înapoi\n",
+	FilepickerFavoriteErr:    "  eroare la salvarea favoritelor: %s\n",
+	FilepickerGoToErr:        "  eroare: %s\n",
 
 	FilepickerErrResolveDir: "nu se poate determina directorul %q: %w",
 	FilepickerErrReadDir:    "nu se poate citi directorul %q: %w",

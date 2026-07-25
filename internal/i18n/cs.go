@@ -33,12 +33,17 @@ q    ukončit
 
 ?    zavřít nápovědu`,
 
-	FilepickerHeader:      "comicread — vyberte kapitolu\n%s\n\n",
-	FilepickerNoEntries:   "  (žádné podporované položky)\n",
-	FilepickerHelp:        "\n↑/↓ pohyb\n← nadřazená složka\n→ vstoupit do složky\nenter otevřít soubor\ns vybrat zvýrazněnou složku\no přejít do adresáře\nq ukončit\n",
-	FilepickerWindowTitle: "comicread — vybrat soubor",
-	FilepickerGoToPrompt:  "\nPřejít do adresáře: %s\n",
-	FilepickerGoToErr:     "  chyba: %s\n",
+	FilepickerHeader:         "comicread — vyberte kapitolu\n%s\n\n",
+	FilepickerNoEntries:      "  (žádné podporované položky)\n",
+	FilepickerHelp:           "\n↑/↓ pohyb\n← nadřazená složka\n→ vstoupit do složky\nenter otevřít soubor\ns vybrat zvýrazněnou složku\nf přidat / odebrat aktuální složku z oblíbených\nF přidat oblíbenou složku\nb oblíbené složky\no přejít do adresáře\nq ukončit\n",
+	FilepickerWindowTitle:    "comicread — vybrat soubor",
+	FilepickerGoToPrompt:     "\nPřejít do adresáře: %s\n",
+	FilepickerFavoritePrompt: "\nOblíbená složka: %s\n",
+	FilepickerFavorites:      "Oblíbené složky\n\n",
+	FilepickerNoFavorites:    "  (žádné oblíbené složky nejsou nastaveny)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ pohyb\nenter přejít do adresáře\nd odebrat oblíbenou\nesc zpět\n",
+	FilepickerFavoriteErr:    "  chyba při ukládání oblíbených: %s\n",
+	FilepickerGoToErr:        "  chyba: %s\n",
 
 	FilepickerErrResolveDir: "nelze zjistit složku %q: %w",
 	FilepickerErrReadDir:    "nelze přečíst složku %q: %w",

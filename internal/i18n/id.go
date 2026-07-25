@@ -33,12 +33,17 @@ q    keluar
 
 ?    tutup bantuan`,
 
-	FilepickerHeader:      "comicread — pilih bab\n%s\n\n",
-	FilepickerNoEntries:   "  (tidak ada entri yang didukung)\n",
-	FilepickerHelp:        "\n↑/↓ pindah\n← direktori induk\n→ masuk direktori\nenter buka berkas\ns pilih direktori yang disorot\no pergi ke direktori\nq keluar\n",
-	FilepickerWindowTitle: "comicread — pilih berkas",
-	FilepickerGoToPrompt:  "\nPergi ke direktori: %s\n",
-	FilepickerGoToErr:     "  kesalahan: %s\n",
+	FilepickerHeader:         "comicread — pilih bab\n%s\n\n",
+	FilepickerNoEntries:      "  (tidak ada entri yang didukung)\n",
+	FilepickerHelp:           "\n↑/↓ pindah\n← direktori induk\n→ masuk direktori\nenter buka berkas\ns pilih direktori yang disorot\nf tambah / hapus direktori saat ini dari favorit\nF tambah direktori favorit\nb direktori favorit\no pergi ke direktori\nq keluar\n",
+	FilepickerWindowTitle:    "comicread — pilih berkas",
+	FilepickerGoToPrompt:     "\nPergi ke direktori: %s\n",
+	FilepickerFavoritePrompt: "\nDirektori favorit: %s\n",
+	FilepickerFavorites:      "Direktori favorit\n\n",
+	FilepickerNoFavorites:    "  (tidak ada direktori favorit yang dikonfigurasi)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ pindah\nenter pergi ke direktori\nd hapus favorit\nesc kembali\n",
+	FilepickerFavoriteErr:    "  kesalahan menyimpan favorit: %s\n",
+	FilepickerGoToErr:        "  kesalahan: %s\n",
 
 	FilepickerErrResolveDir: "tidak dapat menentukan direktori %q: %w",
 	FilepickerErrReadDir:    "tidak dapat membaca direktori %q: %w",

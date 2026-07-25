@@ -33,12 +33,17 @@ q    esci
 
 ?    chiudi l'aiuto`,
 
-	FilepickerHeader:      "comicread — seleziona un capitolo\n%s\n\n",
-	FilepickerNoEntries:   "  (nessuna voce supportata)\n",
-	FilepickerHelp:        "\n↑/↓ sposta\n← cartella superiore\n→ entra nella cartella\nenter apri file\ns seleziona la cartella evidenziata\no vai a una cartella\nq esci\n",
-	FilepickerWindowTitle: "comicread — scegli un file",
-	FilepickerGoToPrompt:  "\nVai alla cartella: %s\n",
-	FilepickerGoToErr:     "  errore: %s\n",
+	FilepickerHeader:         "comicread — seleziona un capitolo\n%s\n\n",
+	FilepickerNoEntries:      "  (nessuna voce supportata)\n",
+	FilepickerHelp:           "\n↑/↓ sposta\n← cartella superiore\n→ entra nella cartella\nenter apri file\ns seleziona la cartella evidenziata\nf aggiungi / rimuovi la cartella corrente dai preferiti\nF aggiungi cartella preferita\nb cartelle preferite\no vai a una cartella\nq esci\n",
+	FilepickerWindowTitle:    "comicread — scegli un file",
+	FilepickerGoToPrompt:     "\nVai alla cartella: %s\n",
+	FilepickerFavoritePrompt: "\nCartella preferita: %s\n",
+	FilepickerFavorites:      "Cartelle preferite\n\n",
+	FilepickerNoFavorites:    "  (nessuna cartella preferita configurata)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ sposta\nenter vai alla cartella\nd rimuovi preferito\nesc indietro\n",
+	FilepickerFavoriteErr:    "  errore nel salvataggio dei preferiti: %s\n",
+	FilepickerGoToErr:        "  errore: %s\n",
 
 	FilepickerErrResolveDir: "impossibile risolvere la cartella %q: %w",
 	FilepickerErrReadDir:    "impossibile leggere la cartella %q: %w",

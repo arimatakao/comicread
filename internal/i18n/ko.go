@@ -33,12 +33,17 @@ q    종료
 
 ?    도움말 닫기`,
 
-	FilepickerHeader:      "comicread — 챕터 선택\n%s\n\n",
-	FilepickerNoEntries:   "  (지원되는 항목 없음)\n",
-	FilepickerHelp:        "\n↑/↓ 이동\n← 상위 디렉터리\n→ 디렉터리 들어가기\nenter 파일 열기\ns 강조 표시된 디렉터리 선택\no 디렉터리로 이동\nq 종료\n",
-	FilepickerWindowTitle: "comicread — 파일 선택",
-	FilepickerGoToPrompt:  "\n디렉터리로 이동: %s\n",
-	FilepickerGoToErr:     "  오류: %s\n",
+	FilepickerHeader:         "comicread — 챕터 선택\n%s\n\n",
+	FilepickerNoEntries:      "  (지원되는 항목 없음)\n",
+	FilepickerHelp:           "\n↑/↓ 이동\n← 상위 디렉터리\n→ 디렉터리 들어가기\nenter 파일 열기\ns 강조 표시된 디렉터리 선택\nf 현재 디렉터리를 즐겨찾기에 추가 / 제거\nF 즐겨찾는 디렉터리 추가\nb 즐겨찾는 디렉터리\no 디렉터리로 이동\nq 종료\n",
+	FilepickerWindowTitle:    "comicread — 파일 선택",
+	FilepickerGoToPrompt:     "\n디렉터리로 이동: %s\n",
+	FilepickerFavoritePrompt: "\n즐겨찾는 디렉터리: %s\n",
+	FilepickerFavorites:      "즐겨찾는 디렉터리\n\n",
+	FilepickerNoFavorites:    "  (설정된 즐겨찾는 디렉터리가 없습니다)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ 이동\nenter 디렉터리로 이동\nd 즐겨찾기 제거\nesc 돌아가기\n",
+	FilepickerFavoriteErr:    "  즐겨찾기 저장 오류: %s\n",
+	FilepickerGoToErr:        "  오류: %s\n",
 
 	FilepickerErrResolveDir: "디렉터리 %q를 확인할 수 없습니다: %w",
 	FilepickerErrReadDir:    "디렉터리 %q를 읽을 수 없습니다: %w",

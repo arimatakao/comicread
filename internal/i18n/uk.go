@@ -33,12 +33,17 @@ q    вихід
 
 ?    закрити довідку`,
 
-	FilepickerHeader:      "comicread — оберіть розділ\n%s\n\n",
-	FilepickerNoEntries:   "  (немає підтримуваних елементів)\n",
-	FilepickerHelp:        "\n↑/↓ рух\n← батьківська тека\n→ відкрити теку\nenter відкрити файл\ns обрати виділену теку\no перейти до теки\nq вихід\n",
-	FilepickerWindowTitle: "comicread — вибір файлу",
-	FilepickerGoToPrompt:  "\nПерейти до теки: %s\n",
-	FilepickerGoToErr:     "  помилка: %s\n",
+	FilepickerHeader:         "comicread — оберіть розділ\n%s\n\n",
+	FilepickerNoEntries:      "  (немає підтримуваних елементів)\n",
+	FilepickerHelp:           "\n↑/↓ рух\n← батьківська тека\n→ відкрити теку\nenter відкрити файл\ns обрати виділену теку\nf додати / прибрати поточну теку з улюблених\nF додати улюблену теку\nb улюблені теки\no перейти до теки\nq вихід\n",
+	FilepickerWindowTitle:    "comicread — вибір файлу",
+	FilepickerGoToPrompt:     "\nПерейти до теки: %s\n",
+	FilepickerFavoritePrompt: "\nУлюблена тека: %s\n",
+	FilepickerGoToErr:        "  помилка: %s\n",
+	FilepickerFavorites:      "Улюблені теки\n\n",
+	FilepickerNoFavorites:    "  (немає налаштованих улюблених тек)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ рух\nenter перейти до теки\nd прибрати з улюблених\nesc повернутися\n",
+	FilepickerFavoriteErr:    "  помилка збереження улюблених: %s\n",
 
 	FilepickerErrResolveDir: "не вдалося визначити теку %q: %w",
 	FilepickerErrReadDir:    "не вдалося прочитати теку %q: %w",

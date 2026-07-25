@@ -33,12 +33,17 @@ q    salir
 
 ?    cerrar ayuda`,
 
-	FilepickerHeader:      "comicread — seleccionar un capítulo\n%s\n\n",
-	FilepickerNoEntries:   "  (no hay entradas compatibles)\n",
-	FilepickerHelp:        "\n↑/↓ mover\n← directorio superior\n→ entrar al directorio\nenter abrir archivo\ns seleccionar el directorio resaltado\no ir a un directorio\nq salir\n",
-	FilepickerWindowTitle: "comicread — elegir un archivo",
-	FilepickerGoToPrompt:  "\nIr al directorio: %s\n",
-	FilepickerGoToErr:     "  error: %s\n",
+	FilepickerHeader:         "comicread — seleccionar un capítulo\n%s\n\n",
+	FilepickerNoEntries:      "  (no hay entradas compatibles)\n",
+	FilepickerHelp:           "\n↑/↓ mover\n← directorio superior\n→ entrar al directorio\nenter abrir archivo\ns seleccionar el directorio resaltado\nf añadir / quitar el directorio actual de favoritos\nF añadir directorio favorito\nb directorios favoritos\no ir a un directorio\nq salir\n",
+	FilepickerWindowTitle:    "comicread — elegir un archivo",
+	FilepickerGoToPrompt:     "\nIr al directorio: %s\n",
+	FilepickerFavoritePrompt: "\nDirectorio favorito: %s\n",
+	FilepickerFavorites:      "Directorios favoritos\n\n",
+	FilepickerNoFavorites:    "  (no hay directorios favoritos configurados)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ mover\nenter ir al directorio\nd quitar favorito\nesc volver\n",
+	FilepickerFavoriteErr:    "  error al guardar favoritos: %s\n",
+	FilepickerGoToErr:        "  error: %s\n",
 
 	FilepickerErrResolveDir: "no se puede resolver el directorio %q: %w",
 	FilepickerErrReadDir:    "no se puede leer el directorio %q: %w",

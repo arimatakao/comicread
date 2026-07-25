@@ -33,12 +33,17 @@ q    έξοδος
 
 ?    κλείσιμο βοήθειας`,
 
-	FilepickerHeader:      "comicread — επιλέξτε κεφάλαιο\n%s\n\n",
-	FilepickerNoEntries:   "  (δεν υπάρχουν υποστηριζόμενες καταχωρήσεις)\n",
-	FilepickerHelp:        "\n↑/↓ μετακίνηση\n← γονικός κατάλογος\n→ είσοδος στον κατάλογο\nenter άνοιγμα αρχείου\ns επιλογή επισημασμένου καταλόγου\no μετάβαση σε κατάλογο\nq έξοδος\n",
-	FilepickerWindowTitle: "comicread — επιλογή αρχείου",
-	FilepickerGoToPrompt:  "\nΜετάβαση σε κατάλογο: %s\n",
-	FilepickerGoToErr:     "  σφάλμα: %s\n",
+	FilepickerHeader:         "comicread — επιλέξτε κεφάλαιο\n%s\n\n",
+	FilepickerNoEntries:      "  (δεν υπάρχουν υποστηριζόμενες καταχωρήσεις)\n",
+	FilepickerHelp:           "\n↑/↓ μετακίνηση\n← γονικός κατάλογος\n→ είσοδος στον κατάλογο\nenter άνοιγμα αρχείου\ns επιλογή επισημασμένου καταλόγου\nf προσθήκη / αφαίρεση του τρέχοντος καταλόγου από τα αγαπημένα\nF προσθήκη αγαπημένου καταλόγου\nb αγαπημένοι κατάλογοι\no μετάβαση σε κατάλογο\nq έξοδος\n",
+	FilepickerWindowTitle:    "comicread — επιλογή αρχείου",
+	FilepickerGoToPrompt:     "\nΜετάβαση σε κατάλογο: %s\n",
+	FilepickerFavoritePrompt: "\nΑγαπημένος κατάλογος: %s\n",
+	FilepickerFavorites:      "Αγαπημένοι κατάλογοι\n\n",
+	FilepickerNoFavorites:    "  (δεν έχουν οριστεί αγαπημένοι κατάλογοι)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ μετακίνηση\nenter μετάβαση σε κατάλογο\nd αφαίρεση αγαπημένου\nesc επιστροφή\n",
+	FilepickerFavoriteErr:    "  σφάλμα αποθήκευσης αγαπημένων: %s\n",
+	FilepickerGoToErr:        "  σφάλμα: %s\n",
 
 	FilepickerErrResolveDir: "δεν είναι δυνατός ο προσδιορισμός του καταλόγου %q: %w",
 	FilepickerErrReadDir:    "δεν είναι δυνατή η ανάγνωση του καταλόγου %q: %w",

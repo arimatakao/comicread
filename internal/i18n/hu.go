@@ -33,12 +33,17 @@ q    kilépés
 
 ?    súgó bezárása`,
 
-	FilepickerHeader:      "comicread — fejezet kiválasztása\n%s\n\n",
-	FilepickerNoEntries:   "  (nincsenek támogatott elemek)\n",
-	FilepickerHelp:        "\n↑/↓ lépés\n← szülőkönyvtár\n→ belépés a könyvtárba\nenter fájl megnyitása\ns kijelölt könyvtár kiválasztása\no ugrás könyvtárhoz\nq kilépés\n",
-	FilepickerWindowTitle: "comicread — fájl kiválasztása",
-	FilepickerGoToPrompt:  "\nUgrás könyvtárhoz: %s\n",
-	FilepickerGoToErr:     "  hiba: %s\n",
+	FilepickerHeader:         "comicread — fejezet kiválasztása\n%s\n\n",
+	FilepickerNoEntries:      "  (nincsenek támogatott elemek)\n",
+	FilepickerHelp:           "\n↑/↓ lépés\n← szülőkönyvtár\n→ belépés a könyvtárba\nenter fájl megnyitása\ns kijelölt könyvtár kiválasztása\nf jelenlegi könyvtár hozzáadása / eltávolítása a kedvencekből\nF kedvenc könyvtár hozzáadása\nb kedvenc könyvtárak\no ugrás könyvtárhoz\nq kilépés\n",
+	FilepickerWindowTitle:    "comicread — fájl kiválasztása",
+	FilepickerGoToPrompt:     "\nUgrás könyvtárhoz: %s\n",
+	FilepickerFavoritePrompt: "\nKedvenc könyvtár: %s\n",
+	FilepickerFavorites:      "Kedvenc könyvtárak\n\n",
+	FilepickerNoFavorites:    "  (nincsenek beállított kedvenc könyvtárak)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ lépés\nenter ugrás könyvtárhoz\nd kedvenc eltávolítása\nesc vissza\n",
+	FilepickerFavoriteErr:    "  hiba a kedvencek mentésekor: %s\n",
+	FilepickerGoToErr:        "  hiba: %s\n",
 
 	FilepickerErrResolveDir: "könyvtár feloldása %q: %w",
 	FilepickerErrReadDir:    "könyvtár olvasása %q: %w",

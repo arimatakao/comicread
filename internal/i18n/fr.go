@@ -33,12 +33,17 @@ q    quitter
 
 ?    fermer l'aide`,
 
-	FilepickerHeader:      "comicread — sélectionner un chapitre\n%s\n\n",
-	FilepickerNoEntries:   "  (aucune entrée prise en charge)\n",
-	FilepickerHelp:        "\n↑/↓ déplacer\n← dossier parent\n→ entrer dans le dossier\nenter ouvrir le fichier\ns sélectionner le dossier surligné\no aller à un dossier\nq quitter\n",
-	FilepickerWindowTitle: "comicread — choisir un fichier",
-	FilepickerGoToPrompt:  "\nAller au dossier : %s\n",
-	FilepickerGoToErr:     "  erreur : %s\n",
+	FilepickerHeader:         "comicread — sélectionner un chapitre\n%s\n\n",
+	FilepickerNoEntries:      "  (aucune entrée prise en charge)\n",
+	FilepickerHelp:           "\n↑/↓ déplacer\n← dossier parent\n→ entrer dans le dossier\nenter ouvrir le fichier\ns sélectionner le dossier surligné\nf ajouter / retirer le dossier actuel des favoris\nF ajouter un dossier favori\nb dossiers favoris\no aller à un dossier\nq quitter\n",
+	FilepickerWindowTitle:    "comicread — choisir un fichier",
+	FilepickerGoToPrompt:     "\nAller au dossier : %s\n",
+	FilepickerFavoritePrompt: "\nDossier favori : %s\n",
+	FilepickerFavorites:      "Dossiers favoris\n\n",
+	FilepickerNoFavorites:    "  (aucun dossier favori configuré)\n",
+	FilepickerFavoritesHelp:  "\n↑/↓ déplacer\nenter aller au dossier\nd retirer le favori\nesc retour\n",
+	FilepickerFavoriteErr:    "  erreur d’enregistrement des favoris : %s\n",
+	FilepickerGoToErr:        "  erreur : %s\n",
 
 	FilepickerErrResolveDir: "impossible de déterminer le dossier %q : %w",
 	FilepickerErrReadDir:    "impossible de lire le dossier %q : %w",
