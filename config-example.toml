@@ -1,9 +1,24 @@
-# Graphics renderer: auto, ascii, dots, kitty, sixel, or iterm2.
+# Graphics renderer:
+#   auto   — automatically choose the best renderer supported by the terminal
+#   ascii  — monochrome ASCII art; works in every terminal
+#   dots   — Unicode half-block image rendering; works in every terminal
+#   kitty  — Kitty graphics protocol
+#   sixel  — Sixel graphics protocol
+#   iterm2 — iTerm2 inline-image protocol
 graphics = 'auto'
-# Page layout: single-page, book-view, right-view, circle-view, or right-circle-view.
+
+
+# Page layout:
+#   single-page       — show one page at a time
+#   book-view         — show page pairs from left to right
+#   right-view        — show page pairs from right to left (manga order)
+#   circle-view       — show overlapping page pairs from left to right
+#   right-circle-view — show overlapping page pairs from right to left
 view = 'single-page'
-# Interface language code (for example, en or uk).
+
+# Interface language code - https://github.com/arimatakao/comicread#configuration-file
 language = 'en'
+
 # Initial directory for the file picker; leave empty to use the current directory.
 directory = ''
 # Directories shown in the file picker's favorites list.
