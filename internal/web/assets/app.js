@@ -24,8 +24,11 @@
   const nextButton = document.getElementById("next-button");
   const fullscreenButton = document.getElementById("fullscreen-button");
   const themeButton = document.getElementById("theme-button");
+  const bgColorInput = document.getElementById("bg-color-input");
 
   const THEME_KEY = "comicread:theme";
+  const BG_COLOR_KEY = "comicread:bg-color";
+  const DEFAULT_BG_COLOR = "#000000";
 
   // state.page is a zero-based page index, matching the server's
   // /api/books/{token}/pages/{index} route. It is only ever shown to the
@@ -219,6 +222,11 @@
     themeButton.setAttribute("aria-label", theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
   }
 
+  function applyBgColor(color) {
+    stage.style.backgroundColor = color;
+    bgColorInput.value = color;
+  }
+
   // --- wiring ---
 
   pickButton.addEventListener("click", () => fileInput.click());
@@ -260,6 +268,11 @@
     applyTheme(next);
   });
 
+  bgColorInput.addEventListener("input", () => {
+    localStorage.setItem(BG_COLOR_KEY, bgColorInput.value);
+    applyBgColor(bgColorInput.value);
+  });
+
   pageImage.addEventListener("load", () => stage.removeAttribute("aria-busy"));
   pageImage.addEventListener("error", () => stage.removeAttribute("aria-busy"));
 
@@ -292,10 +305,11 @@
     event.preventDefault();
   });
 
-  // --- startup: apply the saved theme, then resume an in-session book or
-  // show the picker ---
+  // --- startup: apply the saved theme and page background, then resume an
+  // in-session book or show the picker ---
 
   applyTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
+  applyBgColor(localStorage.getItem(BG_COLOR_KEY) || DEFAULT_BG_COLOR);
 
   (async function init() {
     const saved = loadSession();
