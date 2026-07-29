@@ -30,6 +30,7 @@
   const controls = document.getElementById("controls");
   const hideControlsButton = document.getElementById("hide-controls-button");
   const showControlsButton = document.getElementById("show-controls-button");
+  const openFileButton = document.getElementById("open-file-button");
 
   const THEME_KEY = "comicread:theme";
   const BG_COLOR_KEY = "comicread:bg-color";
@@ -196,13 +197,17 @@
   async function openFile(file) {
     const ext = (file.name.split(".").pop() || "").toLowerCase();
     if (!["cbz", "pdf", "epub"].includes(ext)) {
-      setStatus("Unsupported file type. Choose a CBZ, PDF, or EPUB file.", "error");
+      reportOpenError("Unsupported file type. Choose a CBZ, PDF, or EPUB file.");
       return;
     }
 
+    // The same file input is reused for the initial picker screen and for
+    // the reader's "open a different file" button; whichever triggered this
+    // open gets the busy indicator.
+    const triggerButton = reader.hidden ? pickButton : openFileButton;
     setStatus("Opening…");
-    pickButton.setAttribute("aria-busy", "true");
-    pickButton.disabled = true;
+    triggerButton.setAttribute("aria-busy", "true");
+    triggerButton.disabled = true;
 
     const form = new FormData();
     form.append("file", file, file.name);
@@ -216,11 +221,19 @@
       startReading(body, 0, currentViewPreference());
       setStatus("");
     } catch (err) {
-      setStatus(`Could not open file: ${err.message}`, "error");
+      reportOpenError(`Could not open file: ${err.message}`);
     } finally {
-      pickButton.removeAttribute("aria-busy");
-      pickButton.disabled = false;
+      triggerButton.removeAttribute("aria-busy");
+      triggerButton.disabled = false;
     }
+  }
+
+  // reportOpenError always updates #picker-status (harmless when the picker
+  // screen is hidden), and additionally alerts when the reader is what's
+  // currently visible, since #picker-status can't be seen there.
+  function reportOpenError(message) {
+    setStatus(message, "error");
+    if (!reader.hidden) alert(message);
   }
 
   function startReading(info, page, view) {
@@ -374,6 +387,7 @@
   // --- wiring ---
 
   pickButton.addEventListener("click", () => fileInput.click());
+  openFileButton.addEventListener("click", () => fileInput.click());
   fileInput.addEventListener("change", () => {
     const file = fileInput.files && fileInput.files[0];
     fileInput.value = "";
