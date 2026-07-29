@@ -9,7 +9,7 @@ $InstallDir = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Programs\comicread"
 $ReinstallConfirmed = $false
 $LocaleBaseUrl = "https://raw.githubusercontent.com/$Repo/main/installer/locales"
 $Messages = @{}
-$ConfiguredOrder = @("language", "graphics", "view", "prerender.next", "prerender.previous", "directory")
+$ConfiguredOrder = @("language", "graphics", "view", "prerender.next", "prerender.previous", "web.port", "directory")
 $ConfiguredValues = [ordered]@{}
 
 function ConvertFrom-Properties {
@@ -388,6 +388,38 @@ function Configure-NonNegativeIntegerOption {
     }
 }
 
+function Configure-PortOption {
+    param(
+        [string]$Bin,
+        [string]$Key,
+        [string]$Question,
+        [string]$Hint = ""
+    )
+
+    Write-Host $Question
+    Write-Host "  $(T "value.port")"
+    if (-not [string]::IsNullOrWhiteSpace($Hint)) {
+        Write-Host "  $Hint"
+    }
+    while ($true) {
+        $value = Read-Host (T "prompt.select")
+        if ([string]::IsNullOrWhiteSpace($value)) {
+            if (Set-ConfigOption -Bin $Bin -Assignment "$Key=55566") {
+                $script:ConfiguredValues[$Key] = 55566
+            }
+            return
+        }
+        $port = 0
+        if ([int]::TryParse($value, [ref]$port) -and $port -ge 0 -and $port -le 65535) {
+            if (Set-ConfigOption -Bin $Bin -Assignment "$Key=$port") {
+                $script:ConfiguredValues[$Key] = $port
+            }
+            return
+        }
+        Write-Host (T "error.invalid_value" (T "value.port"))
+    }
+}
+
 function Configure-DirectoryOption {
     param(
         [string]$Bin,
@@ -491,6 +523,7 @@ function Configure-Environment {
     Configure-Option -Bin $Bin -Key "view" -Question (T "environment.view") -AllowedValues @("book-view", "right-view", "circle-view", "right-circle-view") -OptionsPrinter { param($Values) Show-ViewOptions }
     Configure-NonNegativeIntegerOption -Bin $Bin -Key "prerender.next" -Question (T "environment.prerendered_next") -Hint (T "environment.prerendered_hint")
     Configure-NonNegativeIntegerOption -Bin $Bin -Key "prerender.previous" -Question (T "environment.prerendered_previous") -Hint (T "environment.prerendered_hint")
+    Configure-PortOption -Bin $Bin -Key "web.port" -Question (T "environment.web_port") -Hint (T "environment.web_port_hint")
     Configure-DirectoryOption -Bin $Bin -Key "directory" -Question (T "environment.directory") -Hint (T "environment.directory_hint")
     Show-ConfiguredSummary
 }

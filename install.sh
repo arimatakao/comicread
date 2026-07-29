@@ -11,7 +11,7 @@ TMP_DIR=""
 REINSTALL_CONFIRMED="false"
 LOCALE_BASE_URL="https://raw.githubusercontent.com/${REPO}/main/installer/locales"
 LOCALE_FILE=""
-CONFIGURED_ORDER=(language graphics view prerender.next prerender.previous directory)
+CONFIGURED_ORDER=(language graphics view prerender.next prerender.previous web.port directory)
 declare -A CONFIGURED_VALUES=()
 
 detect_locale() {
@@ -338,6 +338,31 @@ configure_non_negative_integer() {
   done
 }
 
+configure_port() {
+  local bin="$1" key="$2" question="$3" hint="$4"
+
+  printf '%s\n' "$question"
+  printf '  %s\n' "$(t value.port)"
+  [ -z "$hint" ] || printf '  %s\n' "$hint"
+  while :; do
+    read_answer "$(t prompt.select) "
+    if [ -z "$ANSWER" ]; then
+      apply_config_option "$bin" "${key}=55566" && CONFIGURED_VALUES["$key"]="55566"
+      return
+    fi
+    case "$ANSWER" in
+      *[!0-9]*) t error.invalid_value "$(t value.port)" >&2 ;;
+      *)
+        if [ "$ANSWER" -le 65535 ]; then
+          apply_config_option "$bin" "${key}=${ANSWER}" && CONFIGURED_VALUES["$key"]="$ANSWER"
+          return
+        fi
+        t error.invalid_value "$(t value.port)" >&2
+        ;;
+    esac
+  done
+}
+
 configure_directory() {
   local bin="$1" key="$2" question="$3" hint="$4"
 
@@ -437,6 +462,7 @@ configure_environment() {
   configure_option "$bin" 'view' "$(t environment.view)" 'book-view right-view circle-view right-circle-view' print_view_options
   configure_non_negative_integer "$bin" 'prerender.next' "$(t environment.prerendered_next)" "$(t environment.prerendered_hint)"
   configure_non_negative_integer "$bin" 'prerender.previous' "$(t environment.prerendered_previous)" "$(t environment.prerendered_hint)"
+  configure_port "$bin" 'web.port' "$(t environment.web_port)" "$(t environment.web_port_hint)"
   configure_directory "$bin" 'directory' "$(t environment.directory)" "$(t environment.directory_hint)"
   print_configured_summary
 }
