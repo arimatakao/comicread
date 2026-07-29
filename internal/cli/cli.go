@@ -40,7 +40,10 @@ func (e *usageError) Unwrap() error        { return e.err }
 func (e *usageError) Is(target error) bool { return target == ErrUsage }
 
 func Run(args []string) error {
-	initial, err := parseOptionsWithConfig(args, config.Default())
+	// Parse once with the default config only to locate a possible custom
+	// config file. Excluding help lets us load the selected language before
+	// the final parse renders its localized output.
+	initial, err := parseOptionsWithConfig(withoutHelp(args), config.Default())
 	if err != nil {
 		return err
 	}
@@ -242,7 +245,7 @@ func normalizeOpenFlag(args []string) []string {
 }
 
 func parseOptions(args []string) (options, error) {
-	initial, err := parseOptionsWithConfig(args, config.Default())
+	initial, err := parseOptionsWithConfig(withoutHelp(args), config.Default())
 	if err != nil {
 		return options{}, err
 	}
@@ -250,7 +253,26 @@ func parseOptions(args []string) (options, error) {
 	if err != nil {
 		return options{}, err
 	}
+	i18n.SetLang(i18n.Lang(settings.Language))
 	return parseOptionsWithConfig(args, settings)
+}
+
+// withoutHelp removes help flags that would otherwise stop the preliminary
+// parse before the configured language can be loaded. Flags following -- are
+// positional arguments and must remain untouched.
+func withoutHelp(args []string) []string {
+	filtered := make([]string, 0, len(args))
+	for i, arg := range args {
+		if arg == "--" {
+			filtered = append(filtered, args[i:]...)
+			break
+		}
+		if arg == "-h" || arg == "--help" {
+			continue
+		}
+		filtered = append(filtered, arg)
+	}
+	return filtered
 }
 
 func loadConfig(path string, custom bool) (config.Config, error) {
