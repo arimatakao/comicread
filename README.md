@@ -320,6 +320,7 @@ The main direct dependencies are distributed under permissive licenses:
 - [dots](https://github.com/imjasonh/dots) — Apache License 2.0
 - [go-toml v2](https://github.com/pelletier/go-toml) — MIT
 - [golang.org/x/image](https://pkg.go.dev/golang.org/x/image) — BSD-style (Go Authors)
+- [Pico CSS](https://picocss.com) — MIT
 
 See the `LICENSE` file bundled with each dependency version in the Go module
 cache for its full license text. Transitive dependencies may have their own
