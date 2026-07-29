@@ -4,6 +4,8 @@ github.com/BourgeoisBear/rasterm v1.1.2 h1:hWHZBZ45N366uNSqxWFYBV0y19q8fXRXADhPk
 github.com/BourgeoisBear/rasterm v1.1.2/go.mod h1:Ifd+To5s/uyUiYx+B4fxhS8lUNwNLSxDBjskmC5pEyw=
 github.com/arimatakao/comicfile v1.2.0 h1:iNz/KxRJIxdAgoN0ksrcPwtItzYfVpargvGLVnNfxUI=
 github.com/arimatakao/comicfile v1.2.0/go.mod h1:S+ZJ4GSYP08v6idkyQU06sZzvJXiuJVtZg1yldTFSnc=
+github.com/arimatakao/comicfile v1.3.0 h1:7fQLZ+kKfNQK1uybOVFtha4gHBJx5KLjaliiGHQpOUk=
+github.com/arimatakao/comicfile v1.3.0/go.mod h1:S+ZJ4GSYP08v6idkyQU06sZzvJXiuJVtZg1yldTFSnc=
 github.com/aymanbagabas/go-udiff v0.2.0 h1:TK0fH4MteXUDspT88n8CKzvK0X9O2xu9yQjWpi6yML8=
 github.com/aymanbagabas/go-udiff v0.2.0/go.mod h1:RE4Ex0qsGkTAJoQdQQCA0uG+nAzJO/pI/QwceO5fgrA=
 github.com/charmbracelet/colorprofile v0.4.3 h1:QPa1IWkYI+AOB+fE+mg/5/4HRMZcaXex9t5KX76i20Q=

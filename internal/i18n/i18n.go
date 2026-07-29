@@ -104,9 +104,15 @@ const (
 	CLIErrInvalidView               = "cli.err.invalid_view"
 	CLIFlagOpenUsage                = "cli.flag.open_usage"
 	CLIErrOpenNotDir                = "cli.err.open_not_dir"
+	CLIFlagWebUsage                 = "cli.flag.web_usage"
+	CLIErrWebArgs                   = "cli.err.web_args"
 	CLIHelpHint                     = "cli.help_hint"
 	CLIUsage                        = "cli.usage"
 	CLIUsageFull                    = "cli.usage_full"
+
+	WebServerStarted = "web.server_started"
+	WebErrListen     = "web.err.listen"
+	WebErrServe      = "web.err.serve"
 )
 
 var currentMessages = messagesFor(English)

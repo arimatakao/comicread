@@ -22,12 +22,20 @@ type Config struct {
 	Directory string    `toml:"directory"`
 	Favorites []string  `toml:"favorites"`
 	Prerender Prerender `toml:"prerender"`
+	Web       Web       `toml:"web"`
 }
 
 // Prerender configures how many neighbouring pages are rendered in advance.
 type Prerender struct {
 	Next     int `toml:"next"`
 	Previous int `toml:"previous"`
+}
+
+// Web configures the --web local browser reader.
+type Web struct {
+	// Port the server listens on, on 127.0.0.1. 0 lets the OS assign any
+	// free port instead of a fixed one.
+	Port int `toml:"port"`
 }
 
 // Default returns the configuration used when no config file exists.
@@ -39,6 +47,9 @@ func Default() Config {
 		Prerender: Prerender{
 			Next:     1,
 			Previous: 1,
+		},
+		Web: Web{
+			Port: 55566,
 		},
 	}
 }
@@ -86,6 +97,9 @@ func LoadFile(path string) (Config, error) {
 	}
 	if settings.Prerender.Next < 0 || settings.Prerender.Previous < 0 {
 		return Config{}, fmt.Errorf("parse config %q: prerender counts must not be negative", path)
+	}
+	if settings.Web.Port < 0 || settings.Web.Port > 65535 {
+		return Config{}, fmt.Errorf("parse config %q: web.port must be between 0 and 65535", path)
 	}
 	return settings, nil
 }
@@ -181,6 +195,12 @@ func SetOption(settings *Config, assignment string) error {
 		} else {
 			settings.Prerender.Previous = count
 		}
+	case "web.port":
+		port, err := strconv.Atoi(value)
+		if err != nil || port < 0 || port > 65535 {
+			return fmt.Errorf("%s must be an integer between 0 and 65535", key)
+		}
+		settings.Web.Port = port
 	default:
 		return fmt.Errorf("unsupported config option %q", key)
 	}

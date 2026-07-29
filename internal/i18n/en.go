@@ -78,8 +78,14 @@ q    quit
 	CLIErrInvalidView:               "unsupported view %q (want single-page, book-view, right-view, circle-view, or right-circle-view)",
 	CLIFlagOpenUsage:                "directory to open in the file picker (default: configured directory or current directory)",
 	CLIErrOpenNotDir:                "open directory %q: not a directory",
+	CLIFlagWebUsage:                 "start a local browser-based reader instead of the terminal UI",
+	CLIErrWebArgs:                   "--web does not accept a file or directory argument",
 	CLIHelpHint:                     "run 'comicread --help' for usage",
 	CLIUsage:                        "usage: comicread [options] [file]",
+
+	WebServerStarted: "comicread web reader running at %s (press Ctrl+C to stop)",
+	WebErrListen:     "start web server: %w",
+	WebErrServe:      "run web server: %w",
 	CLIUsageFull: `comicread - a minimal terminal manga reader
 
 usage: comicread [options] [file]
@@ -97,6 +103,7 @@ options:
   --set-config value update config.toml: key=value
   -o, --open string   directory to open in the file picker (default: configured directory or the current directory)
   --update            check for updates and exit
+  --web               start a local browser-based reader instead of the terminal UI
   -v, --version       print version and exit
   -h, --help          show this help message
 

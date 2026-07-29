@@ -29,3 +29,8 @@ favorites = []
 next = 1
 # Number of preceding pages to render in advance (0 disables it).
 previous = 1
+
+[web]
+# Port the --web local browser reader listens on (127.0.0.1 only).
+# Use 0 to let the OS assign any free port instead of a fixed one.
+port = 55566

@@ -21,6 +21,7 @@ import (
 	"github.com/arimatakao/comicread/internal/tui/filepicker"
 	"github.com/arimatakao/comicread/internal/tui/loading"
 	"github.com/arimatakao/comicread/internal/tui/reader"
+	"github.com/arimatakao/comicread/internal/web"
 )
 
 // ErrUsage marks errors caused by invalid command-line arguments, as opposed
@@ -82,6 +83,10 @@ func Run(args []string) error {
 	// gracefully: save reading progress, clear the image and close the chapter.
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
+
+	if options.web {
+		return web.Serve(ctx, settings.Web.Port)
+	}
 
 	path := options.path
 	if path == "" {
@@ -213,6 +218,7 @@ type options struct {
 	configPathSet bool
 	clearJournal  bool
 	bookView      reader.ViewMode
+	web           bool
 }
 
 // normalizeOpenFlag rewrites a bare, value-less -o/--open into an explicit
@@ -271,6 +277,7 @@ func parseOptionsWithConfig(args []string, settings config.Config) (options, err
 	circleBookViewFlag := flags.Bool("circle-view", false, i18n.T(i18n.CLIFlagCircleBookViewUsage))
 	rightCircleBookViewFlag := flags.Bool("right-circle-view", false, i18n.T(i18n.CLIFlagRightCircleBookViewUsage))
 	openFlag := flags.String("open", "", i18n.T(i18n.CLIFlagOpenUsage))
+	webFlag := flags.Bool("web", false, i18n.T(i18n.CLIFlagWebUsage))
 	flags.BoolVar(versionFlag, "v", false, i18n.T(i18n.CLIFlagVersionUsage))
 	flags.StringVar(openFlag, "o", "", i18n.T(i18n.CLIFlagOpenUsage))
 	if err := flags.Parse(args); err != nil {
@@ -316,6 +323,12 @@ func parseOptionsWithConfig(args []string, settings config.Config) (options, err
 	}
 	if *updateFlag {
 		return options{update: true, configPath: *configPathFlag, configPathSet: configPathSet}, nil
+	}
+	if *webFlag {
+		if flags.NArg() != 0 {
+			return options{}, &usageError{errors.New(i18n.T(i18n.CLIErrWebArgs))}
+		}
+		return options{web: true, configPath: *configPathFlag, configPathSet: configPathSet}, nil
 	}
 	bookView, err := selectedBookView(settings.View, *bookViewFlag, *rightBookViewFlag, *circleBookViewFlag, *rightCircleBookViewFlag)
 	if err != nil {
