@@ -78,6 +78,11 @@ q    beenden
 	CLIErrInvalidView:               "nicht unterstützter COMICREAD_VIEW-Wert %q (erwartet: book-view, right-view, circle-view oder right-circle-view)",
 	CLIFlagOpenUsage:                "im Dateiauswahldialog zu öffnender Ordner (Standard: COMICREAD_DIR oder aktueller Ordner)",
 	CLIErrOpenNotDir:                "Ordner öffnen %q: kein Ordner",
+	CLIFlagWebUsage:                 "lokalen Browser-Reader statt der Terminaloberfläche starten",
+	CLIErrWebArgs:                   "--web akzeptiert kein Datei- oder Ordnerargument",
+	WebServerStarted:                "comicread-Web-Reader läuft unter %s (zum Beenden Ctrl+C drücken)",
+	WebErrListen:                    "Webserver starten: %w",
+	WebErrServe:                     "Webserver ausführen: %w",
 	CLIHelpHint:                     "für Hilfe 'comicread --help' ausführen",
 	CLIUsage:                        "Aufruf: comicread [Optionen] [Datei]",
 	CLIUsageFull: `comicread — ein minimaler Manga-Reader für das Terminal
@@ -85,6 +90,7 @@ q    beenden
 Aufruf: comicread [Optionen] [Datei]
 
 Optionen:
+  --config string     zu verwendende Konfigurationsdatei
   --graphics string   Renderer: auto, ascii, dots, kitty, sixel oder iterm2 (Standard: "auto")
   --book-view         Seiten paarweise von links nach rechts anzeigen
   --right-view        Seiten paarweise von rechts nach links anzeigen
@@ -92,21 +98,15 @@ Optionen:
   --right-circle-view
                       überlappende Seitenpaare von rechts nach links anzeigen
   --clear-journal    lokales Journal für eine Datei oder einen Ordner löschen und beenden
+  --reset-config     config.toml auf Standardwerte zurücksetzen und beenden
+  --set-config value config.toml aktualisieren: schlüssel=wert
   -o, --open string   im Dateiauswahldialog zu öffnender Ordner (Standard: COMICREAD_DIR oder aktueller Ordner)
-  --env               comicread-Umgebung ausgeben und beenden
   --update            nach Updates suchen und beenden
+  --web               lokalen Browser-Reader statt der Terminaloberfläche starten
   -v, --version       Version ausgeben und beenden
   -h, --help          diese Hilfe anzeigen
 
 Wenn keine Datei und kein Ordner angegeben ist, öffnet sich eine interaktive Dateiauswahl in COMICREAD_DIR
-(falls auf einen gültigen Ordner gesetzt), sonst im aktuellen Ordner.
-
-Umgebung:
-  COMICREAD_GRAPHICS  Standard-Renderer: auto, ascii, dots, kitty, sixel oder iterm2
-  COMICREAD_PRERENDERED_NEXT      nächste Seiten vorab rendern (Standard 1)
-  COMICREAD_PRERENDERED_PREVIOUS  vorherige Seiten vorab rendern (Standard 1)
-  COMICREAD_VIEW      Standardansicht: book-view, right-view, circle-view oder right-circle-view
-  COMICREAD_LANG      Sprache der Meldungen: https://github.com/arimatakao/comicread#environment-variables (Standard: "en")
-  COMICREAD_DIR       Standardordner für die Dateiauswahl, wenn kein Pfad angegeben ist`,
+(falls auf einen gültigen Ordner gesetzt), sonst im aktuellen Ordner.`,
 	ReaderViewMetadata: "Metadaten",
 }

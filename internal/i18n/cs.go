@@ -78,6 +78,11 @@ q    ukončit
 	CLIErrInvalidView:               "nepodporovaná hodnota COMICREAD_VIEW %q (očekává se: book-view, right-view, circle-view nebo right-circle-view)",
 	CLIFlagOpenUsage:                "adresář k otevření ve výběru souborů (výchozí: COMICREAD_DIR nebo aktuální adresář)",
 	CLIErrOpenNotDir:                "otevřít adresář %q: není adresář",
+	CLIFlagWebUsage:                 "spustit místní webovou čtečku místo rozhraní terminálu",
+	CLIErrWebArgs:                   "--web nepřijímá argument souboru ani adresáře",
+	WebServerStarted:                "webová čtečka comicread běží na %s (zastavíte ji stisknutím Ctrl+C)",
+	WebErrListen:                    "spustit webový server: %w",
+	WebErrServe:                     "spustit webový server: %w",
 	CLIHelpHint:                     "nápovědu zobrazíte příkazem 'comicread --help'",
 	CLIUsage:                        "použití: comicread [volby] [soubor]",
 	CLIUsageFull: `comicread — minimalistická čtečka mangy pro terminál
@@ -85,6 +90,7 @@ q    ukončit
 použití: comicread [volby] [soubor]
 
 volby:
+  --config string     konfigurační soubor k použití
   --graphics string   vykreslovač: auto, ascii, dots, kitty, sixel nebo iterm2 (výchozí "auto")
   --book-view         zobrazit dvojice stránek zleva doprava
   --right-view        zobrazit dvojice stránek zprava doleva
@@ -92,21 +98,15 @@ volby:
   --right-circle-view
                       zobrazit překrývající se dvojice stránek zprava doleva
   --clear-journal    odstranit místní deník pro soubor nebo složku a ukončit
+  --reset-config     obnovit výchozí config.toml a ukončit
+  --set-config value aktualizovat config.toml: klíč=hodnota
   -o, --open string   adresář k otevření ve výběru souborů (výchozí: COMICREAD_DIR nebo aktuální adresář)
-  --env               vypsat prostředí comicread a ukončit
   --update            zkontrolovat aktualizace a ukončit
+  --web               spustit místní webovou čtečku místo rozhraní terminálu
   -v, --version       vypsat verzi a ukončit
   -h, --help          zobrazit tuto nápovědu
 
 Pokud není zadán soubor ani složka, otevře se interaktivní výběr souboru v COMICREAD_DIR
-(je-li nastavena na platný adresář), jinak v aktuálním adresáři.
-
-prostředí:
-  COMICREAD_GRAPHICS  výchozí vykreslovač: auto, ascii, dots, kitty, sixel nebo iterm2
-  COMICREAD_PRERENDERED_NEXT      počet dalších stránek k předvykreslení (výchozí 1)
-  COMICREAD_PRERENDERED_PREVIOUS  počet předchozích stránek k předvykreslení (výchozí 1)
-  COMICREAD_VIEW      výchozí zobrazení: book-view, right-view, circle-view nebo right-circle-view
-  COMICREAD_LANG      jazyk zpráv: https://github.com/arimatakao/comicread#environment-variables (výchozí "en")
-  COMICREAD_DIR       výchozí adresář pro výběr souborů, když není zadána cesta`,
+(je-li nastavena na platný adresář), jinak v aktuálním adresáři.`,
 	ReaderViewMetadata: "Metadata",
 }

@@ -78,6 +78,11 @@ q    шығу
 	CLIErrInvalidView:               "COMICREAD_VIEW %q мәні қолдау көрсетілмейді (мүмкін мәндер: book-view, right-view, circle-view немесе right-circle-view)",
 	CLIFlagOpenUsage:                "файл таңдағышта ашылатын қалта (әдепкі: COMICREAD_DIR немесе ағымдағы қалта)",
 	CLIErrOpenNotDir:                "қалтаны ашу %q: қалта емес",
+	CLIFlagWebUsage:                 "терминал интерфейсінің орнына жергілікті веб-оқырманды іске қосу",
+	CLIErrWebArgs:                   "--web файл не қалта аргументін қабылдамайды",
+	WebServerStarted:                "comicread веб-оқырманы %s мекенжайында жұмыс істеп тұр (тоқтату үшін Ctrl+C басыңыз)",
+	WebErrListen:                    "веб-серверді іске қосу: %w",
+	WebErrServe:                     "веб-серверді іске қосу: %w",
 	CLIHelpHint:                     "анықтама алу үшін 'comicread --help' орындаңыз",
 	CLIUsage:                        "қолданылуы: comicread [опциялар] [файл]",
 	CLIUsageFull: `comicread - терминалға арналған минималистік манга оқырманы
@@ -85,6 +90,7 @@ q    шығу
 қолданылуы: comicread [опциялар] [файл]
 
 опциялар:
+  --config string     пайдаланылатын конфигурация файлы
   --graphics string   рендерер: auto, ascii, dots, kitty, sixel немесе iterm2 (әдепкі "auto")
   --book-view         беттерді солдан оңға жұп етіп көрсету
   --right-view        беттерді оңнан солға жұп етіп көрсету
@@ -92,21 +98,15 @@ q    шығу
   --right-circle-view
                       беттерді оңнан солға қабаттасқан жұп етіп көрсету
   --clear-journal    файл не қалта үшін жергілікті журналды жойып, жұмысты аяқтау
+  --reset-config     config.toml әдепкі мәндерін қалпына келтіріп, шығу
+  --set-config value config.toml жаңарту: кілт=мән
   -o, --open string   файл таңдағышта ашылатын қалта (әдепкі: COMICREAD_DIR немесе ағымдағы қалта)
-  --env               comicread ортасын шығарып, жұмысты аяқтау
   --update            жаңартуларды тексеріп, жұмысты аяқтау
+  --web               терминал интерфейсінің орнына жергілікті веб-оқырманды іске қосу
   -v, --version       нұсқасын шығарып, жұмысты аяқтау
   -h, --help          осы анықтаманы көрсету
 
 Файл немесе қалта көрсетілмесе, интерактивті файл таңдау COMICREAD_DIR ішінде ашылады
-(егер ол дұрыс қалтаға орнатылса) немесе ағымдағы қалтада ашылады.
-
-орта айнымалылары:
-  COMICREAD_GRAPHICS  әдепкі рендерер: auto, ascii, dots, kitty, sixel немесе iterm2
-  COMICREAD_PRERENDERED_NEXT      алдын ала көрсетуге келесі беттер саны (әдепкі 1)
-  COMICREAD_PRERENDERED_PREVIOUS  алдын ала көрсетуге алдыңғы беттер саны (әдепкі 1)
-  COMICREAD_VIEW      әдепкі режим: book-view, right-view, circle-view немесе right-circle-view
-  COMICREAD_LANG   хабарлама тілі: https://github.com/arimatakao/comicread#environment-variables (әдепкі "en")
-  COMICREAD_DIR    жол көрсетілмегенде файл таңдағышқа арналған әдепкі қалта`,
+(егер ол дұрыс қалтаға орнатылса) немесе ағымдағы қалтада ашылады.`,
 	ReaderViewMetadata: "Метадеректер",
 }

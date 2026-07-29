@@ -78,6 +78,11 @@ q    έξοδος
 	CLIErrInvalidView:               "μη υποστηριζόμενη τιμή COMICREAD_VIEW %q (αναμένονται: book-view, right-view, circle-view ή right-circle-view)",
 	CLIFlagOpenUsage:                "κατάλογος για άνοιγμα στον επιλογέα αρχείων (προεπιλογή: COMICREAD_DIR ή ο τρέχων κατάλογος)",
 	CLIErrOpenNotDir:                "άνοιγμα καταλόγου %q: δεν είναι κατάλογος",
+	CLIFlagWebUsage:                 "εκκίνηση τοπικού προγράμματος ανάγνωσης ιστού αντί για το περιβάλλον τερματικού",
+	CLIErrWebArgs:                   "το --web δεν δέχεται όρισμα αρχείου ή καταλόγου",
+	WebServerStarted:                "το πρόγραμμα ανάγνωσης ιστού comicread εκτελείται στο %s (πατήστε Ctrl+C για διακοπή)",
+	WebErrListen:                    "εκκίνηση διακομιστή ιστού: %w",
+	WebErrServe:                     "εκτέλεση διακομιστή ιστού: %w",
 	CLIHelpHint:                     "εκτελέστε 'comicread --help' για βοήθεια",
 	CLIUsage:                        "χρήση: comicread [επιλογές] [αρχείο]",
 	CLIUsageFull: `comicread — ένας μινιμαλιστικός αναγνώστης manga για τερματικό
@@ -85,6 +90,7 @@ q    έξοδος
 χρήση: comicread [επιλογές] [αρχείο]
 
 επιλογές:
+  --config string     αρχείο ρυθμίσεων προς χρήση
   --graphics string   αποδότης: auto, ascii, dots, kitty, sixel ή iterm2 (προεπιλογή "auto")
   --book-view         εμφάνιση ζευγών σελίδων από αριστερά προς τα δεξιά
   --right-view        εμφάνιση ζευγών σελίδων από δεξιά προς τα αριστερά
@@ -92,21 +98,15 @@ q    έξοδος
   --right-circle-view
                       εμφάνιση επικαλυπτόμενων ζευγών σελίδων από δεξιά προς τα αριστερά
   --clear-journal    διαγραφή τοπικού ημερολογίου για αρχείο ή κατάλογο και έξοδος
+  --reset-config     επαναφορά του config.toml και έξοδος
+  --set-config value ενημέρωση config.toml: κλειδί=τιμή
   -o, --open string   κατάλογος για άνοιγμα στον επιλογέα αρχείων (προεπιλογή: COMICREAD_DIR ή ο τρέχων κατάλογος)
-  --env               εμφάνιση περιβάλλοντος comicread και έξοδος
   --update            έλεγχος ενημερώσεων και έξοδος
+  --web               εκκίνηση τοπικού προγράμματος ανάγνωσης ιστού αντί για το περιβάλλον τερματικού
   -v, --version       εμφάνιση έκδοσης και έξοδος
   -h, --help          εμφάνιση αυτής της βοήθειας
 
 Αν δεν δοθεί αρχείο ή κατάλογος, ανοίγει διαδραστική επιλογή αρχείου στο COMICREAD_DIR
-(αν έχει οριστεί σε έγκυρο κατάλογο) ή αλλιώς στον τρέχοντα κατάλογο.
-
-περιβάλλον:
-  COMICREAD_GRAPHICS  προεπιλεγμένος αποδότης: auto, ascii, dots, kitty, sixel ή iterm2
-  COMICREAD_PRERENDERED_NEXT      επόμενες σελίδες για προαπόδοση (προεπιλογή 1)
-  COMICREAD_PRERENDERED_PREVIOUS  προηγούμενες σελίδες για προαπόδοση (προεπιλογή 1)
-  COMICREAD_VIEW      προεπιλεγμένη προβολή: book-view, right-view, circle-view ή right-circle-view
-  COMICREAD_LANG      γλώσσα μηνυμάτων: https://github.com/arimatakao/comicread#environment-variables (προεπιλογή "en")
-  COMICREAD_DIR       προεπιλεγμένος κατάλογος για τον επιλογέα αρχείων όταν δεν δίνεται διαδρομή`,
+(αν έχει οριστεί σε έγκυρο κατάλογο) ή αλλιώς στον τρέχοντα κατάλογο.`,
 	ReaderViewMetadata: "Μεταδεδομένα",
 }

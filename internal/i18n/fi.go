@@ -19,12 +19,13 @@ q    lopeta
 	FilepickerHeader: "comicread — valitse luku\n%s\n\n", FilepickerNoEntries: "  (ei tuettuja kohteita)\n", FilepickerHelp: "\n↑/↓ siirry\n← ylähakemisto\n→ siirry hakemistoon\nenter avaa tiedosto\ns valitse korostettu hakemisto\nf lisää / poista nykyinen hakemisto suosikeista\nF lisää suosikkihakemisto\nb suosikkihakemistot\no siirry hakemistoon\nq lopeta\n", FilepickerWindowTitle: "comicread — valitse tiedosto", FilepickerGoToPrompt: "\nSiirry hakemistoon: %s\n", FilepickerFavoritePrompt: "\nSuosikkihakemisto: %s\n", FilepickerGoToErr: "  virhe: %s\n", FilepickerFavorites: "Suosikkihakemistot\n\n", FilepickerNoFavorites: "  (suosikkihakemistoja ei ole määritetty)\n", FilepickerFavoritesHelp: "\n↑/↓ siirry\nenter siirry hakemistoon\nd poista suosikki\nesc takaisin\n", FilepickerFavoriteErr: "  virhe suosikkien tallennuksessa: %s\n", FilepickerErrResolveDir: "selvitä hakemisto %q: %w", FilepickerErrReadDir: "lue hakemisto %q: %w", FilepickerErrRunPicker: "suorita tiedostovalitsin: %w", FilepickerErrEmptyPath: "polku on tyhjä", FilepickerErrNotDir: "%q ei ole hakemisto",
 	LoadingViewOpening: "avataan %s…", LoadingViewWindowTitle: "comicread — avataan",
 	CLIErrGetWorkingDir: "hae työhakemisto: %w", CLIErrPickFile: "valitse tiedosto: %w", CLIErrRunTUI: "suorita TUI: %w", CLIErrParseArgs: "jäsennä argumentit: %w", CLIErrOpenChapter: "avaa luku: %w", CLIErrOpenJournal: "avaa päiväkirja: %w", CLIErrClearJournal: "tyhjennä päiväkirja: %w", CLIErrClearJournalRequiresInput: "--clear-journal vaatii tiedoston tai hakemiston", CLIErrNoPages: "luku ei sisällä luettavia kuvasivuja", CLIErrInspectInput: "tutki syöte %q: %w", CLIErrUnsupportedFile: "tiedostoa %q ei tueta: tuetut muodot ovat CBZ, PDF, EPUB tai kuvahakemisto",
-	CLIFlagGraphicsUsage: "renderöijä: auto, ascii, dots, kitty, sixel tai iterm2", CLIFlagVersionUsage: "tulosta versio ja lopeta", CLIFlagUpdateUsage: "tarkista päivitykset ja lopeta", CLIFlagEnvUsage: "tulosta comicread-ympäristö ja lopeta", CLIFlagClearJournalUsage: "poista tiedoston tai hakemiston paikallinen päiväkirja ja lopeta", CLIFlagBookViewUsage: "näytä sivuparit vasemmalta oikealle", CLIFlagRightBookViewUsage: "näytä sivuparit oikealta vasemmalle", CLIFlagCircleBookViewUsage: "näytä limittäiset sivuparit vasemmalta oikealle", CLIFlagRightCircleBookViewUsage: "näytä limittäiset sivuparit oikealta vasemmalle", CLIErrMultipleBookViews: "vain yhtä kirjanäkymäasetusta voidaan käyttää", CLIErrInvalidView: "COMICREAD_VIEW %q ei ole tuettu (odotetaan book-view, right-view, circle-view tai right-circle-view)", CLIFlagOpenUsage: "tiedostovalitsimessa avattava hakemisto (oletus: COMICREAD_DIR tai nykyinen hakemisto)", CLIErrOpenNotDir: "avaa hakemisto %q: ei ole hakemisto", CLIHelpHint: "suorita 'comicread --help' saadaksesi ohjeen", CLIUsage: "käyttö: comicread [asetukset] [tiedosto]",
+	CLIFlagGraphicsUsage: "renderöijä: auto, ascii, dots, kitty, sixel tai iterm2", CLIFlagVersionUsage: "tulosta versio ja lopeta", CLIFlagUpdateUsage: "tarkista päivitykset ja lopeta", CLIFlagEnvUsage: "tulosta comicread-ympäristö ja lopeta", CLIFlagClearJournalUsage: "poista tiedoston tai hakemiston paikallinen päiväkirja ja lopeta", CLIFlagBookViewUsage: "näytä sivuparit vasemmalta oikealle", CLIFlagRightBookViewUsage: "näytä sivuparit oikealta vasemmalle", CLIFlagCircleBookViewUsage: "näytä limittäiset sivuparit vasemmalta oikealle", CLIFlagRightCircleBookViewUsage: "näytä limittäiset sivuparit oikealta vasemmalle", CLIErrMultipleBookViews: "vain yhtä kirjanäkymäasetusta voidaan käyttää", CLIErrInvalidView: "COMICREAD_VIEW %q ei ole tuettu (odotetaan book-view, right-view, circle-view tai right-circle-view)", CLIFlagOpenUsage: "tiedostovalitsimessa avattava hakemisto (oletus: COMICREAD_DIR tai nykyinen hakemisto)", CLIErrOpenNotDir: "avaa hakemisto %q: ei ole hakemisto", CLIFlagWebUsage: "käynnistä paikallinen verkkolukija päätekäyttöliittymän sijaan", CLIErrWebArgs: "--web ei hyväksy tiedosto- tai hakemistoargumenttia", WebServerStarted: "comicread-verkkolukija toimii osoitteessa %s (pysäytä painamalla Ctrl+C)", WebErrListen: "käynnistä verkkopalvelin: %w", WebErrServe: "suorita verkkopalvelin: %w", CLIHelpHint: "suorita 'comicread --help' saadaksesi ohjeen", CLIUsage: "käyttö: comicread [asetukset] [tiedosto]",
 	CLIUsageFull: `comicread — minimalistinen mangalukija päätteelle
 
 käyttö: comicread [asetukset] [tiedosto]
 
 asetukset:
+  --config string     käytettävä asetustiedosto
   --graphics string   renderöijä: auto, ascii, dots, kitty, sixel tai iterm2 (oletus "auto")
   --book-view         näytä sivuparit vasemmalta oikealle
   --right-view        näytä sivuparit oikealta vasemmalle
@@ -32,21 +33,15 @@ asetukset:
   --right-circle-view
                       näytä limittäiset sivuparit oikealta vasemmalle
   --clear-journal     poista tiedoston tai hakemiston paikallinen päiväkirja ja lopeta
+  --reset-config     palauta config.toml oletuksiin ja lopeta
+  --set-config value päivitä config.toml: avain=arvo
   -o, --open string   tiedostovalitsimessa avattava hakemisto (oletus: COMICREAD_DIR tai nykyinen hakemisto)
-  --env               tulosta comicread-ympäristö ja lopeta
   --update            tarkista päivitykset ja lopeta
+  --web               käynnistä paikallinen verkkolukija päätekäyttöliittymän sijaan
   -v, --version       tulosta versio ja lopeta
   -h, --help          näytä tämä ohje
 
 Jos tiedostoa tai hakemistoa ei anneta, interaktiivinen tiedostovalitsin avautuu COMICREAD_DIR-hakemistossa
-(jos se on asetettu kelvolliseksi hakemistoksi) tai muuten nykyisessä hakemistossa.
-
-ympäristö:
-  COMICREAD_GRAPHICS  oletusrenderöijä: auto, ascii, dots, kitty, sixel tai iterm2
-  COMICREAD_PRERENDERED_NEXT      esirenderöitävät seuraavat sivut (oletus 1)
-  COMICREAD_PRERENDERED_PREVIOUS  esirenderöitävät edelliset sivut (oletus 1)
-  COMICREAD_VIEW      oletusnäkymä: book-view, right-view, circle-view tai right-circle-view
-  COMICREAD_LANG      viestien kieli: https://github.com/arimatakao/comicread#environment-variables (oletus "en")
-  COMICREAD_DIR       tiedostovalitsimen oletushakemisto, kun polkua ei anneta`,
+(jos se on asetettu kelvolliseksi hakemistoksi) tai muuten nykyisessä hakemistossa.`,
 	ReaderViewMetadata: "Metatiedot",
 }

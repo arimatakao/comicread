@@ -78,6 +78,11 @@ q    ieșire
 	CLIErrInvalidView:               "valoare COMICREAD_VIEW neacceptată %q (se așteaptă: book-view, right-view, circle-view sau right-circle-view)",
 	CLIFlagOpenUsage:                "director de deschis în selectorul de fișiere (implicit: COMICREAD_DIR sau directorul curent)",
 	CLIErrOpenNotDir:                "deschide directorul %q: nu este un director",
+	CLIFlagWebUsage:                 "pornește un cititor web local în locul interfeței de terminal",
+	CLIErrWebArgs:                   "--web nu acceptă un argument de fișier sau director",
+	WebServerStarted:                "cititorul web comicread rulează la %s (apăsați Ctrl+C pentru oprire)",
+	WebErrListen:                    "pornește serverul web: %w",
+	WebErrServe:                     "rulează serverul web: %w",
 	CLIHelpHint:                     "rulați 'comicread --help' pentru ajutor",
 	CLIUsage:                        "utilizare: comicread [opțiuni] [fișier]",
 	CLIUsageFull: `comicread — un cititor de manga minimal pentru terminal
@@ -85,6 +90,7 @@ q    ieșire
 utilizare: comicread [opțiuni] [fișier]
 
 opțiuni:
+  --config string     fișier de configurare de utilizat
   --graphics string   renderer: auto, ascii, dots, kitty, sixel sau iterm2 (implicit "auto")
   --book-view         afișează perechi de pagini de la stânga la dreapta
   --right-view        afișează perechi de pagini de la dreapta la stânga
@@ -92,21 +98,15 @@ opțiuni:
   --right-circle-view
                       afișează perechi de pagini suprapuse de la dreapta la stânga
   --clear-journal    șterge jurnalul local pentru un fișier sau director și ieși
+  --reset-config     resetează config.toml la valorile implicite și ieși
+  --set-config value actualizează config.toml: cheie=valoare
   -o, --open string   director de deschis în selectorul de fișiere (implicit: COMICREAD_DIR sau directorul curent)
-  --env               afișează mediul comicread și ieși
   --update            verifică actualizările și ieși
+  --web               pornește un cititor web local în locul interfeței de terminal
   -v, --version       afișează versiunea și ieși
   -h, --help          afișează acest ajutor
 
 Dacă nu este dat niciun fișier sau director, se deschide un selector interactiv de fișiere în COMICREAD_DIR
-(dacă este setat la un director valid) sau, altfel, în directorul curent.
-
-mediu:
-  COMICREAD_GRAPHICS  renderer implicit: auto, ascii, dots, kitty, sixel sau iterm2
-  COMICREAD_PRERENDERED_NEXT      pagini următoare pentru prerenderizare (implicit 1)
-  COMICREAD_PRERENDERED_PREVIOUS  pagini anterioare pentru prerenderizare (implicit 1)
-  COMICREAD_VIEW      vizualizare implicită: book-view, right-view, circle-view sau right-circle-view
-  COMICREAD_LANG      limba mesajelor: https://github.com/arimatakao/comicread#environment-variables (implicit "en")
-  COMICREAD_DIR       director implicit pentru selectorul de fișiere când nu este dată o cale`,
+(dacă este setat la un director valid) sau, altfel, în directorul curent.`,
 	ReaderViewMetadata: "Metadate",
 }

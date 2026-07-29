@@ -78,6 +78,11 @@ q    keluar
 	CLIErrInvalidView:               "nilai COMICREAD_VIEW tidak didukung %q (harus: book-view, right-view, circle-view, atau right-circle-view)",
 	CLIFlagOpenUsage:                "direktori untuk dibuka di pemilih berkas (bawaan: COMICREAD_DIR atau direktori saat ini)",
 	CLIErrOpenNotDir:                "buka direktori %q: bukan direktori",
+	CLIFlagWebUsage:                 "mulai pembaca web lokal alih-alih antarmuka terminal",
+	CLIErrWebArgs:                   "--web tidak menerima argumen berkas atau direktori",
+	WebServerStarted:                "pembaca web comicread berjalan di %s (tekan Ctrl+C untuk berhenti)",
+	WebErrListen:                    "mulai server web: %w",
+	WebErrServe:                     "jalankan server web: %w",
 	CLIHelpHint:                     "jalankan 'comicread --help' untuk bantuan",
 	CLIUsage:                        "penggunaan: comicread [opsi] [berkas]",
 	CLIUsageFull: `comicread — pembaca manga terminal minimal
@@ -85,6 +90,7 @@ q    keluar
 penggunaan: comicread [opsi] [berkas]
 
 opsi:
+  --config string     berkas konfigurasi yang digunakan
   --graphics string   perender: auto, ascii, dots, kitty, sixel, atau iterm2 (bawaan "auto")
   --book-view         tampilkan pasangan halaman dari kiri ke kanan
   --right-view        tampilkan pasangan halaman dari kanan ke kiri
@@ -92,21 +98,15 @@ opsi:
   --right-circle-view
                       tampilkan pasangan halaman bertumpuk dari kanan ke kiri
   --clear-journal    hapus jurnal lokal untuk berkas atau direktori lalu keluar
+  --reset-config     atur ulang config.toml ke bawaan lalu keluar
+  --set-config value perbarui config.toml: kunci=nilai
   -o, --open string   direktori untuk dibuka di pemilih berkas (bawaan: COMICREAD_DIR atau direktori saat ini)
-  --env               tampilkan lingkungan comicread lalu keluar
   --update            periksa pembaruan lalu keluar
+  --web               mulai pembaca web lokal alih-alih antarmuka terminal
   -v, --version       tampilkan versi lalu keluar
   -h, --help          tampilkan bantuan ini
 
 Jika tidak ada berkas atau direktori yang diberikan, pemilih berkas interaktif akan terbuka di COMICREAD_DIR
-(jika diatur ke direktori yang valid) atau di direktori saat ini.
-
-lingkungan:
-  COMICREAD_GRAPHICS  perender bawaan: auto, ascii, dots, kitty, sixel, atau iterm2
-  COMICREAD_PRERENDERED_NEXT      halaman berikutnya untuk prarender (bawaan 1)
-  COMICREAD_PRERENDERED_PREVIOUS  halaman sebelumnya untuk prarender (bawaan 1)
-  COMICREAD_VIEW      tampilan bawaan: book-view, right-view, circle-view, atau right-circle-view
-  COMICREAD_LANG      bahasa pesan: https://github.com/arimatakao/comicread#environment-variables (bawaan "en")
-  COMICREAD_DIR       direktori bawaan untuk pemilih berkas saat tidak ada jalur yang diberikan`,
+(jika diatur ke direktori yang valid) atau di direktori saat ini.`,
 	ReaderViewMetadata: "Metadata",
 }

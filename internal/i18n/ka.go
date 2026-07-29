@@ -78,6 +78,11 @@ q    გასვლა
 	CLIErrInvalidView:               "COMICREAD_VIEW-ის მხარდაუჭერელი მნიშვნელობა %q (შესაძლებელია: book-view, right-view, circle-view ან right-circle-view)",
 	CLIFlagOpenUsage:                "საქაღალდე ფაილის ამრჩევში გასახსნელად (ნაგულისხმევი: COMICREAD_DIR ან მიმდინარე საქაღალდე)",
 	CLIErrOpenNotDir:                "საქაღალდის გახსნა %q: არ არის საქაღალდე",
+	CLIFlagWebUsage:                 "ტერმინალის ინტერფეისის ნაცვლად ლოკალური ვებ-მკითხველის გაშვება",
+	CLIErrWebArgs:                   "--web არ იღებს ფაილის ან საქაღალდის არგუმენტს",
+	WebServerStarted:                "comicread-ის ვებ-მკითხველი მუშაობს მისამართზე %s (გასაჩერებლად დააჭირეთ Ctrl+C)",
+	WebErrListen:                    "ვებ-სერვერის გაშვება: %w",
+	WebErrServe:                     "ვებ-სერვერის გაშვება: %w",
 	CLIHelpHint:                     "დახმარებისთვის გაუშვით 'comicread --help'",
 	CLIUsage:                        "გამოყენება: comicread [პარამეტრები] [ფაილი]",
 	CLIUsageFull: `comicread - მინიმალისტური მანგის წამკითხველი ტერმინალისთვის
@@ -85,6 +90,7 @@ q    გასვლა
 გამოყენება: comicread [პარამეტრები] [ფაილი]
 
 პარამეტრები:
+  --config string     გამოსაყენებელი კონფიგურაციის ფაილი
   --graphics string   რენდერერი: auto, ascii, dots, kitty, sixel ან iterm2 (ნაგულისხმევი "auto")
   --book-view         გვერდების წყვილებად ჩვენება მარცხნიდან მარჯვნივ
   --right-view        გვერდების წყვილებად ჩვენება მარჯვნიდან მარცხნივ
@@ -92,21 +98,15 @@ q    გასვლა
   --right-circle-view
                       გვერდების გადამფარავი წყვილებად ჩვენება მარჯვნიდან მარცხნივ
   --clear-journal    ფაილის ან საქაღალდის ადგილობრივი ჟურნალის წაშლა და დასრულება
+  --reset-config     config.toml ნაგულისხმევზე დააბრუნე და დაასრულე
+  --set-config value config.toml განაახლე: გასაღები=მნიშვნელობა
   -o, --open string   საქაღალდე ფაილის ამრჩევში გასახსნელად (ნაგულისხმევი: COMICREAD_DIR ან მიმდინარე საქაღალდე)
-  --env               comicread-ის გარემოს გამოტანა და დასრულება
   --update            განახლებების შემოწმება და დასრულება
+  --web               ტერმინალის ინტერფეისის ნაცვლად ლოკალური ვებ-მკითხველის გაშვება
   -v, --version       ვერსიის გამოტანა და დასრულება
   -h, --help          ამ დახმარების ჩვენება
 
 თუ ფაილი ან საქაღალდე მითითებული არ არის, გაიხსნება ინტერაქტიული ფაილის არჩევა COMICREAD_DIR-ში
-(თუ იგი სწორ საქაღალდეზეა დაყენებული) ან მიმდინარე საქაღალდეში.
-
-გარემოს ცვლადები:
-  COMICREAD_GRAPHICS  ნაგულისხმევი რენდერერი: auto, ascii, dots, kitty, sixel ან iterm2
-  COMICREAD_PRERENDERED_NEXT      შემდეგი გვერდები წინასწარი რენდერისთვის (ნაგულისხმევი 1)
-  COMICREAD_PRERENDERED_PREVIOUS  წინა გვერდები წინასწარი რენდერისთვის (ნაგულისხმევი 1)
-  COMICREAD_VIEW      ნაგულისხმევი რეჟიმი: book-view, right-view, circle-view ან right-circle-view
-  COMICREAD_LANG   შეტყობინებების ენა: https://github.com/arimatakao/comicread#environment-variables (ნაგულისხმევი "en")
-  COMICREAD_DIR    ფაილის ამრჩევის ნაგულისხმევი საქაღალდე, როცა გზა მითითებული არაა`,
+(თუ იგი სწორ საქაღალდეზეა დაყენებული) ან მიმდინარე საქაღალდეში.`,
 	ReaderViewMetadata: "მეტამონაცემები",
 }

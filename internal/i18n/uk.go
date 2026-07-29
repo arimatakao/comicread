@@ -78,6 +78,11 @@ q    вихід
 	CLIErrInvalidView:               "непідтримуване значення COMICREAD_VIEW %q (можливі: book-view, right-view, circle-view або right-circle-view)",
 	CLIFlagOpenUsage:                "тека для відкриття у виборі файлів (за замовчуванням: COMICREAD_DIR або поточна тека)",
 	CLIErrOpenNotDir:                "відкрити теку %q: не є текою",
+	CLIFlagWebUsage:                 "запустити локальну вебчиталку замість інтерфейсу термінала",
+	CLIErrWebArgs:                   "--web не приймає аргумент файлу або теки",
+	WebServerStarted:                "вебчиталка comicread працює за адресою %s (натисніть Ctrl+C, щоб зупинити)",
+	WebErrListen:                    "запуск вебсервера: %w",
+	WebErrServe:                     "робота вебсервера: %w",
 	CLIHelpHint:                     "виконайте 'comicread --help' для довідки",
 	CLIUsage:                        "використання: comicread [опції] [файл]",
 	CLIUsageFull: `comicread - мінімалістична манга-читалка для термінала
@@ -85,6 +90,7 @@ q    вихід
 використання: comicread [опції] [файл]
 
 опції:
+  --config string     файл конфігурації для використання
   --graphics string   рендерер: auto, ascii, dots, kitty, sixel або iterm2 (за замовчуванням "auto")
   --book-view         показувати сторінки парами зліва направо
   --right-view        показувати сторінки парами справа наліво
@@ -92,21 +98,15 @@ q    вихід
   --right-circle-view
                       показувати перекривні пари сторінок справа наліво
   --clear-journal    видалити локальний журнал для файлу або теки та завершити роботу
+  --reset-config     скинути config.toml до значень за замовчуванням і завершити роботу
+  --set-config value оновити config.toml: ключ=значення
   -o, --open string   тека для відкриття у виборі файлів (за замовчуванням: COMICREAD_DIR або поточна тека)
-  --env               вивести середовище comicread та завершити роботу
   --update            перевірити оновлення та завершити роботу
+  --web               запустити локальну вебчиталку замість інтерфейсу термінала
   -v, --version       вивести версію та завершити роботу
   -h, --help          показати цю довідку
 
 Якщо файл або тека не вказані, відкриється інтерактивний вибір файлу в COMICREAD_DIR
-(якщо задано коректну теку) або поточній теці.
-
-змінні середовища:
-  COMICREAD_GRAPHICS  рендерер за замовчуванням: auto, ascii, dots, kitty, sixel або iterm2
-  COMICREAD_PRERENDERED_NEXT      кількість наступних сторінок для пререндеру (за замовчуванням 1)
-  COMICREAD_PRERENDERED_PREVIOUS  кількість попередніх сторінок для пререндеру (за замовчуванням 1)
-  COMICREAD_VIEW      режим за замовчуванням: book-view, right-view, circle-view або right-circle-view
-  COMICREAD_LANG   мова повідомлень: https://github.com/arimatakao/comicread#environment-variables (за замовчуванням "en")
-  COMICREAD_DIR    тека за замовчуванням для вибору файлів, коли шлях не вказано`,
+(якщо задано коректну теку) або поточній теці.`,
 	ReaderViewMetadata: "Метадані",
 }

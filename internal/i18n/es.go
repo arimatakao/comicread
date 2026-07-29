@@ -78,6 +78,11 @@ q    salir
 	CLIErrInvalidView:               "valor de COMICREAD_VIEW no compatible %q (se espera: book-view, right-view, circle-view o right-circle-view)",
 	CLIFlagOpenUsage:                "directorio para abrir en el selector de archivos (predeterminado: COMICREAD_DIR o el directorio actual)",
 	CLIErrOpenNotDir:                "abrir directorio %q: no es un directorio",
+	CLIFlagWebUsage:                 "iniciar un lector web local en lugar de la interfaz de terminal",
+	CLIErrWebArgs:                   "--web no acepta un argumento de archivo o directorio",
+	WebServerStarted:                "el lector web de comicread se ejecuta en %s (pulse Ctrl+C para detenerlo)",
+	WebErrListen:                    "iniciar servidor web: %w",
+	WebErrServe:                     "ejecutar servidor web: %w",
 	CLIHelpHint:                     "ejecute 'comicread --help' para ver la ayuda",
 	CLIUsage:                        "uso: comicread [opciones] [archivo]",
 	CLIUsageFull: `comicread — un lector de manga minimalista para la terminal
@@ -85,6 +90,7 @@ q    salir
 uso: comicread [opciones] [archivo]
 
 opciones:
+  --config string     archivo de configuración que se utilizará
   --graphics string   renderizador: auto, ascii, dots, kitty, sixel o iterm2 (predeterminado "auto")
   --book-view         mostrar pares de páginas de izquierda a derecha
   --right-view        mostrar pares de páginas de derecha a izquierda
@@ -92,21 +98,15 @@ opciones:
   --right-circle-view
                       mostrar pares de páginas superpuestas de derecha a izquierda
   --clear-journal    eliminar el registro local de un archivo o directorio y salir
+  --reset-config     restablecer config.toml y salir
+  --set-config value actualizar config.toml: clave=valor
   -o, --open string   directorio para abrir en el selector de archivos (predeterminado: COMICREAD_DIR o el directorio actual)
-  --env               mostrar el entorno de comicread y salir
   --update            buscar actualizaciones y salir
+  --web               iniciar un lector web local en lugar de la interfaz de terminal
   -v, --version       mostrar la versión y salir
   -h, --help          mostrar esta ayuda
 
 Si no se proporciona ningún archivo o directorio, se abre un selector de archivos interactivo en COMICREAD_DIR
-(si está configurado como un directorio válido) o, de lo contrario, en el directorio actual.
-
-entorno:
-  COMICREAD_GRAPHICS  renderizador predeterminado: auto, ascii, dots, kitty, sixel o iterm2
-  COMICREAD_PRERENDERED_NEXT      páginas siguientes para prerenderizar (predeterminado 1)
-  COMICREAD_PRERENDERED_PREVIOUS  páginas anteriores para prerenderizar (predeterminado 1)
-  COMICREAD_VIEW      vista predeterminada: book-view, right-view, circle-view o right-circle-view
-  COMICREAD_LANG      idioma de los mensajes: https://github.com/arimatakao/comicread#environment-variables (predeterminado "en")
-  COMICREAD_DIR       directorio predeterminado para el selector de archivos cuando no se indica una ruta`,
+(si está configurado como un directorio válido) o, de lo contrario, en el directorio actual.`,
 	ReaderViewMetadata: "Metadatos",
 }

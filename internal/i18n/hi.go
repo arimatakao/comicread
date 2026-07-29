@@ -78,6 +78,11 @@ q    बाहर निकलें
 	CLIErrInvalidView:               "असमर्थित COMICREAD_VIEW मान %q (मान्य: book-view, right-view, circle-view या right-circle-view)",
 	CLIFlagOpenUsage:                "फ़ाइल चयनक में खोलने की निर्देशिका (डिफ़ॉल्ट: COMICREAD_DIR या वर्तमान निर्देशिका)",
 	CLIErrOpenNotDir:                "निर्देशिका खोलें %q: निर्देशिका नहीं है",
+	CLIFlagWebUsage:                 "टर्मिनल UI के बजाय स्थानीय वेब रीडर शुरू करें",
+	CLIErrWebArgs:                   "--web फ़ाइल या निर्देशिका आर्ग्युमेंट स्वीकार नहीं करता",
+	WebServerStarted:                "comicread वेब रीडर %s पर चल रहा है (रोकने के लिए Ctrl+C दबाएँ)",
+	WebErrListen:                    "वेब सर्वर शुरू करें: %w",
+	WebErrServe:                     "वेब सर्वर चलाएँ: %w",
 	CLIHelpHint:                     "सहायता के लिए 'comicread --help' चलाएँ",
 	CLIUsage:                        "उपयोग: comicread [विकल्प] [फ़ाइल]",
 	CLIUsageFull: `comicread — टर्मिनल के लिए एक न्यूनतम मंगा रीडर
@@ -85,6 +90,7 @@ q    बाहर निकलें
 उपयोग: comicread [विकल्प] [फ़ाइल]
 
 विकल्प:
+  --config string     उपयोग की जाने वाली कॉन्फ़िगरेशन फ़ाइल
   --graphics string   रेंडरर: auto, ascii, dots, kitty, sixel या iterm2 (डिफ़ॉल्ट "auto")
   --book-view         पृष्ठों के जोड़े बाएँ से दाएँ दिखाएँ
   --right-view        पृष्ठों के जोड़े दाएँ से बाएँ दिखाएँ
@@ -92,21 +98,15 @@ q    बाहर निकलें
   --right-circle-view
                       ओवरलैप होते पृष्ठों के जोड़े दाएँ से बाएँ दिखाएँ
   --clear-journal    फ़ाइल या निर्देशिका का स्थानीय जर्नल हटाएँ और बाहर निकलें
+  --reset-config     config.toml को डिफ़ॉल्ट पर रीसेट करें और बाहर निकलें
+  --set-config value config.toml अपडेट करें: कुंजी=मान
   -o, --open string   फ़ाइल चयनक में खोलने की निर्देशिका (डिफ़ॉल्ट: COMICREAD_DIR या वर्तमान निर्देशिका)
-  --env               comicread परिवेश दिखाएँ और बाहर निकलें
   --update            अपडेट जाँचें और बाहर निकलें
+  --web               टर्मिनल UI के बजाय स्थानीय वेब रीडर शुरू करें
   -v, --version       संस्करण दिखाएँ और बाहर निकलें
   -h, --help          यह सहायता दिखाएँ
 
 यदि कोई फ़ाइल या निर्देशिका नहीं दी गई है, तो COMICREAD_DIR में इंटरैक्टिव फ़ाइल चयनक खुलेगा
-(यदि यह मान्य निर्देशिका पर सेट है), अन्यथा वर्तमान निर्देशिका में खुलेगा।
-
-परिवेश:
-  COMICREAD_GRAPHICS  डिफ़ॉल्ट रेंडरर: auto, ascii, dots, kitty, sixel या iterm2
-  COMICREAD_PRERENDERED_NEXT      प्रीरेंडर करने के लिए अगली पृष्ठ संख्या (डिफ़ॉल्ट 1)
-  COMICREAD_PRERENDERED_PREVIOUS  प्रीरेंडर करने के लिए पिछले पृष्ठ संख्या (डिफ़ॉल्ट 1)
-  COMICREAD_VIEW      डिफ़ॉल्ट दृश्य: book-view, right-view, circle-view या right-circle-view
-  COMICREAD_LANG      संदेश की भाषा: https://github.com/arimatakao/comicread#environment-variables (डिफ़ॉल्ट "en")
-  COMICREAD_DIR       पथ न दिए जाने पर फ़ाइल चयनक की डिफ़ॉल्ट निर्देशिका`,
+(यदि यह मान्य निर्देशिका पर सेट है), अन्यथा वर्तमान निर्देशिका में खुलेगा।`,
 	ReaderViewMetadata: "मेटाडेटा",
 }

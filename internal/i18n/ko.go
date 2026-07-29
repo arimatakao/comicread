@@ -78,6 +78,11 @@ q    종료
 	CLIErrInvalidView:               "지원되지 않는 COMICREAD_VIEW 값 %q (가능한 값: book-view, right-view, circle-view 또는 right-circle-view)",
 	CLIFlagOpenUsage:                "파일 선택기에서 열 디렉터리(기본값: COMICREAD_DIR 또는 현재 디렉터리)",
 	CLIErrOpenNotDir:                "디렉터리 열기 %q: 디렉터리가 아닙니다",
+	CLIFlagWebUsage:                 "터미널 UI 대신 로컬 웹 리더 시작",
+	CLIErrWebArgs:                   "--web는 파일 또는 디렉터리 인수를 허용하지 않습니다",
+	WebServerStarted:                "comicread 웹 리더가 %s에서 실행 중입니다 (중지하려면 Ctrl+C를 누르세요)",
+	WebErrListen:                    "웹 서버 시작: %w",
+	WebErrServe:                     "웹 서버 실행: %w",
 	CLIHelpHint:                     "도움말은 'comicread --help'를 실행하세요",
 	CLIUsage:                        "사용법: comicread [옵션] [파일]",
 	CLIUsageFull: `comicread — 미니멀한 터미널 만화 리더
@@ -85,6 +90,7 @@ q    종료
 사용법: comicread [옵션] [파일]
 
 옵션:
+  --config string     사용할 설정 파일
   --graphics string   렌더러: auto, ascii, dots, kitty, sixel 또는 iterm2 (기본값 "auto")
   --book-view         왼쪽에서 오른쪽 순서로 페이지 쌍 표시
   --right-view        오른쪽에서 왼쪽 순서로 페이지 쌍 표시
@@ -92,21 +98,15 @@ q    종료
   --right-circle-view
                       오른쪽에서 왼쪽 순서로 겹치는 페이지 쌍 표시
   --clear-journal    파일 또는 디렉터리의 로컬 저널을 삭제하고 종료
+  --reset-config     config.toml을 기본값으로 재설정하고 종료
+  --set-config value config.toml 업데이트: 키=값
   -o, --open string   파일 선택기에서 열 디렉터리(기본값: COMICREAD_DIR 또는 현재 디렉터리)
-  --env               comicread 환경을 출력하고 종료
   --update            업데이트를 확인하고 종료
+  --web               터미널 UI 대신 로컬 웹 리더 시작
   -v, --version       버전을 출력하고 종료
   -h, --help          이 도움말 표시
 
 파일이나 디렉터리를 지정하지 않으면 COMICREAD_DIR에서 대화형 파일 선택기가 열립니다
-(유효한 디렉터리로 설정된 경우). 그렇지 않으면 현재 디렉터리에서 열립니다.
-
-환경 변수:
-  COMICREAD_GRAPHICS  기본 렌더러: auto, ascii, dots, kitty, sixel 또는 iterm2
-  COMICREAD_PRERENDERED_NEXT      미리 렌더링할 다음 페이지 수(기본값 1)
-  COMICREAD_PRERENDERED_PREVIOUS  미리 렌더링할 이전 페이지 수(기본값 1)
-  COMICREAD_VIEW      기본 보기: book-view, right-view, circle-view 또는 right-circle-view
-  COMICREAD_LANG      메시지 언어: https://github.com/arimatakao/comicread#environment-variables (기본값 "en")
-  COMICREAD_DIR       경로를 지정하지 않았을 때 파일 선택기에 사용할 기본 디렉터리`,
+(유효한 디렉터리로 설정된 경우). 그렇지 않으면 현재 디렉터리에서 열립니다.`,
 	ReaderViewMetadata: "메타데이터",
 }

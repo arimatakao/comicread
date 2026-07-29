@@ -78,6 +78,11 @@ q    kilépés
 	CLIErrInvalidView:               "nem támogatott COMICREAD_VIEW %q (elvárt: book-view, right-view, circle-view vagy right-circle-view)",
 	CLIFlagOpenUsage:                "a fájlválasztóban megnyitandó könyvtár (alapértelmezés: COMICREAD_DIR vagy a jelenlegi könyvtár)",
 	CLIErrOpenNotDir:                "könyvtár megnyitása %q: nem könyvtár",
+	CLIFlagWebUsage:                 "helyi webes olvasó indítása a terminálfelület helyett",
+	CLIErrWebArgs:                   "a --web nem fogad el fájl- vagy könyvtárargumentumot",
+	WebServerStarted:                "a comicread webes olvasó a következő címen fut: %s (leállítás: Ctrl+C)",
+	WebErrListen:                    "webszerver indítása: %w",
+	WebErrServe:                     "webszerver futtatása: %w",
 	CLIHelpHint:                     "használathoz futtasd: 'comicread --help'",
 	CLIUsage:                        "használat: comicread [beállítások] [fájl]",
 	CLIUsageFull: `comicread — minimalista terminálos mangaolvasó
@@ -85,6 +90,7 @@ q    kilépés
 használat: comicread [beállítások] [fájl]
 
 beállítások:
+  --config string     használandó konfigurációs fájl
   --graphics string   megjelenítő: auto, ascii, dots, kitty, sixel vagy iterm2 (alapértelmezés: "auto")
   --book-view         oldalpárok megjelenítése balról jobbra
   --right-view        oldalpárok megjelenítése jobbról balra
@@ -92,21 +98,15 @@ beállítások:
   --right-circle-view
                       átfedő oldalpárok megjelenítése jobbról balra
   --clear-journal     fájl vagy könyvtár helyi naplójának törlése és kilépés
+  --reset-config     a config.toml alaphelyzetbe állítása és kilépés
+  --set-config value config.toml frissítése: kulcs=érték
   -o, --open string   a fájlválasztóban megnyitandó könyvtár (alapértelmezés: COMICREAD_DIR vagy a jelenlegi könyvtár)
-  --env               comicread környezet kiírása és kilépés
   --update            frissítések keresése és kilépés
+  --web               helyi webes olvasó indítása a terminálfelület helyett
   -v, --version       verzió kiírása és kilépés
   -h, --help          súgó megjelenítése
 
 Ha nincs megadva fájl vagy könyvtár, egy interaktív fájlválasztó nyílik meg a COMICREAD_DIR
-(ha érvényes könyvtárra van beállítva) vagy egyébként a jelenlegi könyvtárban.
-
-környezet:
-  COMICREAD_GRAPHICS  alapértelmezett megjelenítő: auto, ascii, dots, kitty, sixel vagy iterm2
-  COMICREAD_PRERENDERED_NEXT      előre megjelenítendő következő oldalak (alapértelmezés: 1)
-  COMICREAD_PRERENDERED_PREVIOUS  előre megjelenítendő előző oldalak (alapértelmezés: 1)
-  COMICREAD_VIEW      alapértelmezett nézet: book-view, right-view, circle-view vagy right-circle-view
-  COMICREAD_LANG      üzenetek nyelve: https://github.com/arimatakao/comicread#environment-variables (alapértelmezés: "en")
-  COMICREAD_DIR       alapértelmezett fájlválasztó-könyvtár, ha nincs útvonal megadva`,
+(ha érvényes könyvtárra van beállítva) vagy egyébként a jelenlegi könyvtárban.`,
 	ReaderViewMetadata: "Metaadatok",
 }

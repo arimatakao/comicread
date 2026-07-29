@@ -78,6 +78,11 @@ q    wyjście
 	CLIErrInvalidView:               "nieobsługiwana wartość COMICREAD_VIEW %q (dozwolone: book-view, right-view, circle-view lub right-circle-view)",
 	CLIFlagOpenUsage:                "katalog do otwarcia w wyborze plików (domyślnie: COMICREAD_DIR lub bieżący katalog)",
 	CLIErrOpenNotDir:                "otwórz katalog %q: nie jest katalogiem",
+	CLIFlagWebUsage:                 "uruchom lokalny czytnik internetowy zamiast interfejsu terminalowego",
+	CLIErrWebArgs:                   "--web nie przyjmuje argumentu pliku ani katalogu",
+	WebServerStarted:                "czytnik internetowy comicread działa pod adresem %s (naciśnij Ctrl+C, aby zatrzymać)",
+	WebErrListen:                    "uruchom serwer internetowy: %w",
+	WebErrServe:                     "obsłuż serwer internetowy: %w",
 	CLIHelpHint:                     "uruchom 'comicread --help', aby uzyskać pomoc",
 	CLIUsage:                        "użycie: comicread [opcje] [plik]",
 	CLIUsageFull: `comicread — minimalny czytnik mangi dla terminala
@@ -85,6 +90,7 @@ q    wyjście
 użycie: comicread [opcje] [plik]
 
 opcje:
+  --config string     plik konfiguracji do użycia
   --graphics string   renderer: auto, ascii, dots, kitty, sixel lub iterm2 (domyślnie "auto")
   --book-view         pokaż pary stron od lewej do prawej
   --right-view        pokaż pary stron od prawej do lewej
@@ -92,21 +98,15 @@ opcje:
   --right-circle-view
                       pokaż nakładające się pary stron od prawej do lewej
   --clear-journal    usuń lokalny dziennik dla pliku lub katalogu i zakończ
+  --reset-config     zresetuj config.toml do wartości domyślnych i zakończ
+  --set-config value zaktualizuj config.toml: klucz=wartość
   -o, --open string   katalog do otwarcia w wyborze plików (domyślnie: COMICREAD_DIR lub bieżący katalog)
-  --env               wypisz środowisko comicread i zakończ
   --update            sprawdź aktualizacje i zakończ
+  --web               uruchom lokalny czytnik internetowy zamiast interfejsu terminalowego
   -v, --version       wypisz wersję i zakończ
   -h, --help          pokaż tę pomoc
 
 Jeśli nie podano pliku ani katalogu, interaktywny wybór pliku otworzy się w COMICREAD_DIR
-(jeśli ustawiono prawidłowy katalog) lub w bieżącym katalogu.
-
-zmienne środowiskowe:
-  COMICREAD_GRAPHICS  domyślny renderer: auto, ascii, dots, kitty, sixel lub iterm2
-  COMICREAD_PRERENDERED_NEXT      kolejne strony do wstępnego renderowania (domyślnie 1)
-  COMICREAD_PRERENDERED_PREVIOUS  poprzednie strony do wstępnego renderowania (domyślnie 1)
-  COMICREAD_VIEW      domyślny widok: book-view, right-view, circle-view lub right-circle-view
-  COMICREAD_LANG      język komunikatów: https://github.com/arimatakao/comicread#environment-variables (domyślnie "en")
-  COMICREAD_DIR       domyślny katalog dla wyboru plików, gdy nie podano ścieżki`,
+(jeśli ustawiono prawidłowy katalog) lub w bieżącym katalogu.`,
 	ReaderViewMetadata: "Metadane",
 }
