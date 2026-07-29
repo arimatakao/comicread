@@ -39,9 +39,11 @@
     overflow: hidden;
     background: #000;
   }
-  #page-image {
+  #stage img {
+    flex: 1 1 0;
+    min-width: 0;
     max-width: 100%;
-    max-height: 100%;
+    height: 100%;
     object-fit: contain;
     user-select: none;
     -webkit-user-drag: none;
@@ -66,7 +68,14 @@
   }
   #controls button[disabled] { opacity: .35; }
 
-  #fullscreen-button { grid-column: 1; justify-self: start; }
+  #controls-left { grid-column: 1; justify-self: start; display: flex; align-items: center; gap: .5rem; min-width: 0; }
+  #view-select {
+    height: 2.75rem;
+    max-width: 9rem;
+    margin: 0;
+    padding: 0 .5rem;
+    font-size: .85rem;
+  }
 
   #controls-right { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: .5rem; }
   #bg-color-input {
@@ -105,6 +114,7 @@
     #controls button { min-width: 2.5rem; min-height: 2.5rem; font-size: 1.1rem; }
     #page-count-button, #page-goto-input { min-width: 4.5rem; height: 2.5rem; }
     #bg-color-input { width: 2.5rem; height: 2.5rem; }
+    #view-select { height: 2.5rem; max-width: 7rem; font-size: .75rem; }
   }
 </style>
 </head>
@@ -122,10 +132,20 @@
 
 <div id="reader" hidden>
   <figure id="stage">
-    <img id="page-image" alt="">
+    <img id="page-image-left" alt="">
+    <img id="page-image-right" alt="" hidden>
   </figure>
   <nav id="controls" aria-label="Reader controls">
-    <button id="fullscreen-button" type="button" aria-label="Toggle fullscreen">⤢</button>
+    <div id="controls-left">
+      <select id="view-select" aria-label="Page layout">
+        <option value="single-page" title="Show one page at a time">Single page</option>
+        <option value="book-view" title="Show page pairs from left to right">Pairs L→R</option>
+        <option value="right-view" title="Show page pairs from right to left (manga order)">Pairs R→L</option>
+        <option value="circle-view" title="Show overlapping page pairs from left to right">Overlap L→R</option>
+        <option value="right-circle-view" title="Show overlapping page pairs from right to left (manga order)">Overlap R→L</option>
+      </select>
+      <button id="fullscreen-button" type="button" aria-label="Toggle fullscreen">⤢</button>
+    </div>
 
     <div id="page-nav">
       <button id="prev-button" type="button" aria-label="Previous page">‹</button>

@@ -2,8 +2,8 @@
 //
 // Two screens live in the same page and are toggled by hiding/showing their
 // root elements: #picker (native file input) and #reader (page view). State
-// (current book, page) is kept in sessionStorage only, so it resumes across
-// a reload but does not outlive the browser tab's session.
+// (current book, page, view mode) is kept in sessionStorage only, so it
+// resumes across a reload but does not outlive the browser tab's session.
 (() => {
   "use strict";
 
@@ -16,12 +16,14 @@
 
   const reader = document.getElementById("reader");
   const stage = document.getElementById("stage");
-  const pageImage = document.getElementById("page-image");
+  const pageImageLeft = document.getElementById("page-image-left");
+  const pageImageRight = document.getElementById("page-image-right");
   const pageCountButton = document.getElementById("page-count-button");
   const pageGotoForm = document.getElementById("page-goto-form");
   const pageGotoInput = document.getElementById("page-goto-input");
   const prevButton = document.getElementById("prev-button");
   const nextButton = document.getElementById("next-button");
+  const viewSelect = document.getElementById("view-select");
   const fullscreenButton = document.getElementById("fullscreen-button");
   const themeButton = document.getElementById("theme-button");
   const bgColorInput = document.getElementById("bg-color-input");
@@ -30,9 +32,17 @@
   const BG_COLOR_KEY = "comicread:bg-color";
   const DEFAULT_BG_COLOR = "#000000";
 
-  // state.page is a zero-based page index, matching the server's
-  // /api/books/{token}/pages/{index} route. It is only ever shown to the
-  // user as a one-based number.
+  // Mirrors internal/tui/reader/book_view.go's ViewMode: single-page shows
+  // one physical page at a time; the rest show two-page spreads, paired
+  // left-to-right or right-to-left (manga order), with or without overlap.
+  const VIEW_KEY = "comicread:view";
+  const VIEWS = ["single-page", "book-view", "right-view", "circle-view", "right-circle-view"];
+  const DEFAULT_VIEW = "single-page";
+
+  // state.page is a zero-based index: a physical page in single-page view,
+  // or a spread index in the paired views (see pageSlots below) — the same
+  // dual meaning internal/tui/reader/book_view.go's Model.page has. It is
+  // only ever shown to the user as one-based physical page numbers.
   let state = null;
 
   // prefetchAbort stops the background prefetch loop (see prefetchAll)
@@ -45,6 +55,97 @@
 
   function pageUrl(token, index) {
     return `${bookUrl(token)}/pages/${index}`;
+  }
+
+  function currentViewPreference() {
+    const saved = localStorage.getItem(VIEW_KEY);
+    return VIEWS.includes(saved) ? saved : DEFAULT_VIEW;
+  }
+
+  // --- view-mode / page-pairing math, ported from
+  // internal/tui/reader/book_view.go so the web reader lays out spreads
+  // exactly like the terminal UI does ---
+
+  function isBookView(view) {
+    return view !== "single-page";
+  }
+
+  function isRightToLeft(view) {
+    return view === "right-view" || view === "right-circle-view";
+  }
+
+  function isCircleView(view) {
+    return view === "circle-view" || view === "right-circle-view";
+  }
+
+  function circleRightPageForSpread(spread, totalPages) {
+    if (spread === 0) return Math.min(1, totalPages - 1);
+    return Math.min(spread * 2 + 1, totalPages - 1);
+  }
+
+  // pageSlots returns the [left, right] zero-based physical page indices to
+  // display for a spread; -1 means that slot is empty. Mirrors
+  // Model.pageSlots().
+  function pageSlots(view, spread, totalPages) {
+    if (totalPages < 1) return [-1, -1];
+    if (!isBookView(view)) return [spread, -1];
+
+    let pages;
+    if (isCircleView(view)) {
+      const right = circleRightPageForSpread(spread, totalPages);
+      const left = spread > 0 ? circleRightPageForSpread(spread - 1, totalPages) : 0;
+      pages = [left, right];
+    } else {
+      const left = spread * 2;
+      const right = left + 1 < totalPages ? left + 1 : -1;
+      pages = [left, right];
+    }
+    return isRightToLeft(view) ? [pages[1], pages[0]] : pages;
+  }
+
+  // canGoToNextSpread mirrors Model.canNextPage().
+  function canGoToNextSpread(view, spread, totalPages) {
+    if (!isBookView(view)) return spread + 1 < totalPages;
+    if (!isCircleView(view)) return (spread + 1) * 2 < totalPages;
+    return circleRightPageForSpread(spread, totalPages) < totalPages - 1;
+  }
+
+  function totalSpreads(view, totalPages) {
+    if (totalPages < 1) return 0;
+    if (!isBookView(view)) return totalPages;
+    let spread = 0;
+    while (canGoToNextSpread(view, spread, totalPages)) spread++;
+    return spread + 1;
+  }
+
+  // lowestPageForSpread mirrors Model.currentPageNumber() (zero-based here).
+  function lowestPageForSpread(view, spread, totalPages) {
+    const slots = pageSlots(view, spread, totalPages);
+    return Math.min(...slots.filter((slot) => slot >= 0));
+  }
+
+  // spreadForPage finds the spread that displays pageIndex, for jumping to
+  // a physical page number (goto input) or preserving the reading position
+  // when the view mode changes. Circle views can skip a page entirely
+  // (mirroring the terminal UI), in which case the nearest preceding spread
+  // is used.
+  function spreadForPage(view, pageIndex, totalPages) {
+    if (!isBookView(view)) return pageIndex;
+    const spreads = totalSpreads(view, totalPages);
+    let nearest = 0;
+    for (let spread = 0; spread < spreads; spread++) {
+      const slots = pageSlots(view, spread, totalPages);
+      if (slots.includes(pageIndex)) return spread;
+      if (lowestPageForSpread(view, spread, totalPages) <= pageIndex) nearest = spread;
+    }
+    return nearest;
+  }
+
+  function pageLabel(slots, totalPages) {
+    const valid = slots.filter((slot) => slot >= 0);
+    const low = Math.min(...valid) + 1;
+    const high = Math.max(...valid) + 1;
+    return low === high ? `${low} / ${totalPages}` : `${low}-${high} / ${totalPages}`;
   }
 
   function saveSession() {
@@ -103,7 +204,7 @@
       if (!response.ok) {
         throw new Error(body.error || `server returned ${response.status}`);
       }
-      startReading(body, 0);
+      startReading(body, 0, currentViewPreference());
       setStatus("");
     } catch (err) {
       setStatus(`Could not open file: ${err.message}`, "error");
@@ -113,26 +214,29 @@
     }
   }
 
-  function startReading(info, page) {
+  function startReading(info, page, view) {
     state = {
       token: info.token,
       title: info.title,
       totalPages: info.totalPages,
-      page: Math.min(Math.max(page || 0, 0), info.totalPages - 1),
+      view: VIEWS.includes(view) ? view : DEFAULT_VIEW,
+      page: 0,
     };
+    state.page = Math.min(Math.max(page || 0, 0), totalSpreads(state.view, state.totalPages) - 1);
+    viewSelect.value = state.view;
     saveSession();
     showReader();
     renderPage();
     prefetchAll(state.token, state.totalPages);
   }
 
-  // prefetchAll walks every page of the book in order, one request at a
-  // time, independent of which page is currently being viewed. It shares
-  // the server's per-page PNG endpoint and the browser's HTTP cache with
-  // ordinary navigation, so pages requested by the reader UI while this is
-  // still running are served immediately and simply let this loop catch up
-  // around them later; already-cached pages resolve instantly and add no
-  // extra load.
+  // prefetchAll walks every physical page of the book in order, one request
+  // at a time, independent of which page (or spread) is currently being
+  // viewed or which view mode is active. It shares the server's per-page
+  // PNG endpoint and the browser's HTTP cache with ordinary navigation, so
+  // pages requested by the reader UI while this is still running are served
+  // immediately and simply let this loop catch up around them later;
+  // already-cached pages resolve instantly and add no extra load.
   //
   // Once every page has been cached by the browser, it tells the server to
   // release the chapter from memory (DELETE /api/books/{token}). From that
@@ -162,17 +266,38 @@
   function renderPage() {
     if (!state) return;
     stage.setAttribute("aria-busy", "true");
-    pageImage.src = pageUrl(state.token, state.page);
-    pageImage.alt = `Page ${state.page + 1} of ${state.totalPages}`;
-    pageCountButton.textContent = `${state.page + 1} / ${state.totalPages}`;
+
+    const slots = pageSlots(state.view, state.page, state.totalPages);
+    setSlotImage(pageImageLeft, slots[0]);
+    setSlotImage(pageImageRight, slots[1]);
+
+    const label = pageLabel(slots, state.totalPages);
+    pageCountButton.textContent = label;
+    document.title = `${label} — ${state.title} — comicread`;
 
     prevButton.disabled = state.page <= 0;
-    nextButton.disabled = state.page >= state.totalPages - 1;
+    nextButton.disabled = !canGoToNextSpread(state.view, state.page, state.totalPages);
 
-    document.title = `${state.page + 1}/${state.totalPages} — ${state.title} — comicread`;
+    preloadSpread(state.page + 1);
+    preloadSpread(state.page - 1);
+  }
 
-    preload(state.page + 1);
-    preload(state.page - 1);
+  function setSlotImage(img, index) {
+    if (index < 0) {
+      img.hidden = true;
+      img.removeAttribute("src");
+      return;
+    }
+    img.hidden = false;
+    img.src = pageUrl(state.token, index);
+    img.alt = `Page ${index + 1} of ${state.totalPages}`;
+  }
+
+  function preloadSpread(spread) {
+    if (!state || spread < 0 || spread >= totalSpreads(state.view, state.totalPages)) return;
+    const slots = pageSlots(state.view, spread, state.totalPages);
+    preload(slots[0]);
+    preload(slots[1]);
   }
 
   function preload(index) {
@@ -181,11 +306,21 @@
     img.src = pageUrl(state.token, index);
   }
 
-  function goTo(index) {
+  function goTo(spread) {
     if (!state) return;
-    const clamped = Math.min(Math.max(index, 0), state.totalPages - 1);
+    const clamped = Math.min(Math.max(spread, 0), totalSpreads(state.view, state.totalPages) - 1);
     if (clamped === state.page) return;
     state.page = clamped;
+    saveSession();
+    renderPage();
+  }
+
+  function setView(view) {
+    if (!state || !VIEWS.includes(view) || view === state.view) return;
+    localStorage.setItem(VIEW_KEY, view);
+    const anchorPage = lowestPageForSpread(state.view, state.page, state.totalPages);
+    state.view = view;
+    state.page = spreadForPage(view, anchorPage, state.totalPages);
     saveSession();
     renderPage();
   }
@@ -203,7 +338,7 @@
   function openGoto() {
     if (!state) return;
     pageGotoInput.max = String(state.totalPages);
-    pageGotoInput.value = String(state.page + 1);
+    pageGotoInput.value = String(lowestPageForSpread(state.view, state.page, state.totalPages) + 1);
     pageCountButton.hidden = true;
     pageGotoForm.hidden = false;
     pageGotoInput.focus();
@@ -238,6 +373,7 @@
 
   prevButton.addEventListener("click", () => goTo(state.page - 1));
   nextButton.addEventListener("click", () => goTo(state.page + 1));
+  viewSelect.addEventListener("change", () => setView(viewSelect.value));
   fullscreenButton.addEventListener("click", toggleFullscreen);
 
   document.addEventListener("fullscreenchange", () => {
@@ -248,7 +384,10 @@
   pageGotoForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const value = parseInt(pageGotoInput.value, 10);
-    if (!Number.isNaN(value)) goTo(value - 1);
+    if (!Number.isNaN(value)) {
+      const targetPage = Math.min(Math.max(value - 1, 0), state.totalPages - 1);
+      goTo(spreadForPage(state.view, targetPage, state.totalPages));
+    }
     closeGoto();
   });
   pageGotoInput.addEventListener("blur", closeGoto);
@@ -273,8 +412,10 @@
     applyBgColor(bgColorInput.value);
   });
 
-  pageImage.addEventListener("load", () => stage.removeAttribute("aria-busy"));
-  pageImage.addEventListener("error", () => stage.removeAttribute("aria-busy"));
+  for (const img of [pageImageLeft, pageImageRight]) {
+    img.addEventListener("load", () => stage.removeAttribute("aria-busy"));
+    img.addEventListener("error", () => stage.removeAttribute("aria-busy"));
+  }
 
   document.addEventListener("keydown", (event) => {
     if (reader.hidden || !pageGotoForm.hidden) return;
@@ -294,7 +435,7 @@
         goTo(0);
         break;
       case "End":
-        goTo(state.totalPages - 1);
+        goTo(totalSpreads(state.view, state.totalPages) - 1);
         break;
       case "f":
         toggleFullscreen();
@@ -305,11 +446,12 @@
     event.preventDefault();
   });
 
-  // --- startup: apply the saved theme and page background, then resume an
-  // in-session book or show the picker ---
+  // --- startup: apply the saved theme, page background and view mode, then
+  // resume an in-session book or show the picker ---
 
   applyTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
   applyBgColor(localStorage.getItem(BG_COLOR_KEY) || DEFAULT_BG_COLOR);
+  viewSelect.value = currentViewPreference();
 
   (async function init() {
     const saved = loadSession();
@@ -321,7 +463,7 @@
       const response = await fetch(bookUrl(saved.token));
       if (!response.ok) throw new Error("session expired");
       const info = await response.json();
-      startReading(info, saved.page);
+      startReading(info, saved.page, saved.view);
     } catch {
       showPicker();
     }
