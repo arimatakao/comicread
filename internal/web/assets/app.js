@@ -27,6 +27,9 @@
   const fullscreenButton = document.getElementById("fullscreen-button");
   const themeButton = document.getElementById("theme-button");
   const bgColorInput = document.getElementById("bg-color-input");
+  const controls = document.getElementById("controls");
+  const hideControlsButton = document.getElementById("hide-controls-button");
+  const showControlsButton = document.getElementById("show-controls-button");
 
   const THEME_KEY = "comicread:theme";
   const BG_COLOR_KEY = "comicread:bg-color";
@@ -182,6 +185,12 @@
   function showReader() {
     picker.hidden = true;
     reader.hidden = false;
+    setControlsVisible(true);
+  }
+
+  function setControlsVisible(visible) {
+    controls.hidden = !visible;
+    showControlsButton.hidden = visible;
   }
 
   async function openFile(file) {
@@ -375,6 +384,8 @@
   nextButton.addEventListener("click", () => goTo(state.page + 1));
   viewSelect.addEventListener("change", () => setView(viewSelect.value));
   fullscreenButton.addEventListener("click", toggleFullscreen);
+  hideControlsButton.addEventListener("click", () => setControlsVisible(false));
+  showControlsButton.addEventListener("click", () => setControlsVisible(true));
 
   document.addEventListener("fullscreenchange", () => {
     fullscreenButton.setAttribute("aria-pressed", String(Boolean(document.fullscreenElement)));

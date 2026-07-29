@@ -68,6 +68,24 @@
   }
   #controls button[disabled] { opacity: .35; }
 
+  #show-controls-button {
+    position: fixed;
+    left: calc(.5rem + env(safe-area-inset-left));
+    bottom: calc(.5rem + env(safe-area-inset-bottom));
+    z-index: 1;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0;
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1;
+    border-radius: var(--pico-border-radius);
+    background: var(--pico-card-background-color);
+    border: var(--pico-border-width) solid var(--pico-muted-border-color);
+    color: var(--pico-color);
+    cursor: pointer;
+  }
+
   #controls-left { grid-column: 1; justify-self: start; display: flex; align-items: center; gap: .5rem; min-width: 0; }
   #view-select {
     height: 2.75rem;
@@ -115,6 +133,7 @@
     #page-count-button, #page-goto-input { min-width: 4.5rem; height: 2.5rem; }
     #bg-color-input { width: 2.5rem; height: 2.5rem; }
     #view-select { height: 2.5rem; max-width: 7rem; font-size: .75rem; }
+    #show-controls-button { min-width: 2.5rem; min-height: 2.5rem; font-size: 1.1rem; }
   }
 </style>
 </head>
@@ -135,8 +154,12 @@
     <img id="page-image-left" alt="">
     <img id="page-image-right" alt="" hidden>
   </figure>
+
+  <button id="show-controls-button" type="button" aria-label="Show controls" hidden>▴</button>
+
   <nav id="controls" aria-label="Reader controls">
     <div id="controls-left">
+      <button id="hide-controls-button" type="button" aria-label="Hide controls">▾</button>
       <select id="view-select" aria-label="Page layout">
         <option value="single-page" title="Show one page at a time">Single page</option>
         <option value="book-view" title="Show page pairs from left to right">Pairs L→R</option>
