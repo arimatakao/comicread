@@ -27,6 +27,7 @@ small: open a chapter, turn pages with the keyboard, and focus on reading.
 - **Fast** and lightweight — a single **standalone binary**, no external libraries to install.
 - **Native application** written in Go — no JavaScript runtime, no Node.js, no Electron.
 - Reads **CBZ**, **PDF**, **EPUB** files, and image directories.
+- **Start a local web server and read manga in any browser.**
 - Renders pages via **Kitty**, **Sixel**, or **iTerm2**, with ASCII/Braille-dot fallback in plain UTF-8 terminals.
 - Saves **bookmarks** and resumes each chapter at its **last-opened page**.
 - Supports **single**, **spread** (LTR/RTL), and **overlapping-page** views.
