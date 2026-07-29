@@ -31,6 +31,8 @@
   const hideControlsButton = document.getElementById("hide-controls-button");
   const showControlsButton = document.getElementById("show-controls-button");
   const openFileButton = document.getElementById("open-file-button");
+  const prefetchProgress = document.getElementById("prefetch-progress");
+  const readingProgress = document.getElementById("reading-progress");
 
   const THEME_KEY = "comicread:theme";
   const BG_COLOR_KEY = "comicread:bg-color";
@@ -52,6 +54,11 @@
   // prefetchAbort stops the background prefetch loop (see prefetchAll)
   // started for the book previously open, once a different one replaces it.
   let prefetchAbort = null;
+
+  // prefetchActive tracks whether prefetchAll is still running for the
+  // current book, so #prefetch-progress can be hidden once every page has
+  // been cached (or shown again if the controls panel is toggled back on).
+  let prefetchActive = false;
 
   function bookUrl(token) {
     return `/api/books/${encodeURIComponent(token)}`;
@@ -177,6 +184,7 @@
 
   function showPicker() {
     if (prefetchAbort) prefetchAbort.abort();
+    prefetchActive = false;
     sessionStorage.removeItem(SESSION_KEY);
     state = null;
     reader.hidden = true;
@@ -192,6 +200,14 @@
   function setControlsVisible(visible) {
     controls.hidden = !visible;
     showControlsButton.hidden = visible;
+    updatePrefetchProgressVisibility();
+  }
+
+  // The progress strip only ever shows while prefetchAll is still running,
+  // and only alongside the controls panel — hiding the panel for immersive
+  // reading hides it too.
+  function updatePrefetchProgressVisibility() {
+    prefetchProgress.hidden = !prefetchActive || controls.hidden;
   }
 
   async function openFile(file) {
@@ -270,6 +286,11 @@
     const controller = new AbortController();
     prefetchAbort = controller;
 
+    prefetchActive = true;
+    prefetchProgress.max = totalPages;
+    prefetchProgress.value = 0;
+    updatePrefetchProgressVisibility();
+
     (async () => {
       for (let index = 0; index < totalPages; index++) {
         if (controller.signal.aborted) return;
@@ -279,8 +300,11 @@
           img.onerror = resolve;
           img.src = pageUrl(token, index);
         });
+        prefetchProgress.value = index + 1;
       }
       if (controller.signal.aborted) return;
+      prefetchActive = false;
+      updatePrefetchProgressVisibility();
       fetch(bookUrl(token), { method: "DELETE", keepalive: true }).catch(() => {});
     })();
   }
@@ -296,6 +320,9 @@
     const label = pageLabel(slots, state.totalPages);
     pageCountButton.textContent = label;
     document.title = `${label} — ${state.title} — comicread`;
+
+    readingProgress.max = state.totalPages;
+    readingProgress.value = Math.max(...slots.filter((slot) => slot >= 0)) + 1;
 
     prevButton.disabled = state.page <= 0;
     nextButton.disabled = !canGoToNextSpread(state.view, state.page, state.totalPages);

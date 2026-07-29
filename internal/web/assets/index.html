@@ -48,6 +48,14 @@
     user-select: none;
     -webkit-user-drag: none;
   }
+  #prefetch-progress, #reading-progress {
+    display: block;
+    width: 100%;
+    height: .25rem;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+  }
   #controls {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -157,6 +165,8 @@
 
   <button id="show-controls-button" type="button" aria-label="Show controls" hidden>▴</button>
 
+  <progress id="prefetch-progress" value="0" max="1" aria-label="Caching pages" hidden></progress>
+
   <nav id="controls" aria-label="Reader controls">
     <div id="controls-left">
       <button id="hide-controls-button" type="button" aria-label="Hide controls">▾</button>
@@ -185,6 +195,8 @@
       <button id="theme-button" type="button" aria-label="Switch to light theme">☀️</button>
     </div>
   </nav>
+
+  <progress id="reading-progress" value="0" max="1" aria-label="Reading progress"></progress>
 </div>
 
 <script src="/app.js"></script>
