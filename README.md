@@ -25,8 +25,8 @@ small: open a chapter, turn pages with the keyboard, and focus on reading.
 
 - Runs on **Linux**, **macOS**, and **Windows**.
 - **Fast** and lightweight — a single **standalone binary**, no external libraries to install.
-- **Native application** written in Go — no browser, no JavaScript runtime, no Node.js, no Electron.
-- Reads **CBZ**, image-based **PDF** and **EPUB** files, and image directories.
+- **Native application** written in Go — no JavaScript runtime, no Node.js, no Electron.
+- Reads **CBZ**, **PDF**, **EPUB** files, and image directories.
 - Renders pages via **Kitty**, **Sixel**, or **iTerm2**, with ASCII/Braille-dot fallback in plain UTF-8 terminals.
 - Saves **bookmarks** and resumes each chapter at its **last-opened page**.
 - Supports **single**, **spread** (LTR/RTL), and **overlapping-page** views.
@@ -162,6 +162,9 @@ comicread --open /path/to/manga
 
 # Ignore the configured directory and open the file picker in the current directory.
 comicread --open
+
+# Start the local browser-based reader.
+comicread --web
 
 # Read a CBZ archive.
 comicread /path/to/file.cbz
