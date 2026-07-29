@@ -79,10 +79,6 @@ Move the extracted executable to a directory in your `PATH` to install it manual
 
 </details>
 
-### Installer language
-
-The Linux/macOS and Windows installers automatically use the system language for their prompts and status messages. Supported languages are English, Ukrainian, Polish, German, French, Spanish, Czech, Romanian, Italian, Korean, Japanese, Indonesian, Hindi, Greek, Turkish, Kazakh, and Georgian. Unsupported languages fall back to English.
-
 ### Go
 
 Requires Go 1.26.5 or newer:
@@ -90,6 +86,31 @@ Requires Go 1.26.5 or newer:
 ```sh
 go install github.com/arimatakao/comicread@latest
 ```
+
+### Docker
+
+Clone the repository and enter its directory:
+
+```sh
+git clone https://github.com/arimatakao/comicread.git
+cd comicread
+```
+
+Build the image:
+
+```sh
+docker build -t comicread .
+```
+
+Run the web reader:
+
+```sh
+docker run --rm --network host comicread
+```
+
+Then open <http://127.0.0.1:55566> in a browser. The web reader currently
+listens only on localhost, so Docker port publishing (`-p 55566:55566`) cannot
+expose it outside the container.
 
 
 ## Terminal compatibility
