@@ -30,6 +30,9 @@
     background: var(--pico-background-color);
   }
   #stage {
+    position: relative;
+    perspective: 1800px;
+    perspective-origin: center;
     flex: 1;
     min-height: 0;
     margin: 0;
@@ -47,6 +50,71 @@
     object-fit: contain;
     user-select: none;
     -webkit-user-drag: none;
+  }
+  .page-transition-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform, opacity, clip-path, filter;
+    background: #000;
+  }
+  .page-transition-old { z-index: 3; }
+  .page-transition-new { z-index: 2; }
+  .page-transition-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .page-transition-layer img {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .page-curl-shadow {
+    position: absolute;
+    top: -5%;
+    left: 0;
+    z-index: 4;
+    width: 4rem;
+    height: 110%;
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+  .page-turn-leaf {
+    position: absolute;
+    z-index: 4;
+    transform-style: preserve-3d;
+    will-change: transform, filter;
+  }
+  .page-turn-face {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: contain;
+    backface-visibility: hidden;
+  }
+  .page-turn-back { transform: rotateY(180deg); }
+  .page-turn-highlight {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0;
+    backface-visibility: hidden;
+    pointer-events: none;
   }
   #stage.vertical-scroll-view {
     display: block;
@@ -114,7 +182,7 @@
   }
 
   #controls-left { grid-column: 1; justify-self: start; display: flex; align-items: center; gap: .5rem; min-width: 0; }
-  #view-select {
+  #view-select, #animation-select {
     height: 2.75rem;
     max-width: 9rem;
     margin: 0;
@@ -123,6 +191,9 @@
   }
 
   #controls-right { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: .5rem; }
+  #animation-select {
+    max-width: 7.5rem;
+  }
   #bg-color-input {
     width: 2.75rem;
     height: 2.75rem;
@@ -159,9 +230,18 @@
     #controls button { min-width: 2.5rem; min-height: 2.5rem; font-size: 1.1rem; }
     #page-count-button, #page-goto-input { min-width: 4.5rem; height: 2.5rem; }
     #bg-color-input { width: 2.5rem; height: 2.5rem; }
-    #view-select { height: 2.5rem; max-width: 7rem; font-size: .75rem; }
+    #view-select, #animation-select { height: 2.5rem; max-width: 7rem; font-size: .75rem; }
     #show-controls-button { min-width: 2.5rem; min-height: 2.5rem; font-size: 1.1rem; }
   }
+
+  @media (max-width: 700px) {
+    #controls { grid-template-columns: 1fr auto; }
+    #page-nav { grid-column: 1 / -1; grid-row: 1; }
+    #controls-left { grid-column: 1; grid-row: 2; }
+    #controls-right { grid-column: 2; grid-row: 2; }
+    #view-select, #animation-select { max-width: 6rem; }
+  }
+
 </style>
 </head>
 <body>
@@ -212,6 +292,13 @@
     </div>
 
     <div id="controls-right">
+      <select id="animation-select" aria-label="Page animation">
+        <option value="none">No animation</option>
+        <option value="slide">Slide</option>
+        <option value="fade">Fade</option>
+        <option value="turn">3D turn</option>
+        <option value="curl">Page curl</option>
+      </select>
       <input id="bg-color-input" type="color" value="#000000" aria-label="Page background color">
       <button id="theme-button" type="button" aria-label="Switch to light theme">☀️</button>
     </div>

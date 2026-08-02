@@ -27,6 +27,7 @@
   const viewSelect = document.getElementById("view-select");
   const fullscreenButton = document.getElementById("fullscreen-button");
   const themeButton = document.getElementById("theme-button");
+  const animationSelect = document.getElementById("animation-select");
   const bgColorInput = document.getElementById("bg-color-input");
   const controls = document.getElementById("controls");
   const hideControlsButton = document.getElementById("hide-controls-button");
@@ -38,6 +39,9 @@
   const THEME_KEY = "comicread:theme";
   const BG_COLOR_KEY = "comicread:bg-color";
   const DEFAULT_BG_COLOR = "#000000";
+  const ANIMATION_KEY = "comicread:animation";
+  const ANIMATIONS = ["none", "slide", "fade", "turn", "curl"];
+  const DEFAULT_ANIMATION = "none";
 
   // Mirrors internal/tui/reader/book_view.go's ViewMode, with an additional
   // browser-only vertical strip that displays every physical page in order.
@@ -59,6 +63,8 @@
   // been cached (or shown again if the controls panel is toggled back on).
   let prefetchActive = false;
   let verticalScrollFrame = 0;
+  let transitionInProgress = false;
+  let activeTransitionCleanup = null;
 
   function bookUrl(token) {
     return `/api/books/${encodeURIComponent(token)}`;
@@ -71,6 +77,11 @@
   function currentViewPreference() {
     const saved = localStorage.getItem(VIEW_KEY);
     return VIEWS.includes(saved) ? saved : DEFAULT_VIEW;
+  }
+
+  function currentAnimationPreference() {
+    const saved = localStorage.getItem(ANIMATION_KEY);
+    return ANIMATIONS.includes(saved) ? saved : DEFAULT_ANIMATION;
   }
 
   // --- view-mode / page-pairing math, ported from
@@ -187,6 +198,7 @@
   }
 
   function showPicker() {
+    cancelPageTransition();
     if (prefetchAbort) prefetchAbort.abort();
     prefetchActive = false;
     sessionStorage.removeItem(SESSION_KEY);
@@ -257,6 +269,7 @@
   }
 
   function startReading(info, page, view) {
+    cancelPageTransition();
     state = {
       token: info.token,
       title: info.title,
@@ -423,16 +436,279 @@
   }
 
   function goTo(spread) {
-    if (!state) return;
+    if (!state || transitionInProgress) return;
     const clamped = Math.min(Math.max(spread, 0), totalSpreads(state.view, state.totalPages) - 1);
     if (clamped === state.page) return;
+    const previous = state.page;
+    const transition = capturePageTransition();
     state.page = clamped;
     saveSession();
     renderPage();
+    playPageTransition(transition, clamped > previous);
+  }
+
+  // Capture the currently displayed page or spread before renderPage swaps
+  // its image sources. The copy sits above the new spread and animates away,
+  // avoiding duplicate page-layout logic for single and paired views.
+  function capturePageTransition() {
+    const animation = currentAnimationPreference();
+    if (animation === "none" || isVerticalScroll(state.view) ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
+
+    const oldLayer = capturePageLayer("old");
+    if (!oldLayer) return null;
+    const backdrop = document.createElement("div");
+    backdrop.className = "page-transition-backdrop";
+    backdrop.style.backgroundColor = getComputedStyle(stage).backgroundColor;
+    stage.appendChild(backdrop);
+    return { oldLayer, backdrop, animation };
+  }
+
+  function capturePageLayer(kind) {
+    const layer = document.createElement("div");
+    layer.className = `page-transition-layer page-transition-${kind}`;
+    layer.style.backgroundColor = getComputedStyle(stage).backgroundColor;
+    for (const image of [pageImageLeft, pageImageRight]) {
+      if (image.hidden || !image.getAttribute("src")) continue;
+      const copy = image.cloneNode(false);
+      copy.removeAttribute("id");
+      copy.hidden = false;
+      layer.appendChild(copy);
+    }
+    if (!layer.children.length) return null;
+    stage.appendChild(layer);
+    return layer;
+  }
+
+  function playPageTransition(transition, forward) {
+    if (!transition) return;
+
+    // Forward navigation moves toward the reading direction. Manga layouts
+    // therefore mirror every directional transition automatically.
+    const movesRight = forward === isRightToLeft(state.view);
+    transitionInProgress = true;
+
+    let animations = [];
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      for (const animation of animations) animation.cancel();
+      transition.oldLayer.remove();
+      if (transition.newLayer) transition.newLayer.remove();
+      if (transition.shadow) transition.shadow.remove();
+      if (transition.leaf) transition.leaf.remove();
+      transition.backdrop.remove();
+      transitionInProgress = false;
+      if (activeTransitionCleanup === finish) activeTransitionCleanup = null;
+    };
+    activeTransitionCleanup = finish;
+
+    waitForDisplayedPages().then(() => {
+      if (finished) return;
+      transition.newLayer = capturePageLayer("new");
+      if (!transition.newLayer || typeof transition.oldLayer.animate !== "function") {
+        finish();
+        return;
+      }
+      animations = animatePageTransition(transition, movesRight);
+      Promise.allSettled(animations.map((animation) => animation.finished)).then(finish);
+    });
+  }
+
+  // Animate old and new snapshots together, matching the model used by the
+  // browser View Transition API. This keeps motion short and preserves visual
+  // continuity instead of throwing the old spread completely off screen.
+  function animatePageTransition(transition, movesRight) {
+    const oldLayer = transition.oldLayer;
+    const newLayer = transition.newLayer;
+    const direction = movesRight ? 1 : -1;
+
+    switch (transition.animation) {
+      case "fade":
+        return [
+          oldLayer.animate([{ opacity: 1 }, { opacity: 0 }], motionOptions(150)),
+          newLayer.animate([{ opacity: 0 }, { opacity: 1 }], motionOptions(150)),
+        ];
+      case "turn": {
+        if (isBookView(state.view) && oldLayer.children.length > 1 && newLayer.children.length > 1) {
+          return animateBookTurn(transition, movesRight, false);
+        }
+        const angle = direction * 78;
+        const origin = movesRight ? "right center" : "left center";
+        oldLayer.style.transformOrigin = origin;
+        newLayer.style.transformOrigin = origin;
+        return [
+          oldLayer.animate([
+            { opacity: 1, transform: "perspective(1800px) rotateY(0deg)", filter: "brightness(1)" },
+            { opacity: 0, transform: `perspective(1800px) rotateY(${angle}deg)`, filter: "brightness(.72)" },
+          ], motionOptions(300)),
+          newLayer.animate([
+            { opacity: 0, transform: `perspective(1800px) rotateY(${-angle}deg)`, filter: "brightness(.72)" },
+            { opacity: 1, transform: "perspective(1800px) rotateY(0deg)", filter: "brightness(1)" },
+          ], motionOptions(300)),
+        ];
+      }
+      case "curl":
+        if (isBookView(state.view) && oldLayer.children.length > 1 && newLayer.children.length > 1) {
+          return animateBookTurn(transition, movesRight, true);
+        }
+        return animatePageCurl(transition, movesRight);
+      case "slide":
+      default:
+        return [
+          oldLayer.animate([
+            { transform: "translate3d(0, 0, 0)" },
+            { transform: `translate3d(${direction * 100}%, 0, 0)` },
+          ], motionOptions(220)),
+          newLayer.animate([
+            { transform: `translate3d(${-direction * 100}%, 0, 0)` },
+            { transform: "translate3d(0, 0, 0)" },
+          ], motionOptions(220)),
+        ];
+    }
+  }
+
+  function motionOptions(duration) {
+    return { duration, easing: "cubic-bezier(.4, 0, .2, 1)", fill: "both" };
+  }
+
+  // In paired layouts, a real book turns one leaf around the centre spine.
+  // Its front is the outgoing outer page and its back is the incoming page
+  // on the opposite side. The remaining half swaps near the edge-on point.
+  function animateBookTurn(transition, movesRight, soft) {
+    const oldImages = [...transition.oldLayer.children];
+    const newImages = [...transition.newLayer.children];
+    const frontSource = movesRight ? oldImages[0] : oldImages[oldImages.length - 1];
+    const backSource = movesRight ? newImages[newImages.length - 1] : newImages[0];
+    const stageRect = stage.getBoundingClientRect();
+    const pageRect = frontSource.getBoundingClientRect();
+    const direction = movesRight ? 1 : -1;
+    const duration = soft ? 420 : 350;
+
+    const leaf = document.createElement("div");
+    leaf.className = "page-turn-leaf";
+    leaf.style.left = `${pageRect.left - stageRect.left}px`;
+    leaf.style.top = `${pageRect.top - stageRect.top}px`;
+    leaf.style.width = `${pageRect.width}px`;
+    leaf.style.height = `${pageRect.height}px`;
+    leaf.style.transformOrigin = movesRight ? "right center" : "left center";
+    leaf.style.backgroundColor = getComputedStyle(stage).backgroundColor;
+
+    const front = frontSource.cloneNode(false);
+    front.className = "page-turn-face page-turn-front";
+    const back = backSource.cloneNode(false);
+    back.className = "page-turn-face page-turn-back";
+    const highlight = document.createElement("div");
+    highlight.className = "page-turn-highlight";
+    highlight.style.background = movesRight
+      ? "linear-gradient(to left, rgb(255 255 255 / .24), transparent 32%, rgb(0 0 0 / .28))"
+      : "linear-gradient(to right, rgb(255 255 255 / .24), transparent 32%, rgb(0 0 0 / .28))";
+    leaf.append(front, back, highlight);
+    stage.appendChild(leaf);
+    transition.leaf = leaf;
+    transition.oldLayer.style.backgroundColor = "transparent";
+    frontSource.style.visibility = "hidden";
+
+    const angle = direction * 180;
+    const leafFrames = soft
+      ? [
+          { transform: "rotateY(0deg) skewY(0deg)", filter: "drop-shadow(0 0 0 rgb(0 0 0 / 0))" },
+          { transform: `rotateY(${angle * .48}deg) skewY(${direction * 3.5}deg) scaleX(.94)`, filter: `drop-shadow(${-direction * 1.1}rem .15rem .7rem rgb(0 0 0 / .42))`, offset: .48 },
+          { transform: `rotateY(${angle}deg) skewY(0deg)`, filter: "drop-shadow(0 0 0 rgb(0 0 0 / 0))" },
+        ]
+      : [
+          { opacity: 1, transform: "rotateY(0deg)", filter: "brightness(1) drop-shadow(0 0 0 rgb(0 0 0 / 0))" },
+          { opacity: .5, transform: `rotateY(${angle * .5}deg)`, filter: `brightness(.76) drop-shadow(${-direction * .8}rem 0 .55rem rgb(0 0 0 / .38))`, offset: .5 },
+          { opacity: 0, transform: `rotateY(${angle}deg)`, filter: "brightness(1) drop-shadow(0 0 0 rgb(0 0 0 / 0))" },
+        ];
+
+    const animations = [
+      leaf.animate(leafFrames, { ...motionOptions(duration), easing: soft ? "cubic-bezier(.37, .02, .2, 1)" : "cubic-bezier(.45, .05, .2, 1)" }),
+      transition.oldLayer.animate([
+        { opacity: 1 },
+        ...(soft ? [{ opacity: 1, offset: .46 }, { opacity: 0, offset: .54 }] : []),
+        { opacity: 0 },
+      ], motionOptions(duration)),
+      highlight.animate([
+        { opacity: 0 },
+        { opacity: soft ? .9 : .55, offset: .5 },
+        { opacity: 0 },
+      ], motionOptions(duration)),
+    ];
+    if (!soft) {
+      animations.push(transition.newLayer.animate([{ opacity: 0 }, { opacity: 1 }], motionOptions(duration)));
+    }
+    return animations;
+  }
+
+  // A soft page curl is a moving fold rather than a rigid 3D rotation. The
+  // visible page is clipped by a changing polygon while a narrow two-sided
+  // gradient follows the fold to provide highlight and cast shadow.
+  function animatePageCurl(transition, movesRight) {
+    const frames = [];
+    const shadowFrames = [];
+    const steps = 24;
+    const stageWidth = stage.clientWidth;
+    const shadowWidth = 64;
+
+    transition.shadow = document.createElement("div");
+    transition.shadow.className = "page-curl-shadow";
+    transition.shadow.style.background = movesRight
+      ? "linear-gradient(to left, transparent, rgb(255 255 255 / .32) 42%, rgb(0 0 0 / .38) 58%, transparent)"
+      : "linear-gradient(to right, transparent, rgb(255 255 255 / .32) 42%, rgb(0 0 0 / .38) 58%, transparent)";
+    stage.appendChild(transition.shadow);
+
+    for (let index = 0; index <= steps; index++) {
+      const progress = index / steps;
+      const edge = movesRight ? progress * 100 : (1 - progress) * 100;
+      const bow = Math.sin(Math.PI * progress) * 6;
+      const top = Math.min(100, Math.max(0, edge + (movesRight ? bow : -bow)));
+      const bottom = Math.min(100, Math.max(0, edge + (movesRight ? -bow : bow)));
+      const clipPath = movesRight
+        ? `polygon(${top}% 0, 100% 0, 100% 100%, ${bottom}% 100%)`
+        : `polygon(0 0, ${top}% 0, ${bottom}% 100%, 0 100%)`;
+      const shadowX = edge / 100 * stageWidth - shadowWidth / 2;
+      frames.push({ clipPath, offset: progress });
+      shadowFrames.push({
+        opacity: Math.sin(Math.PI * progress) * .9,
+        transform: `translate3d(${shadowX}px, 0, 0) skewY(${movesRight ? -bow : bow}deg)`,
+        offset: progress,
+      });
+    }
+
+    return [
+      transition.oldLayer.animate(frames, motionOptions(360)),
+      transition.shadow.animate(shadowFrames, motionOptions(360)),
+    ];
+  }
+
+  function waitForDisplayedPages() {
+    const pending = [pageImageLeft, pageImageRight]
+      .filter((image) => !image.hidden && image.getAttribute("src") && !image.complete)
+      .map((image) => new Promise((resolve) => {
+        const done = () => {
+          image.removeEventListener("load", done);
+          image.removeEventListener("error", done);
+          resolve();
+        };
+        image.addEventListener("load", done);
+        image.addEventListener("error", done);
+      }));
+    if (!pending.length) return Promise.resolve();
+    return Promise.race([
+      Promise.all(pending),
+      new Promise((resolve) => setTimeout(resolve, 3000)),
+    ]);
+  }
+
+  function cancelPageTransition() {
+    if (activeTransitionCleanup) activeTransitionCleanup();
   }
 
   function setView(view) {
     if (!state || !VIEWS.includes(view) || view === state.view) return;
+    cancelPageTransition();
     localStorage.setItem(VIEW_KEY, view);
     const anchorPage = lowestPageForSpread(state.view, state.page, state.totalPages);
     state.view = view;
@@ -491,6 +767,9 @@
   prevButton.addEventListener("click", () => goTo(state.page - 1));
   nextButton.addEventListener("click", () => goTo(state.page + 1));
   viewSelect.addEventListener("change", () => setView(viewSelect.value));
+  animationSelect.addEventListener("change", () => {
+    localStorage.setItem(ANIMATION_KEY, animationSelect.value);
+  });
   fullscreenButton.addEventListener("click", toggleFullscreen);
   hideControlsButton.addEventListener("click", () => setControlsVisible(false));
   showControlsButton.addEventListener("click", () => setControlsVisible(true));
@@ -575,6 +854,7 @@
   applyTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
   applyBgColor(localStorage.getItem(BG_COLOR_KEY) || DEFAULT_BG_COLOR);
   viewSelect.value = currentViewPreference();
+  animationSelect.value = currentAnimationPreference();
 
   (async function init() {
     const saved = loadSession();
