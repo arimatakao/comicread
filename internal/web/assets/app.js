@@ -18,6 +18,7 @@
   const stage = document.getElementById("stage");
   const pageImageLeft = document.getElementById("page-image-left");
   const pageImageRight = document.getElementById("page-image-right");
+  const verticalPages = document.getElementById("vertical-pages");
   const pageCountButton = document.getElementById("page-count-button");
   const pageGotoForm = document.getElementById("page-goto-form");
   const pageGotoInput = document.getElementById("page-goto-input");
@@ -38,17 +39,15 @@
   const BG_COLOR_KEY = "comicread:bg-color";
   const DEFAULT_BG_COLOR = "#000000";
 
-  // Mirrors internal/tui/reader/book_view.go's ViewMode: single-page shows
-  // one physical page at a time; the rest show two-page spreads, paired
-  // left-to-right or right-to-left (manga order), with or without overlap.
+  // Mirrors internal/tui/reader/book_view.go's ViewMode, with an additional
+  // browser-only vertical strip that displays every physical page in order.
   const VIEW_KEY = "comicread:view";
-  const VIEWS = ["single-page", "book-view", "right-view", "circle-view", "right-circle-view"];
+  const VIEWS = ["single-page", "vertical-scroll", "book-view", "right-view", "circle-view", "right-circle-view"];
   const DEFAULT_VIEW = "single-page";
 
-  // state.page is a zero-based index: a physical page in single-page view,
-  // or a spread index in the paired views (see pageSlots below) — the same
-  // dual meaning internal/tui/reader/book_view.go's Model.page has. It is
-  // only ever shown to the user as one-based physical page numbers.
+  // state.page is a zero-based index: a physical page in single-page and
+  // vertical-scroll views, or a spread index in the paired views (see
+  // pageSlots below). It is only shown as a one-based physical page number.
   let state = null;
 
   // prefetchAbort stops the background prefetch loop (see prefetchAll)
@@ -59,6 +58,7 @@
   // current book, so #prefetch-progress can be hidden once every page has
   // been cached (or shown again if the controls panel is toggled back on).
   let prefetchActive = false;
+  let verticalScrollFrame = 0;
 
   function bookUrl(token) {
     return `/api/books/${encodeURIComponent(token)}`;
@@ -78,7 +78,11 @@
   // exactly like the terminal UI does ---
 
   function isBookView(view) {
-    return view !== "single-page";
+    return view !== "single-page" && view !== "vertical-scroll";
+  }
+
+  function isVerticalScroll(view) {
+    return view === "vertical-scroll";
   }
 
   function isRightToLeft(view) {
@@ -311,11 +315,31 @@
 
   function renderPage() {
     if (!state) return;
+
+    if (isVerticalScroll(state.view)) {
+      renderVerticalPages();
+      updatePageStatus([state.page, -1]);
+      scrollToVerticalPage(state.page);
+      return;
+    }
+
+    stage.classList.remove("vertical-scroll-view");
+    verticalPages.hidden = true;
+    pageImageLeft.hidden = false;
     stage.setAttribute("aria-busy", "true");
 
     const slots = pageSlots(state.view, state.page, state.totalPages);
     setSlotImage(pageImageLeft, slots[0]);
     setSlotImage(pageImageRight, slots[1]);
+
+    updatePageStatus(slots);
+
+    preloadSpread(state.page + 1);
+    preloadSpread(state.page - 1);
+  }
+
+  function updatePageStatus(slots) {
+    if (!state) return;
 
     const label = pageLabel(slots, state.totalPages);
     pageCountButton.textContent = label;
@@ -326,9 +350,52 @@
 
     prevButton.disabled = state.page <= 0;
     nextButton.disabled = !canGoToNextSpread(state.view, state.page, state.totalPages);
+  }
 
-    preloadSpread(state.page + 1);
-    preloadSpread(state.page - 1);
+  function renderVerticalPages() {
+    stage.removeAttribute("aria-busy");
+    stage.classList.add("vertical-scroll-view");
+    pageImageLeft.hidden = true;
+    pageImageRight.hidden = true;
+    verticalPages.hidden = false;
+
+    const currentToken = verticalPages.dataset.token;
+    if (currentToken === state.token && verticalPages.children.length === state.totalPages) return;
+
+    verticalPages.replaceChildren();
+    verticalPages.dataset.token = state.token;
+    const fragment = document.createDocumentFragment();
+    for (let index = 0; index < state.totalPages; index++) {
+      const img = document.createElement("img");
+      img.src = pageUrl(state.token, index);
+      img.alt = `Page ${index + 1} of ${state.totalPages}`;
+      img.dataset.page = String(index);
+      fragment.appendChild(img);
+    }
+    verticalPages.appendChild(fragment);
+  }
+
+  function scrollToVerticalPage(index) {
+    const page = verticalPages.children[index];
+    if (page) page.scrollIntoView({ block: "start" });
+  }
+
+  function syncPageFromVerticalScroll() {
+    verticalScrollFrame = 0;
+    if (!state || !isVerticalScroll(state.view) || verticalPages.hidden) return;
+
+    const stageRect = stage.getBoundingClientRect();
+    const readingLine = stageRect.top + Math.min(stageRect.height * 0.25, 160);
+    let current = 0;
+    for (const page of verticalPages.children) {
+      if (page.getBoundingClientRect().top <= readingLine) current = Number(page.dataset.page);
+      else break;
+    }
+    if (current === state.page) return;
+
+    state.page = current;
+    saveSession();
+    updatePageStatus([current, -1]);
   }
 
   function setSlotImage(img, index) {
@@ -427,6 +494,10 @@
   fullscreenButton.addEventListener("click", toggleFullscreen);
   hideControlsButton.addEventListener("click", () => setControlsVisible(false));
   showControlsButton.addEventListener("click", () => setControlsVisible(true));
+  stage.addEventListener("scroll", () => {
+    if (!isVerticalScroll(state && state.view) || verticalScrollFrame) return;
+    verticalScrollFrame = requestAnimationFrame(syncPageFromVerticalScroll);
+  }, { passive: true });
 
   document.addEventListener("fullscreenchange", () => {
     fullscreenButton.setAttribute("aria-pressed", String(Boolean(document.fullscreenElement)));
