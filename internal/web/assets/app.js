@@ -25,6 +25,8 @@
   const prevButton = document.getElementById("prev-button");
   const nextButton = document.getElementById("next-button");
   const viewSelect = document.getElementById("view-select");
+  const pageGapLabel = document.getElementById("page-gap-label");
+  const pageGapToggle = document.getElementById("page-gap-toggle");
   const fullscreenButton = document.getElementById("fullscreen-button");
   const themeButton = document.getElementById("theme-button");
   const animationSelect = document.getElementById("animation-select");
@@ -41,11 +43,12 @@
   const DEFAULT_BG_COLOR = "#000000";
   const ANIMATION_KEY = "comicread:animation";
   const ANIMATIONS = ["none", "slide", "fade", "turn", "curl"];
-  const DEFAULT_ANIMATION = "none";
+  const DEFAULT_ANIMATION = "fade";
 
   // Mirrors internal/tui/reader/book_view.go's ViewMode, with an additional
   // browser-only vertical strip that displays every physical page in order.
   const VIEW_KEY = "comicread:view";
+  const PAGE_GAP_KEY = "comicread:pages-touching";
   const VIEWS = ["single-page", "vertical-scroll", "book-view", "right-view", "circle-view", "right-circle-view"];
   const DEFAULT_VIEW = "single-page";
 
@@ -82,6 +85,10 @@
   function currentAnimationPreference() {
     const saved = localStorage.getItem(ANIMATION_KEY);
     return ANIMATIONS.includes(saved) ? saved : DEFAULT_ANIMATION;
+  }
+
+  function currentPageGapPreference() {
+    return localStorage.getItem(PAGE_GAP_KEY) === "true";
   }
 
   // --- view-mode / page-pairing math, ported from
@@ -330,6 +337,7 @@
     if (!state) return;
 
     if (isVerticalScroll(state.view)) {
+      updatePageGapControl([-1, -1]);
       renderVerticalPages();
       updatePageStatus([state.page, -1]);
       scrollToVerticalPage(state.page);
@@ -344,11 +352,47 @@
     const slots = pageSlots(state.view, state.page, state.totalPages);
     setSlotImage(pageImageLeft, slots[0]);
     setSlotImage(pageImageRight, slots[1]);
+    updatePageGapControl(slots);
 
     updatePageStatus(slots);
 
     preloadSpread(state.page + 1);
     preloadSpread(state.page - 1);
+  }
+
+  function updatePageGapControl(slots) {
+    const pairedView = state && isBookView(state.view);
+    pageGapToggle.disabled = !pairedView;
+    pageGapLabel.setAttribute("aria-disabled", String(!pairedView));
+    const touching = Boolean(pairedView && slots[1] >= 0 && pageGapToggle.checked);
+    stage.classList.toggle("pages-touching", touching);
+    clearTouchingPageSizes();
+    if (!touching) {
+      return;
+    }
+    updateTouchingPageSizes();
+  }
+
+  function clearTouchingPageSizes() {
+    for (const image of [pageImageLeft, pageImageRight]) {
+      image.style.width = "";
+      image.style.height = "";
+    }
+  }
+
+  function updateTouchingPageSizes() {
+    if (!stage.classList.contains("pages-touching") ||
+        pageImageLeft.hidden || pageImageRight.hidden ||
+        !pageImageLeft.complete || !pageImageRight.complete ||
+        !pageImageLeft.naturalWidth || !pageImageRight.naturalWidth) return;
+
+    const leftRatio = pageImageLeft.naturalWidth / pageImageLeft.naturalHeight;
+    const rightRatio = pageImageRight.naturalWidth / pageImageRight.naturalHeight;
+    const height = Math.min(stage.clientHeight, stage.clientWidth / (leftRatio + rightRatio));
+    pageImageLeft.style.width = `${height * leftRatio}px`;
+    pageImageLeft.style.height = `${height}px`;
+    pageImageRight.style.width = `${height * rightRatio}px`;
+    pageImageRight.style.height = `${height}px`;
   }
 
   function updatePageStatus(slots) {
@@ -468,11 +512,20 @@
     const layer = document.createElement("div");
     layer.className = `page-transition-layer page-transition-${kind}`;
     layer.style.backgroundColor = getComputedStyle(stage).backgroundColor;
+    const stageRect = stage.getBoundingClientRect();
     for (const image of [pageImageLeft, pageImageRight]) {
       if (image.hidden || !image.getAttribute("src")) continue;
       const copy = image.cloneNode(false);
       copy.removeAttribute("id");
       copy.hidden = false;
+      const rect = image.getBoundingClientRect();
+      // Transition layers must preserve the rendered page geometry exactly.
+      // Re-running flex layout here would reintroduce a gap for No gap mode.
+      copy.style.position = "absolute";
+      copy.style.left = `${rect.left - stageRect.left}px`;
+      copy.style.top = `${rect.top - stageRect.top}px`;
+      copy.style.width = `${rect.width}px`;
+      copy.style.height = `${rect.height}px`;
       layer.appendChild(copy);
     }
     if (!layer.children.length) return null;
@@ -599,6 +652,12 @@
     front.className = "page-turn-face page-turn-front";
     const back = backSource.cloneNode(false);
     back.className = "page-turn-face page-turn-back";
+    for (const face of [front, back]) {
+      face.style.left = "";
+      face.style.top = "";
+      face.style.width = "100%";
+      face.style.height = "100%";
+    }
     const highlight = document.createElement("div");
     highlight.className = "page-turn-highlight";
     highlight.style.background = movesRight
@@ -767,6 +826,10 @@
   prevButton.addEventListener("click", () => goTo(state.page - 1));
   nextButton.addEventListener("click", () => goTo(state.page + 1));
   viewSelect.addEventListener("change", () => setView(viewSelect.value));
+  pageGapToggle.addEventListener("change", () => {
+    localStorage.setItem(PAGE_GAP_KEY, String(pageGapToggle.checked));
+    if (state) updatePageGapControl(pageSlots(state.view, state.page, state.totalPages));
+  });
   animationSelect.addEventListener("change", () => {
     localStorage.setItem(ANIMATION_KEY, animationSelect.value);
   });
@@ -815,9 +878,14 @@
   });
 
   for (const img of [pageImageLeft, pageImageRight]) {
-    img.addEventListener("load", () => stage.removeAttribute("aria-busy"));
+    img.addEventListener("load", () => {
+      stage.removeAttribute("aria-busy");
+      updateTouchingPageSizes();
+    });
     img.addEventListener("error", () => stage.removeAttribute("aria-busy"));
   }
+
+  window.addEventListener("resize", updateTouchingPageSizes);
 
   document.addEventListener("keydown", (event) => {
     if (reader.hidden || !pageGotoForm.hidden) return;
@@ -854,6 +922,7 @@
   applyTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
   applyBgColor(localStorage.getItem(BG_COLOR_KEY) || DEFAULT_BG_COLOR);
   viewSelect.value = currentViewPreference();
+  pageGapToggle.checked = currentPageGapPreference();
   animationSelect.value = currentAnimationPreference();
 
   (async function init() {
